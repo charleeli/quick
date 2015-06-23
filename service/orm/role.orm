@@ -1,0 +1,4 @@
+Role {
+    uid string
+    base Base
+}

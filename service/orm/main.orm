@@ -1,0 +1,16 @@
+# struct: struct_a {
+#     attr_a type_attr_a
+#     attr_b type_attr_b
+# }
+# map: map_a <key_type, value_type>
+# list: list_a [item_type]
+# number: num_a number
+# string: str_a string
+# boolean: bool_a boolean
+# 数字默认值0, 字符串是"", 布尔是false, 不支持自定义
+
+include base.orm
+#add system here
+
+include role.orm
+

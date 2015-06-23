@@ -1,0 +1,8 @@
+Base {
+    name string
+    gender number
+    exp number
+    level number
+    vip number
+    gold number
+}

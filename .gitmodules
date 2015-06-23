@@ -1,0 +1,12 @@
+[submodule "3rd/skynet"]
+	path = 3rd/skynet
+	url = https://github.com/cloudwu/skynet.git
+[submodule "3rd/sproto_dump"]
+	path = 3rd/sproto_dump
+	url = https://github.com/lvzixun/sproto_dump.git
+[submodule "3rd/levent"]
+	path = 3rd/levent
+	url = https://github.com/xjdrew/levent.git
+[submodule "3rd/luafilesystem"]
+	path = 3rd/luafilesystem
+	url = https://github.com/keplerproject/luafilesystem.git
