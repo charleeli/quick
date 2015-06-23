@@ -77,9 +77,12 @@ local function print_response(session, ret)
 end
 
 local session = 0
-
+local power = 0
 local function send_request(name, args)
-    session = session + 1
+    session = math.floor(2^power)
+    power = power + 1
+    if power == 32 then power = 0 end
+    
     local v = sproto_client(name, args, session)
     local size = #v + 4
 	local package = string.pack(">I2", size)..v..string.pack(">I4", session)
