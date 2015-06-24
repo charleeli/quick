@@ -84,9 +84,9 @@ local function send_request(name, args)
     session = session + 1
     local v = sproto_client(name, args, session)
     local size = #v + 4
-	local package = string.pack(">I2", size)..v..string.pack(">I4", session)
-	socket.send(fd, package)
-	print_request(name, session,args)
+    local package = string.pack(">I2", size)..v..string.pack(">I4", session)
+    socket.send(fd, package)
+    print_request(name, session,args)
 end
 
 local last = ""
@@ -110,13 +110,8 @@ local function dispatch_package()
         
         local size = #v - 5
         local content, ok, session = string.unpack("c"..tostring(size).."B>I4", v)
-        if ok == 1 then
-            v = content .. '\1'  .. 0
-        else
-            v = content .. '\0'  .. 0
-        end
         
-        print_package(sproto_server:dispatch(v))
+        print_package(sproto_server:dispatch(content))
     end
 end
 
