@@ -4,12 +4,17 @@ package.path = "../3rd/skynet/lualib/?.lua;../3rd/skynet/service/?.lua;" .. serv
 
 local netpack = require "netpack"
 local socket = require "clientsocket"
-local SprotoLoader = require "sprotoloader"
-local SprotoEnv = require "sproto_env"
-SprotoEnv.init('../service/sproto')
-
 local crypt = require "crypt"
 require "luaext"
+
+local SprotoLoader = require "sprotoloader"
+local SprotoCore = require "sproto.core"
+local SprotoEnv = require "sproto_env"
+SprotoEnv.init('../build/sproto')
+
+local sp_s2c = SprotoLoader.load(SprotoEnv.PID_S2C)
+local sproto_server = sp_s2c:host(SprotoEnv.BASE_PACKAGE)
+local sproto_client = sproto_server:attach(SprotoLoader.load(SprotoEnv.PID_C2S))
 
 local LOGIN_HOST = "127.0.0.1"
 local LOGIN_PORT = 5188
@@ -23,9 +28,6 @@ local UID
 
 local index = 0
 
-local sp_s2c = SprotoLoader.load(SprotoEnv.PID_S2C)
-local sproto_server = sp_s2c:host(SprotoEnv.BASE_PACKAGE)
-local sproto_client = sproto_server:attach(SprotoLoader.load(SprotoEnv.PID_C2S))
 local fd = nil
 
 local function send_package(fd, pack)
@@ -77,12 +79,9 @@ local function print_response(session, ret)
 end
 
 local session = 0
-local power = 0
+
 local function send_request(name, args)
-    session = math.floor(2^power)
-    power = power + 1
-    if power == 32 then power = 0 end
-    
+    session = session + 1
     local v = sproto_client(name, args, session)
     local size = #v + 4
 	local package = string.pack(">I2", size)..v..string.pack(">I4", session)
@@ -108,7 +107,15 @@ local function dispatch_package()
         if not v then
             break
         end
-
+        
+        local size = #v - 5
+        local content, ok, session = string.unpack("c"..tostring(size).."B>I4", v)
+        if ok == 1 then
+            v = content .. '\1'  .. 0
+        else
+            v = content .. '\0'  .. 0
+        end
+        
         print_package(sproto_server:dispatch(v))
     end
 end

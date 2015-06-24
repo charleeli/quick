@@ -44,9 +44,9 @@ lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
 --daemon = "./game.pid"
 
 -- 自定义
-sprotopath = './service/sproto'
+sprotopath = './build/sproto'
 orm_main = 'main.orm'
-orm_path = './service/orm'
+orm_path = './service/agent/orm'
 
 port = 5189					-- 监听端口
 maxclient = 100				-- 最大连接数
