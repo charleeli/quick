@@ -8,7 +8,7 @@ LUA_CLIB_PATH = $(BUILD_DIR)/luaclib
 
 CFLAGS = -g -O2 -Wall
 
-LUA_CLIB = log
+LUA_CLIB = log ctime lfs
 
 all : skynet build
 
@@ -30,7 +30,13 @@ $(LUA_CLIB_PATH) :
 
 $(LUA_CLIB_PATH)/log.so : lualib-src/lua-log.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
-
+	
+$(LUA_CLIB_PATH)/ctime.so: lualib-src/lua-ctime.c | $(LUA_CLIB_PATH)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+	
+$(LUA_CLIB_PATH)/lfs.so: 3rd/luafilesystem/src/lfs.c | $(LUA_CLIB_PATH) 
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+	
 clean :
 	-rm -rf build
 	cd 3rd/skynet && $(MAKE) clean

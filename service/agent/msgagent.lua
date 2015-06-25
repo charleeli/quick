@@ -3,9 +3,10 @@ require "skynet.manager"
 local queue = require "skynet.queue"
 local snax = require "snax"
 local netpack = require "netpack"
+local lfs = require"lfs"
 local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
---SprotoEnv.init('/home/charleeli/wotoo/xmongo/sproto')
+
 local c2s_sp = SprotoLoader.load(SprotoEnv.PID_C2S)
 local c2s_host = c2s_sp:host(SprotoEnv.BASE_PACKAGE)
 
@@ -136,6 +137,26 @@ function CMD.afk(source)
 	skynet.error(string.format("AFK"))
 end
 
+local request_handlers = {}
+
+local function load_request_handlers()
+    local path = "./handler"
+    for file in lfs.dir(path) do
+        local _,suffix = file:match "([^.]*).(.*)"
+        if suffix == 'lua' then
+            local module_data = setmetatable({}, { __index = _ENV })
+            local routine, err = loadfile(path..'/'..file, "bt", module_data)
+            assert(routine, err)()
+            
+            for k, v in pairs(module_data) do
+                if type(v) == 'function' then
+                    request_handlers[k] = v
+                end
+            end
+        end
+    end
+end
+
 local function msg_unpack(msg, sz)
 	local netmsg = netpack.tostring(msg, sz, 0) 
 	if not netmsg then
@@ -192,4 +213,6 @@ skynet.start(function()
 		local f = assert(CMD[command])
 		skynet.retpack(cs(f, source, ...))
 	end)
+	
+	load_request_handlers()
 end)
