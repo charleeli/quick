@@ -140,7 +140,7 @@ end
 local request_handlers = {}
 
 local function load_request_handlers()
-    local path = "./handler"
+    local path = skynet.getenv('handlerpath') or "./handler"
     for file in lfs.dir(path) do
         local _,suffix = file:match "([^.]*).(.*)"
         if suffix == 'lua' then
@@ -177,18 +177,9 @@ end
 local function msg_dispatch(netmsg)
     local begin = skynet.time()
 	local type, name, request, response = c2s_host:dispatch(netmsg)
-	--[[
-	local r = {
-	    uuid = '717066513',
-        account = "charleeli"
-	}
-	--]]
-	 local r =  {
-        errcode = 0,
-        
-        left_resign_count = 2,
-        can_sign_count = 3,
-    }
+	
+	local r = request_handlers[name](request)
+	table.print(r)
 	
 	LOG_INFO("process %s time used %f ms", name, (skynet.time()-begin)*10)
 	return response(r)	

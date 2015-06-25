@@ -45,6 +45,7 @@ lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
 
 -- 自定义
 sprotopath = './build/sproto'
+handlerpath = './service/agent/handler'
 orm_main = 'main.orm'
 orm_path = './service/agent/orm'
 
