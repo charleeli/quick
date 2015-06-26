@@ -1,0 +1,6 @@
+.Role {
+    uid 0: integer
+    account 1: string
+    uuid 2: string
+    base 3: Base
+}

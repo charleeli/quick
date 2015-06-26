@@ -124,7 +124,7 @@ local function _gen_profile(obj)
         name = obj.name,
         gender = obj.gender,
         exp = obj.exp,
-        level = level,
+        level = obj.level,
         vip = obj.vip,
         gold = obj.gold,
     }

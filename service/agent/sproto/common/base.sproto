@@ -1,0 +1,8 @@
+.Base {
+    name 0: string
+    gender 1: integer
+    exp 2: integer
+    level 3: integer
+    vip 4: integer
+    gold 5: integer
+}

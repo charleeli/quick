@@ -1,0 +1,4 @@
+# [role]
+load_role 101 {
+	  response Role
+}
