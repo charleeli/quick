@@ -20,7 +20,7 @@ table.print = function(T, CR)
                 table.insert(temp, 
                     "+" .. key .. _dump( 
                     v,
-                    space .. (next(t,k) and "|" or " " ).. srep(" ",#key),
+                    space .. (next(t,k) and "|" or " " ).. string.rep(" ",#key),
                     new_key
                 ))
             else
@@ -203,7 +203,6 @@ math.round = function(n, p)
         local e = 10 ^ (p or 0)
         return math.floor(n * e + 0.5) / e
 end
-
 
 -- lua面向对象扩展
 local _class={}

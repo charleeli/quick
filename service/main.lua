@@ -9,6 +9,8 @@ skynet.start(function()
 	skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
 	
 	skynet.uniqueservice("sproto_loader")
+	
+	local gamedb = skynet.uniqueservice("gamedb")
 
 	local gate = skynet.uniqueservice("gated")		-- 启动游戏服务器
 	skynet.call(gate, "lua", "init")				-- 初始化，预先分配若干agent

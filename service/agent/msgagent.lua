@@ -6,6 +6,8 @@ local netpack = require "netpack"
 local lfs = require"lfs"
 local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
+local Env = require 'global'
+local RoleApi = require 'apis.role_api'
 
 local c2s_sp = SprotoLoader.load(SprotoEnv.PID_C2S)
 local c2s_host = c2s_sp:host(SprotoEnv.BASE_PACKAGE)
@@ -82,6 +84,9 @@ local function logout()
 	afktime = 0
 
 	--skynet.call("dcmgr", "lua", "unload", UID)	-- 卸载玩家数据
+	local ok = RoleApi.apis.close()
+	LOG_INFO("close msgagent %d, uid=%d", ok , UID)
+	
 	--这里不退出agent服务，以便agent能复用
 	--skynet.exit()	-- 玩家显示登出，需要退出agent服务
 end
@@ -118,6 +123,9 @@ function CMD.auth(source, uid)
 	--LOG_INFO("call dcmgr to load user data uid=%d", uid)
 	--skynet.call("dcmgr", "lua", "load", uid)	-- 加载玩家数据，重复加载是无害的
 
+    LOG_INFO("init agent's environmnet uid=%d", uid)
+	RoleApi.apis.start({uid = uid})
+	
 	if not running then
 		running = true
 		reg_timers()

@@ -35,7 +35,8 @@ cpath = skynetroot .. "cservice/?.so"
 lua_path = skynetroot .. "lualib/?.lua;" ..
 		   "./lualib/?.lua;" ..
 		   "./lualib/preload/?.lua;" ..
-		   "./lualib/entity/?.lua"
+		   "./lualib/entity/?.lua;"..
+		   "./service/agent/?.lua"
 
 -- 将添加到 package.cpath 中的路径，供 require 调用。
 lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
@@ -44,10 +45,12 @@ lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
 --daemon = "./game.pid"
 
 -- 自定义
-sprotopath = './build/sproto'
 handlerpath = './service/agent/handler'
+apispath = './service/agent/apis'
 orm_main = 'main.orm'
 orm_path = './service/agent/orm'
+sprotopath = './build/sproto'
+gamedb = '{host="127.0.0.1", port=27017, db="quick"}'
 
 port = 5189					-- 监听端口
 maxclient = 100				-- 最大连接数

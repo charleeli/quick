@@ -3,7 +3,7 @@ local Orm = require 'orm'
 local TypeDef = require 'typedef'
 
 local type_list = TypeDef.parse(
-    skynet.getenv("orm_main")
+    skynet.getenv("orm_main"),
     skynet.getenv("orm_path")
 )
 
