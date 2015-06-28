@@ -44,6 +44,9 @@ lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
 -- 后台模式
 --daemon = "./game.pid"
 
+--测试环境
+test_environment = true
+
 -- 自定义
 handlerpath = './service/agent/handler'
 apispath = './service/agent/apis'

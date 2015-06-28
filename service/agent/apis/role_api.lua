@@ -36,11 +36,11 @@ end
 
 function M._load_role(role_orm)
     local role = Role.new(role_orm)
+    Env.role = role
+    
     role:init_apis()
     role:init_data()
-    
-    Env.role = role
-
+ 
     M.reset_timer()
     Env.timer_mgr:add_timer(
         180,

@@ -8,7 +8,7 @@ local Env = require 'global'
 local Role = class()
 
 function Role:ctor(role_orm)
-	assert(role_orm, "new role has no role_orm")
+    assert(role_orm, "new role has no role_orm")
     self._role_orm = role_orm
     self.message = Message.new()
 end
@@ -26,6 +26,10 @@ end
 
 function Role:get_uuid()
     return self._role_orm.uuid
+end
+
+function Role:get_role()
+    return self._role_orm
 end
 
 function Role:init_data()
@@ -69,7 +73,7 @@ function Role:init_apis()
             end
         end
     end
-    
+ 
     LOG_INFO("init apis end")
 end
 
@@ -115,18 +119,20 @@ function Role:save_db()
     return suc
 end
 
-local function _gen_profile(obj)
-    if not obj then
+function Role:gen_base_proto()
+    local base = self:get_base()
+    
+    if not base then
         return nil
     end
 
     return {
-        name = obj.name,
-        gender = obj.gender,
-        exp = obj.exp,
-        level = obj.level,
-        vip = obj.vip,
-        gold = obj.gold,
+        name = base.name,
+        gender = base.gender,
+        exp = base.exp,
+        level = base.level,
+        vip = base.vip,
+        gold = base.gold,
     }
 end
 
@@ -135,7 +141,7 @@ function Role:gen_proto()
     ret.uid = self._role_orm.uid
     ret.account = self._role_orm.account
     ret.uuid = self._role_orm.uuid
-    ret.base = _gen_profile(self._role_orm.base)
+    ret.base = self:gen_base_proto()
     
     return ret
 end

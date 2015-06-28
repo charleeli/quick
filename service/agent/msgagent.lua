@@ -187,7 +187,6 @@ local function msg_dispatch(netmsg)
 	local type, name, request, response = c2s_host:dispatch(netmsg)
 	
 	local r = request_handlers[name](request)
-	table.print(r)
 	
 	LOG_INFO("process %s time used %f ms", name, (skynet.time()-begin)*10)
 	return response(r)	

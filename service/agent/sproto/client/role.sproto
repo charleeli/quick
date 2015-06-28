@@ -2,3 +2,15 @@
 load_role 101 {
 	  response Role
 }
+
+gm 102 {
+    request {
+        cmd 0: string
+    }
+    
+    response {
+        errcode 0: integer
+        errdata 1: string
+        base 2: Base
+    }
+}
