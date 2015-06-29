@@ -14,3 +14,10 @@ function gm(args)
     
     return Env.role:gm(args.cmd)
 end
+
+--[[
+--会话级别安全锁示例
+function gm(args)
+    return Env.role:lock_session('gm',args.cmd)
+end
+--]]

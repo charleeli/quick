@@ -79,6 +79,19 @@ function Role:init_apis()
     LOG_INFO("init apis end")
 end
 
+function Role:lock_session(func_name,...)
+    local ret = table.pack(
+        Env.session_lock:lock_session(func_name, self[func_name],self, ...)
+    )
+
+    if not ret[1] then
+        LOG_ERROR("<%s>session lock fail", func_name)
+        return {errcode = Const.ERROR}
+    end
+    
+    return table.unpack(ret, 2)
+end
+
 function Role:online()
     LOG_INFO("role online begin")
     self.message:pub(Const.EVT_ONLINE)
