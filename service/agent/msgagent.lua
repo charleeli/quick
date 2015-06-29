@@ -84,9 +84,8 @@ local function logout()
 	afktime = 0
 
 	--skynet.call("dcmgr", "lua", "unload", UID)	-- 卸载玩家数据
-	local ok = RoleApi.apis.close()
-	LOG_INFO("close msgagent %d, uid=%d", ok , UID)
-	
+	RoleApi.apis.close()
+
 	--这里不退出agent服务，以便agent能复用
 	--skynet.exit()	-- 玩家显示登出，需要退出agent服务
 end
