@@ -73,6 +73,8 @@ function Role:init_apis()
             end
         end
     end
+    
+    self:init_base_apis()
  
     LOG_INFO("init apis end")
 end
