@@ -15,7 +15,7 @@ CFLAGS = -g -O2 -Wall
 
 LUA_CLIB = log ctime lfs
 
-all : skynet build lua53 proto
+all : skynet build lua53 proto res
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -70,6 +70,9 @@ proto:
 	`find -L $(TOP)/service/agent/sproto/common  -name "*.sproto"`
 
 	rm $(TOP)/3rd/sproto_dump/lpeg.so
+	
+res:
+	cd ./tools/xls2lua && sh run.sh
 
 clean :
 	-rm -rf build
