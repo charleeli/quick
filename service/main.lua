@@ -8,6 +8,8 @@ skynet.start(function()
 	
 	skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
 	
+	skynet.newservice("resource")
+	
 	skynet.uniqueservice("sproto_loader")
 	
 	local gamedb = skynet.uniqueservice("gamedb")
