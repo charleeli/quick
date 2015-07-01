@@ -42,7 +42,7 @@ end
 function Role:init_apis()
     LOG_INFO("init apis begin")
     
-    local path = skynet.getenv('apispath')
+    local path = skynet.getenv('apispath') or './service/agent/apis'
     
     for file in lfs.dir(path) do
         local mod_name,suffix = file:match "([^.]*).(.*)"

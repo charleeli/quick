@@ -89,7 +89,7 @@ function apis:view_sign()
     end
     
     local level = self:get_level() 
-    if level < 0 then
+    if level < Res.SysConst.sign_open_level then
         LOG_ERROR('view sign,level not enough!')    
         return {errcode = Res.ErrCode.level}
     end
@@ -120,7 +120,7 @@ end
 function apis:sign_in()
     --必须达到开放等级
     local level = self:get_level() 
-    if level < 0 then
+    if level < Res.SysConst.sign_open_level then
         LOG_ERROR('sign in,level not enough!')    
         return {errcode = Res.ErrCode.level}
     end
@@ -193,7 +193,7 @@ end
 function apis:resign()
     --必须达到开放等级
     local level = self:get_level() 
-    if level < 0 then
+    if level < Res.SysConst.sign_open_level then
         LOG_ERROR('sign in,level not enough!')    
         return {errcode = Res.ErrCode.level}
     end
@@ -287,7 +287,7 @@ end
 function apis:full_duty()
     --必须达到开放等级
     local level = self:get_level() 
-    if level < 0 then
+    if level < Res.SysConst.sign_open_level then
         LOG_ERROR('resign,level not enough!')    
         return {errcode = Res.ErrCode.lv}
     end

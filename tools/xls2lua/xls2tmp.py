@@ -5,7 +5,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from future import standard_library
 from future.builtins import *
-#py3 compatibility
 
 import sys
 from inspect import currentframe
@@ -17,11 +16,9 @@ from collections import defaultdict
 from xlrd import open_workbook, XLRDError
 import unicodecsv as csv
 
-
 if not sys.stdout.encoding:
     reload(sys)
     sys.setdefaultencoding("utf-8")
-
 
 if sys.stderr.encoding == 'cp936':
     class UnicodeStreamFilter(object):
@@ -37,9 +34,6 @@ if sys.stderr.encoding == 'cp936':
             s = s.encode(self.encode_to, self.errors).decode(self.encode_to)
             self.target.write(s)
     sys.stderr = UnicodeStreamFilter(sys.stderr)
-
-#encoding = getpreferredencoding()
-
 
 begin_temple = """
 return {
@@ -59,12 +53,6 @@ end_temple = """
 
 def assertx(value, message):
     if __debug__ and not value:
-        #tb =
-        #f = sys.exc_info()[2].tb_frame.f_back
-        #back_frame = currentframe().f_back
-        #lineno = back_frame.f_lineno - 1
-        #filename = back_frame.f_code.co_filename
-        #source = '\n' * lineno + 'assert False'
         try:
             code = compile('1 / 0', '', 'eval')
             exec(code)
@@ -75,8 +63,7 @@ def assertx(value, message):
     return value
 
 def csv_from_excel(xls_name):
-    workbook = open_workbook(xls_name)#, encoding_override='gbk')
-    #sh = wb.sheet_by_name('Sheet1')
+    workbook = open_workbook(xls_name)
     for sheet in workbook.sheets():
         with open(sheet.name + '.csv', 'wb') as csv_file:
             writer = csv.writer(csv_file, quoting=csv.QUOTE_NONNUMERIC)
@@ -107,9 +94,9 @@ row_values_ = {}
 def cell_to_value(col_type, value):
     if col_type.startswith('struct'):
         templates = col_type.split("(")[1].split(")")[0]
-        template_lst = templates.split("|")
+        template_lst = templates.split(",")
         values = value.strip()
-        value_lst = values.split("|")
+        value_lst = values.split(",")
 
         value = {}
         for i, j in enumerate(template_lst):
@@ -443,7 +430,7 @@ def convet_xls_file(path, output, file_names_):
 
 if __name__ == '__main__':
     PATH = './xls/'
-    OUTPUT = 'temp/'
+    OUTPUT = 'tmp/'
 
     file_names_ = {}
     convet_enumerate(join(PATH, 'enumerate.xls'), PATH)

@@ -1,12 +1,6 @@
-is_windows, is_client = ...
-
 local DumpApi = require 'datadump'
 local EncodeC = {}
 EncodeC.u82a = function(str) return str end
-
-if is_windows and is_windows == "true" then
-    EncodeC = require('encode_c')
-end
 
 local ms = {} --- 缓存
 
@@ -20,10 +14,9 @@ local function readfile(file)
     return data
 end
 
-
 local function require_module(file_name, mod_name)
     local mod_name = mod_name or file_name
-    local file_path = string.format("./temp/%s.lua", EncodeC.u82a(file_name))
+    local file_path = string.format("./tmp/%s.lua", EncodeC.u82a(file_name))
     local file_data = assert(readfile(file_path), file_path)
     local func, err = load(file_data)
     if not func then
@@ -31,7 +24,6 @@ local function require_module(file_name, mod_name)
     end
     ms[mod_name] = func()
 end
-
 
 local function run_script(tbl_list, name, is_convertor, save)
     if save == nil then
@@ -44,12 +36,8 @@ local function run_script(tbl_list, name, is_convertor, save)
     if is_convertor then
 
         ------ 加载导表脚本
-        local script_path
-        if is_client then
-            script_path = string.format("./game_script_client/%s.lua", name)
-        else
-            script_path = string.format("./script/%s.lua", name)
-        end
+        local script_path = string.format("./script/%s.lua", name)
+   
         local script_data = assert(readfile(script_path), script_path)
         local func, err = load(script_data, modname, 'bt', _ENV)
         if not func then
@@ -60,7 +48,7 @@ local function run_script(tbl_list, name, is_convertor, save)
         local input = {}
         for _, i in ipairs(tbl_list) do
             if not ms[i] then
-                local file_path = string.format("./temp/%s.lua", EncodeC.u82a(i))
+                local file_path = string.format("./tmp/%s.lua", EncodeC.u82a(i))
                 local file_data = assert(readfile(file_path), file_path)
                 local func, err = load(file_data)
                 if not func then
@@ -89,38 +77,23 @@ local function run_script(tbl_list, name, is_convertor, save)
         return
     end
 
-    local out_file_path
-    if is_client then
-        out_file_path = string.format("./game_data_client/%s.lua.bytes", name)
-    else
-        out_file_path = string.format("../../service/res_mgr/res/%s.lua", name)
-    end
+    local out_file_path = string.format("../../service/res_mgr/res/%s.lua", name)
+ 
     local out_file = io.open(out_file_path, 'wb')
     print(out_file_path)
     out_file:write(DumpApi(rlt))
     out_file:close()
 end
 
-local mod_list
---客户端跟服务器应该用一个mod_list
-if is_client then
-    mod_list = require "mod_list"
-else
-    mod_list = require "mod_list"
-end
+local sheet_list = require "sheet_list"
 
-for _, item in ipairs(mod_list) do
+for _, item in ipairs(sheet_list) do
     require_module(unpack(item))
 end
 
 -- (res_name, has_script)
 -- script_name既是脚本名，也是最终存储的res_name
-local script_list
-if is_client then
-    script_list = require "client_script_list"
-else
-    script_list = require "script_list"
-end
+local script_list = require "script_list"
 
 for _, item in ipairs(script_list) do
     run_script(unpack(item))

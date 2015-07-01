@@ -3,8 +3,8 @@ local Orm = require 'orm'
 local TypeDef = require 'typedef'
 
 local type_list = TypeDef.parse(
-    skynet.getenv("orm_main"),
-    skynet.getenv("orm_path")
+    skynet.getenv("orm_main") or 'main.orm',
+    skynet.getenv("orm_path") or './service/agent/orm'
 )
 
 Orm.init(type_list)

@@ -52,20 +52,15 @@ test_environment = true
 --开服时间
 open_server_time = [[{
     year =  2015,--年
-    month = 5,--月
-    day = 25,--日
+    month = 7,--月
+    day = 1,--日
     hour = 17,--时
     min = 16,--分
     sec = 56,--秒
 }]]
 
--- 自定义
-handlerpath = './service/agent/handler'
-apispath = './service/agent/apis'
-orm_main = 'main.orm'
-orm_path = './service/agent/orm'
-sprotopath = './build/sproto'
-gamedb = '{host="127.0.0.1", port=27017, db="quick"}'
+-- 角色数据库
+gamedb = "{host='127.0.0.1', port=27017, db='quick'}"
 
 port = 5189					-- 监听端口
 maxclient = 100				-- 最大连接数

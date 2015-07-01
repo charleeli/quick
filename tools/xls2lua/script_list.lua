@@ -3,6 +3,7 @@ return {
     --res下的最终名字（若script目录有对应转换脚本，将是转换脚本的名字）
     --是否需要转换脚本
     { {'errcode'},              'errcode',              true},
+    { {'sys_const'},            'sys_const',            true},
     { {'goods_virtual'},        'goods_virtual'             },
     { {'sign_award_base'},      'sign_award_base',          },
     { {'sign_award_rate'},      'sign_award_rate'           },

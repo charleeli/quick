@@ -19,6 +19,7 @@ local function require_file(modname)
 end
 
 M.ErrCode = require_file "errcode"
+M.SysConst = require_file "sys_const"
 
 --sign system start
 M.SignAwardBase = require_file 'sign_award_base'
