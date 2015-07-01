@@ -93,7 +93,7 @@ local function run_script(tbl_list, name, is_convertor, save)
     if is_client then
         out_file_path = string.format("./game_data_client/%s.lua.bytes", name)
     else
-        out_file_path = string.format("../../service/agent/res/%s.lua", name)
+        out_file_path = string.format("../../service/res_mgr/res/%s.lua", name)
     end
     local out_file = io.open(out_file_path, 'wb')
     print(out_file_path)

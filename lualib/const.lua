@@ -15,4 +15,13 @@ M.EVT_OFFLINE = EVT_ENUM()
 
 M.OK = 0
 M.ERROR = -1
+
+M.VIRTUAL_NAME2ID = {
+    coupon = 1000,
+    exp = 1001,
+    level = 1002,
+    vip = 1003,
+    gold = 1004,
+    sign_score = 1005,
+}
 return M

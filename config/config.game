@@ -16,7 +16,9 @@ log_dirname = "log"
 log_basename = "game"
 
 gameservice = "./service/?.lua;" ..
-              "./service/agent/?.lua;"
+              "./service/?/main.lua;"..
+              "./service/agent/?.lua"
+              
 			  
 -- LUA服务所在位置
 luaservice = skynetroot .. "service/?.lua;" .. gameservice
@@ -46,6 +48,16 @@ lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
 
 --测试环境
 test_environment = true
+
+--开服时间
+open_server_time = [[{
+    year =  2015,--年
+    month = 5,--月
+    day = 25,--日
+    hour = 17,--时
+    min = 16,--分
+    sec = 56,--秒
+}]]
 
 -- 自定义
 handlerpath = './service/agent/handler'

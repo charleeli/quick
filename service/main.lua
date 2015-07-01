@@ -3,12 +3,12 @@ local snax = require "snax"
 local cluster = require "cluster"
 
 skynet.start(function()
-	local log = skynet.uniqueservice("log")
+    local log = skynet.uniqueservice("log")
 	skynet.call(log, "lua", "start")
 	
 	skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
 	
-	skynet.newservice("resource")
+	skynet.newservice("res_mgr")
 	
 	skynet.uniqueservice("sproto_loader")
 	

@@ -7,6 +7,7 @@ local Date = require 'date'
 local TimerMgr = require 'timer_mgr'
 local Bson   = require 'bson'
 local Env = require 'global'
+local Res = require 'res'
 local Role = require 'crud.role'
 
 local M = {}
@@ -92,6 +93,8 @@ function M.create_role(name, gender)
     role.base.level = 1
     role.base.vip = 0
     role.base.gold = 100
+    role.base.coupon = 0
+    role.base.sign_score = 0
 
     local ret, detail = Loader.create_role(Env.account, role)
     local retcode = 0

@@ -10,24 +10,26 @@ local function readfile(file)
     return data
 end
 
-local res_path = "./service/agent/resmgr.lua"
-
 local Command = {}
+
+local res_path = "./service/res_mgr/res.lua"
 
 function Command.reload_res()
     local res_file = readfile(res_path)
-    ShareData.update('resource', res_file)
+    ShareData.update('res', res_file)
     return Skynet.retpack(true)
 end
 
-Skynet.start(function()
+local function __init__()
     Skynet.dispatch('lua', function(session, address, cmd, ...)
         local f = assert(Command[cmd], cmd)
         f(...)
     end)
 
     local res_file = readfile(res_path)
-    ShareData.new('resource', res_file)
-    Skynet.register('.resource')
-    LOG_INFO('resource booted')
-end)
+    ShareData.new('res', res_file)
+    Skynet.register('.res_mgr')
+    LOG_INFO('res_mgr booted')
+end
+
+Skynet.start(__init__)

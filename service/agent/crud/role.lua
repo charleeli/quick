@@ -34,6 +34,7 @@ end
 
 function Role:init_data()
     LOG_INFO("init data begin")
+    self:init_sign()
     
     LOG_INFO("init data end")
 end
@@ -148,6 +149,8 @@ function Role:gen_base_proto()
         level = base.level,
         vip = base.vip,
         gold = base.gold,
+        coupon = base.coupon,
+        sign_score = base.sign_score,
     }
 end
 

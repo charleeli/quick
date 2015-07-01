@@ -1,8 +1,10 @@
 Base {
-    name string
-    gender number
-    exp number
-    level number
-    vip number
-    gold number
+    name string         #姓名
+    gender number       #性别
+    exp number          #经验
+    level number        #等级
+    vip number          #VIP
+    coupon number       #点券 需用人民币购买
+    gold number         #金币 用点券购买或游戏内获得   
+    sign_score number   #签到积分
 }

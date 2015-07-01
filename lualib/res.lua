@@ -4,10 +4,11 @@ local ShareData = require "sharedata"
 local M = {}
 
 Skynet.init(function()
-    local box = ShareData.query('resource')
+    local box = ShareData.query('res')
     box = box.M
+    
     setmetatable(M, {__index = box})
-end, "resource")
+end, "res")
 
 return M
 
