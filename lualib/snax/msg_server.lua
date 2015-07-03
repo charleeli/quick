@@ -125,6 +125,13 @@ function server.ip(username)
 	end
 end
 
+function server.fd(username)
+	local u = user_online[username]
+	if u then
+		return u.fd
+	end
+end
+
 function server.start(conf)
 	--protobuf.register_file("protocol/netmsg.pb")
 	local expired_number = conf.expired_number or 128

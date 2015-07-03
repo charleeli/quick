@@ -28,9 +28,11 @@ end
 function server.auth_handler(username)
 	local uid = msgserver.userid(username)
 	uid = tonumber(uid)
+	
+	local fd = msgserver.fd(username)
 
 	LOG_INFO("notify agent uid=%d is real login", uid)
-	skynet.call(users[uid].agent, "lua", "auth", uid)	-- 通知agent认证成功，玩家真正处于登录状态了
+	skynet.call(users[uid].agent, "lua", "auth", uid, fd)	-- 通知agent认证成功，玩家真正处于登录状态了
 end
 
 -- login server disallow multi login, so login_handler never be reentry

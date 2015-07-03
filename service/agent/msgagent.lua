@@ -20,6 +20,8 @@ local SECRET
 local afktime = 0
 
 local gate		-- 游戏服务器gate地址
+local fd        -- msgagent对应的fd
+
 local CMD = {}
 
 local worker_co
@@ -79,6 +81,7 @@ local function logout()
 	UID = nil
 	SUB_ID = nil
 	SECRET = nil
+	fd = nil
 
 	ti = {}
 	afktime = 0
@@ -111,18 +114,20 @@ function CMD.login(source, uid, subid, secret)
 	UID = uid
 	SUB_ID = subid
 	SECRET = secret
-
+    
 	ti = {}
 	afktime = 0
 end
 
 -- 玩家登录游服，握手成功后调用
-function CMD.auth(source, uid)
+function CMD.auth(source, uid,fd)
 	LOG_INFO(string.format("%d is real login", uid))
 	--LOG_INFO("call dcmgr to load user data uid=%d", uid)
 	--skynet.call("dcmgr", "lua", "load", uid)	-- 加载玩家数据，重复加载是无害的
-
-    LOG_INFO("init agent's environmnet uid=%d", uid)
+	
+	fd = fd
+	
+	LOG_INFO("init agent's environmnet uid=%d fd=%d", uid, fd)
 	RoleApi.apis.start({uid = uid})
 	
 	if not running then
