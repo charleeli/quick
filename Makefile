@@ -2,58 +2,86 @@
 
 PLAT ?= linux
 SHARED := -fPIC --shared
-BUILD_DIR=build
 
 TOP=$(PWD)
-BIN_DIR=$(BUILD_DIR)/bin
-INCLUDE_DIR=$(BUILD_DIR)/include
-LUA_CLIB_PATH = $(BUILD_DIR)/luaclib
-SPROTO_DIR=$(BUILD_DIR)/sproto
-BUILD_STATIC_LIB=$(BUILD_DIR)/static_lib
+BUILD_DIR =             build
+BUILD_BIN_DIR =         $(BUILD_DIR)/bin
+BUILD_INCLUDE_DIR =     $(BUILD_DIR)/include
+BUILD_LUACLIB_DIR =     $(BUILD_DIR)/luaclib
+BUILD_SPROTO_DIR =      $(BUILD_DIR)/sproto
+BUILD_STATIC_LIB_DIR =  $(BUILD_DIR)/static_lib
+BUILD_CLIB_DIR =        $(BUILD_DIR)/clib
+BUILD_CSERVICE_DIR =    $(BUILD_DIR)/cservice
 
-CFLAGS = -g -O2 -Wall
+CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR) 
+LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -pthread -lm -ldl -lrt
 
-LUA_CLIB = log ctime lfs
-
-all : skynet build lua53 proto res
+all : build libcrab.so skynet lua53 proto res
 
 build:
 	-mkdir $(BUILD_DIR)
-	-mkdir $(BIN_DIR)
-	-mkdir $(INCLUDE_DIR)
-	-mkdir $(LUA_CLIB_PATH)
-	-mkdir $(BUILD_STATIC_LIB)
-	-mkdir $(SPROTO_DIR)
+	-mkdir $(BUILD_BIN_DIR)
+	-mkdir $(BUILD_INCLUDE_DIR)
+	-mkdir $(BUILD_LUACLIB_DIR)
+	-mkdir $(BUILD_STATIC_LIB_DIR)
+	-mkdir $(BUILD_CSERVICE_DIR)
+	-mkdir $(BUILD_SPROTO_DIR)
+	-mkdir $(BUILD_CLIB_DIR)
+	
+libcrab.so : 3rd/crab/crab.c
+	cp 3rd/crab/crab.h $(BUILD_INCLUDE_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libcrab.so
 	
 lua53:
 	cd 3rd/skynet/3rd/lua/ && $(MAKE) MYCFLAGS="-O2 -fPIC -g" linux
-	install -p -m 0755 3rd/skynet/3rd/lua/lua $(BIN_DIR)/lua
-	install -p -m 0755 3rd/skynet/3rd/lua/luac $(BIN_DIR)/luac
-	install -p -m 0644 3rd/skynet/3rd/lua/liblua.a $(BUILD_STATIC_LIB)
-	install -p -m 0644 3rd/skynet/3rd/lua/lua.h $(INCLUDE_DIR)
-	install -p -m 0644 3rd/skynet/3rd/lua/lauxlib.h $(INCLUDE_DIR)
-	install -p -m 0644 3rd/skynet/3rd/lua/lualib.h $(INCLUDE_DIR)
-	install -p -m 0644 3rd/skynet/3rd/lua/luaconf.h $(INCLUDE_DIR)
+	install -p -m 0755 3rd/skynet/3rd/lua/lua $(BUILD_BIN_DIR)/lua
+	install -p -m 0755 3rd/skynet/3rd/lua/luac $(BUILD_BIN_DIR)/luac
+	install -p -m 0644 3rd/skynet/3rd/lua/liblua.a $(BUILD_STATIC_LIB_DIR)
+	install -p -m 0644 3rd/skynet/3rd/lua/lua.h $(BUILD_INCLUDE_DIR)
+	install -p -m 0644 3rd/skynet/3rd/lua/lauxlib.h $(BUILD_INCLUDE_DIR)
+	install -p -m 0644 3rd/skynet/3rd/lua/lualib.h $(BUILD_INCLUDE_DIR)
+	install -p -m 0644 3rd/skynet/3rd/lua/luaconf.h $(BUILD_INCLUDE_DIR)
 
 skynet/Makefile :
 	git submodule update --init
 
 skynet : skynet/Makefile
 	cd 3rd/skynet && $(MAKE) $(PLAT) && cd ../..
+	cp 3rd/skynet/skynet-src/skynet_malloc.h $(BUILD_INCLUDE_DIR)
+	cp 3rd/skynet/skynet-src/skynet.h $(BUILD_INCLUDE_DIR)
+	cp 3rd/skynet/skynet-src/skynet_env.h $(BUILD_INCLUDE_DIR)
+	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
+	
+CLIB = libcrab
+LUACLIB = log ctime lfs lcrab
+CSEVICE = zinc_client
 
 all : \
-  $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so)
+  $(foreach v, $(LUACLIB), $(BUILD_LUACLIB_DIR)/$(v).so) \
+  $(foreach v, $(CSEVICE), $(BUILD_CSERVICE_DIR)/$(v).so)
 
-$(LUA_CLIB_PATH) :
-	mkdir $(LUA_CLIB_PATH)
+$(BUILD_LUACLIB_DIR) :
+	mkdir $(BUILD_LUACLIB_DIR)
+	
+$(BUILD_CSERVICE_DIR) :
+	mkdir $(BUILD_CSERVICE_DIR)
+	
+$(BUILD_CLIB_DIR) :
+	mkdir $(BUILD_CLIB_DIR)
+	
+$(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c  | $(BUILD_LUACLIB_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lcrab 
 
-$(LUA_CLIB_PATH)/log.so : lualib-src/lua-log.c | $(LUA_CLIB_PATH)
+$(BUILD_LUACLIB_DIR)/log.so : lualib-src/lua-log.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
-$(LUA_CLIB_PATH)/ctime.so: lualib-src/lua-ctime.c | $(LUA_CLIB_PATH)
+$(BUILD_LUACLIB_DIR)/ctime.so: lualib-src/lua-ctime.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
-$(LUA_CLIB_PATH)/lfs.so: 3rd/luafilesystem/src/lfs.c | $(LUA_CLIB_PATH) 
+$(BUILD_LUACLIB_DIR)/lfs.so: 3rd/luafilesystem/src/lfs.c | $(BUILD_LUACLIB_DIR) 
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+	
+$(BUILD_CSERVICE_DIR)/zinc_client.so : service-src/zinc_client.c | $(BUILD_CSERVICE_DIR) 
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
 proto:

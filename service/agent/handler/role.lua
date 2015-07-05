@@ -9,7 +9,7 @@ end
 function gm(args)
     if not Env.role then
         LOG_ERROR('<%s> exec gm without role', Env.account)
-        return {errcode = Const.ERROR}
+        return {errcode = ERRNO.E_ERROR}
     end
     
     return Env.role:gm(args.cmd)

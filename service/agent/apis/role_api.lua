@@ -1,4 +1,5 @@
 local skynet = require "skynet"
+local Cluster = require 'cluster'
 local Loader = require 'mongo_loader'
 local Lock = require 'lock'
 local SessionLock = require 'session_lock'
@@ -16,6 +17,7 @@ M.load_role_lock = Lock.new()
 
 function M.start(env)
     Env.uid = env.uid
+    Env.zinc_client = env.zinc_client
 
     if not Env.uid then
         LOG_ERROR("msgagent start fail, no uid")
@@ -74,7 +76,7 @@ function M.load_role()
             'load role<%s|%s|%s>',
             Env.account,Env.role:get_uid(), Env.role:get_uuid()
         )
-        
+       
         return Env.role:gen_proto()
     end)
 end

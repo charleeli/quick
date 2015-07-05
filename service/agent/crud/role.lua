@@ -35,6 +35,7 @@ end
 function Role:init_data()
     LOG_INFO("init data begin")
     self:init_sign()
+    self:init_chat()
     
     LOG_INFO("init data end")
 end
@@ -87,7 +88,7 @@ function Role:lock_session(func_name,...)
 
     if not ret[1] then
         LOG_ERROR("<%s>session lock fail", func_name)
-        return {errcode = Const.ERROR}
+        return {errcode = ERRNO.E_ERROR}
     end
     
     return table.unpack(ret, 2)

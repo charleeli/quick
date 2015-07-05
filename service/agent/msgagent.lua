@@ -20,7 +20,8 @@ local SECRET
 local afktime = 0
 
 local gate		-- 游戏服务器gate地址
-local fd        -- msgagent对应的fd
+local fd        -- msgagent对应的fd应用层套接字
+local zinc_client   -- msgagent对应的zinc_client服务
 
 local CMD = {}
 
@@ -85,6 +86,9 @@ local function logout()
 
 	ti = {}
 	afktime = 0
+	
+	skynet.kill(zinc_client)
+	zinc_client = nil
 
 	--skynet.call("dcmgr", "lua", "unload", UID)	-- 卸载玩家数据
 	RoleApi.apis.close()
@@ -127,8 +131,13 @@ function CMD.auth(source, uid,fd)
 	
 	fd = fd
 	
-	LOG_INFO("init agent's environmnet uid=%d fd=%d", uid, fd)
-	RoleApi.apis.start({uid = uid})
+	zinc_client = skynet.launch("zinc_client", fd)
+	
+	LOG_INFO(
+	    "init agent's environmnet uid=%d fd=%d zinc_client=%x", 
+	    uid, fd,zinc_client
+    )
+	RoleApi.apis.start({uid = uid,zinc_client = zinc_client})
 	
 	if not running then
 		running = true
@@ -189,6 +198,10 @@ end
 local function msg_dispatch(netmsg)
     local begin = skynet.time()
 	local type, name, request, response = c2s_host:dispatch(netmsg)
+	
+	if not request_handlers[name] then
+	    LOG_ERROR('request_handler %s not exist or not loaded',name)
+	end
 	
 	local r = request_handlers[name](request)
 	

@@ -1,0 +1,18 @@
+send_private_chat 300  {
+    request {
+        uuid 0 : string
+        msg 1 : string
+    }
+    response {
+        errcode 0 : integer
+    }
+}
+
+send_world_chat 301 {
+    request {
+        msg 0 : string
+    }
+    response {
+        errcode 0 : integer
+    }
+}

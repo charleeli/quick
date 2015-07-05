@@ -20,8 +20,8 @@ local LOGIN_HOST = "127.0.0.1"
 local LOGIN_PORT = 5188
 
 local GAME_HOST = "127.0.0.1"
-local GAME_PORT = 5189
-local gameserver = "game"
+local GAME_PORT = 5190
+local gameserver = "game2"
 local secret
 local USERNAME
 local UID
@@ -252,7 +252,7 @@ local function check_cmd(s)
 end
 
 local function main()
-    login(80, 1, true)
+    login(90, 1, true)
 
     while true do
         dispatch_package()

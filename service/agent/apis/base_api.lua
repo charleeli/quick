@@ -26,7 +26,7 @@ function apis:init_base_apis()
                 LOG_INFO('set_%s, old<%s> new<%s>', name, old_value, new_value)
 
                 return {
-                    errcode = Const.OK,
+                    errcode = ERRNO.E_OK,
                     base = self:gen_base_proto()
                 }
             end
@@ -46,7 +46,7 @@ function apis:init_base_apis()
                 )
 
                 return {
-                    errcode = Const.OK,
+                    errcode = ERRNO.E_OK,
                     base = self:gen_base_proto()
                 }
             end
@@ -73,7 +73,7 @@ function apis:init_base_apis()
                 )
 
                 return {
-                    errcode = Const.OK,
+                    errcode = ERRNO.E_OK,
                     base = self:gen_base_proto(),
                 }
             end

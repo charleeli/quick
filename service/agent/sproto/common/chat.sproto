@@ -1,0 +1,8 @@
+.Chat {
+    type 0 :    integer 
+    sub_type 1: integer  
+    uuid 2 :    string     
+    name 3 :    string
+    time 4 :    integer     
+    msg 5 :     string
+}

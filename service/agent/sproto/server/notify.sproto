@@ -1,0 +1,6 @@
+# [notify] ------ [1, 100) ------
+chat 1 { 
+    request {
+        chats 0 : *Chat
+    }   
+}

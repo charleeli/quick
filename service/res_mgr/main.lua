@@ -20,7 +20,7 @@ function Command.reload_res()
     return Skynet.retpack(true)
 end
 
-local function __init__()
+Skynet.start(function()
     Skynet.dispatch('lua', function(session, address, cmd, ...)
         local f = assert(Command[cmd], cmd)
         f(...)
@@ -30,6 +30,4 @@ local function __init__()
     ShareData.new('res', res_file)
     Skynet.register('.res_mgr')
     LOG_INFO('res_mgr booted')
-end
-
-Skynet.start(__init__)
+end)
