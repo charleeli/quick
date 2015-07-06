@@ -10,7 +10,10 @@ debug_port = 8002
 
 -- 集群名称配置文件
 cluster = "./config/clustername.lua"
-nodename = "game2"       --本节点名
+--本节点名
+nodename = "game2"  
+--集群中心节点配置文件     
+center = './config/centernode.lua'
 
 log_dirname = "log"
 log_basename = "game2"

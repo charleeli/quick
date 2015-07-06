@@ -21,8 +21,6 @@ function Repeater.new_chat(chat_channel, chat_info)
 end
 
 function Repeater._dispatch(chat_channel, chat_buffer)
-    table.print(listeners)
-    
     for node, _ in pairs(listeners) do
         Skynet.fork(function()
             local ok, err = _call(

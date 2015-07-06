@@ -40,8 +40,20 @@ function Quick.send(node, service, api, ...)
     Skynet.fork(caller, node, service, api, ...)
 end
 
+function Quick.center_node_name()
+    local center_cfg = Skynet.getenv('center')
+    if not center_cfg then
+        error("no center cfg!")
+    end
+    
+    local env = {}
+    local f = assert(loadfile(center_cfg,"t",env))
+    f()
+    return env.centernode
+end
+
 function Quick.caller(g_service)
-    local node = 'game' --TODO:应当通过全局服务名g_service查询得到
+    local node = Quick.center_node_name()
     
     if node ~= NODE_NAME then
         return function(api, ...)

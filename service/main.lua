@@ -15,7 +15,8 @@ skynet.start(function()
 	
 	skynet.newservice('chat_listener')
 	
-	if NODE_NAME == 'game' then --TODO:通过配置获得
+	local quick = require "quick"
+	if NODE_NAME == quick.center_node_name() then 
 	    skynet.uniqueservice(true, 'chat_speaker')
 	end
 

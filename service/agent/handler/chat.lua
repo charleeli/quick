@@ -5,6 +5,5 @@ function send_private_chat(args)
 end
 
 function send_world_chat(args)
-    print('handler args.msg = ',args.msg)
     return Env.role:send_world_chat(args.msg)
 end
