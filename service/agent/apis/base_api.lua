@@ -1,9 +1,42 @@
+local Date = require 'date'
 local Const = require 'const'
+local Notify = require 'notify'
 
 local apis = {}
 
 function apis:get_base()
     return self._role_orm.base
+end
+
+function apis:_need_daily_update()
+    local t_now = Date.second()
+    local t_prev = self._role_orm.base.daily_update_time
+    
+    if t_now > t_prev + Const.ONE_DAY_SECONDS then
+        return true
+    end
+
+    local t_daily_update = Date.get_today_time(
+        Const.ROLE_DAILY_UPDATE_HOUR, 0, 0
+    )
+    
+    return t_prev < t_daily_update
+end
+
+function apis:daily_update()
+    LOG_INFO("daily update begin")
+    
+    self._role_orm.base.daily_update_time = Date.second()
+    self.messager:pub(Const.EVT_DAILY_UPDATE)
+    Notify.daily_update()
+    
+    LOG_INFO("daily update end")
+end
+
+function apis:check_cron_update()
+    if self:_need_daily_update() then
+        Env.role:lock_session('daily_update')
+    end
 end
 
 function apis:init_base_apis()

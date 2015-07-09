@@ -1,0 +1,21 @@
+.Mail {
+   uuid 0: string
+   type 1: integer
+   sub_type 2: integer
+   to_uuid 3: string
+   from_account 4: string
+   from_uuid 5: string
+   subject 6: string
+   content 7: string
+   attachment 8: string
+   create_time 9: integer
+   is_read 10: boolean
+    
+}
+
+.MailBox {
+   private_mails 0: *Mail
+   system_mails 1: *Mail
+   update_time 2: integer
+}
+

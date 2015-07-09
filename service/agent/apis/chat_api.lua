@@ -118,6 +118,7 @@ end
 
 local triggers = {
     [Const.EVT_ONLINE] = function(self)
+        self:init_chat()
         self:online_chat_trigger()
     end,
 

@@ -18,6 +18,7 @@ skynet.start(function()
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 
 	    skynet.uniqueservice(true, 'chat_speaker')
+	    skynet.uniqueservice(true, 'mailbox')
 	end
 
 	local gate = skynet.uniqueservice("gated")		-- 启动游戏服务器

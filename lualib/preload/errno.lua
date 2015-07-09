@@ -9,4 +9,6 @@ ERRNO = {
 	E_CHAT_EMPTY                = -7,       -- 聊天消息长度为0
 	E_CHAT_OVENLEN              = -8,       -- 聊天消息过长
 	E_CONTENT_SENSITIVE         = -9,       -- 内容敏感
+	E_SUBJECT_LONG              = -10,      -- 标题太长
+	E_CONTENT_LONG              = -11,      -- 内容太长
 }

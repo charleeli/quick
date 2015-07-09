@@ -1,0 +1,18 @@
+Mail {
+    uuid string             #邮件自己的uuid
+    type number             #邮件类型
+    sub_type number         #用在发送agent邮件时填充邮件标题使用
+    to_uuid string          #收件人
+    from_account string     #发件人账号
+    from_uuid string        #发件人
+    subject string          #邮件标题
+    content string          #邮件正文
+    attachment string       #附件
+    create_time number      #发送时间
+    is_read boolean         #是否已读 
+}
+
+MailBox {
+    private_mails <string, Mail>    #个人邮件
+    system_mails <string, Mail>     #系统邮件
+}

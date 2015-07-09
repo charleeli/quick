@@ -354,7 +354,14 @@ function apis:full_duty()
 end
 
 local triggers = {
+    [Const.EVT_ONLINE] = function(self)
+        self:init_sign()
+        return
+    end,
 
+    [Const.EVT_OFFLINE] = function(self)
+        return
+    end
 }
 
 return {apis = apis, triggers = triggers}

@@ -7,4 +7,5 @@ Base {
     coupon number       #点券 需用人民币购买
     gold number         #金币 用点券购买或游戏内获得   
     sign_score number   #签到积分
+    daily_update_time number #每日更新时间戳
 }

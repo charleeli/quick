@@ -4,7 +4,7 @@
 
 --打印table
 table.print = function(T, CR)
-    assert(type(T) == "table")
+    assert(type(T) == "table",'arg should be a table!')
 
     CR = CR or '\r\n'
     local cache = {  [T] = "." }

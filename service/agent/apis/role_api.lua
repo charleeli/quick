@@ -6,6 +6,7 @@ local SessionLock = require 'session_lock'
 local Factory = require 'factory'
 local Date = require 'date'
 local TimerMgr = require 'timer_mgr'
+local Const = require 'const'
 local Bson   = require 'bson'
 local Env = require 'global'
 local Res = require 'res'
@@ -40,15 +41,27 @@ end
 function M._load_role(role_orm)
     local role = Role.new(role_orm)
     Env.role = role
-    
     role:init_apis()
-    role:init_data()
  
     M.reset_timer()
     Env.timer_mgr:add_timer(
         180,
         function()
             role:save_db() 
+        end
+    )
+    
+    Env.timer_mgr:add_timer(
+        18,
+        function() 
+            role:check_cron_update()
+        end
+    )
+    
+    Env.timer_mgr:add_timer(
+        Const.MAIL_UPDATE_INTERVAL,
+        function()
+             Env.role:lock_session('update_mailbox')
         end
     )
 

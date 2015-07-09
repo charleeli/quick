@@ -1,6 +1,16 @@
 # [notify] ------ [1, 100) ------
-chat 1 { 
+daily_update 1 {}
+
+chat 2 { 
     request {
         chats 0 : *Chat
     }   
 }
+
+mail 3 {
+    request {
+        private_mails 0: *Mail   #私人邮件
+        system_mails 1: *Mail   #系统邮件
+    }
+}
+

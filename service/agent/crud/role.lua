@@ -32,14 +32,6 @@ function Role:get_role()
     return self._role_orm
 end
 
-function Role:init_data()
-    LOG_INFO("init data begin")
-    self:init_sign()
-    self:init_chat()
-    
-    LOG_INFO("init data end")
-end
-
 function Role:init_apis()
     LOG_INFO("init apis begin")
     

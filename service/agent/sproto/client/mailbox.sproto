@@ -1,0 +1,57 @@
+send_private_mail 400  {
+    request {
+        to_uuid 0: string
+        subject 1: string
+        content 2: string
+    }
+    response {
+        errcode 0 : integer
+    }
+}
+
+read_mail 401 {
+    request {
+        mail_uuid 0: string
+        mail_type 1: integer
+    }
+    response {
+        errcode 0: integer
+    }
+}
+
+delete_mail 402 {
+    request {
+        mail_uuid 0: string
+        mail_type 1: integer
+        safe 2: boolean
+    }
+    response {
+        errcode 0: integer
+    }
+}
+
+delete_mails 403 {
+    request {
+        mail_uuid_list 0: *string
+        mail_type 1: integer
+        safe 2: boolean
+    }
+    response {
+        errcode 0: integer
+    }
+}
+
+get_mailbox 405 {
+    response {
+        mailbox 0: MailBox
+    }
+}
+
+update_mailbox 406 {
+    response {
+        errcode 0: integer
+        private_mails 1: *Mail
+        system_mails 2: *Mail
+    }
+}
+

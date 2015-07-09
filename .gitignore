@@ -1,3 +1,4 @@
+log/
 service/res_mgr/res
 tools/xls2lua/tmp
 build/bin/skynet

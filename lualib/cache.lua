@@ -2,7 +2,7 @@ local Date = require 'date'
 
 local Cache = class()
 
-function Cache:ctor(obj)
+function Cache:ctor(obj,...)
     self._obj = obj
     self._ref_cnt = 0
     self.last_access_time = Date.second()

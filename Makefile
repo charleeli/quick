@@ -54,11 +54,11 @@ skynet : skynet/Makefile
 	
 CLIB = libcrab
 LUACLIB = log ctime lfs lcrab
-CSEVICE = zinc_client
+CSERVICE = zinc_client
 
 all : \
   $(foreach v, $(LUACLIB), $(BUILD_LUACLIB_DIR)/$(v).so) \
-  $(foreach v, $(CSEVICE), $(BUILD_CSERVICE_DIR)/$(v).so)
+  $(foreach v, $(CSERVICE), $(BUILD_CSERVICE_DIR)/$(v).so)
 
 $(BUILD_LUACLIB_DIR) :
 	mkdir $(BUILD_LUACLIB_DIR)
