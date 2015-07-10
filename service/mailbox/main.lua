@@ -1,8 +1,8 @@
---local Monitor = require "monitor"
 local Skynet = require "skynet"
 local Env = require "global"
 local Cmd = require "command"
 local MailBoxMgr = require 'mailbox.mailbox_mgr'
+local NodeMonitorClient = require 'client.node_monitor'
 
 Skynet.start(function()
     Skynet.dispatch("lua", function(session, from, cmd, ...)
@@ -20,6 +20,6 @@ Skynet.start(function()
     
     Skynet.register('.mailbox')
     LOG_INFO('mailbox booted') 
-    --Monitor.register("mailbox", Cmd.on_exit)  
+    NodeMonitorClient.register("mailbox", Cmd.on_exit)  
 end)
 

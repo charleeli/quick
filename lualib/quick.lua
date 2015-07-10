@@ -53,12 +53,16 @@ function Quick.center_node_name()
 end
 
 function Quick.caller(g_service)
-    local node = Quick.center_node_name()
+    local center_node_name = Quick.center_node_name()
     
-    if node ~= NODE_NAME then
+    if center_node_name ~= NODE_NAME then
         return function(api, ...)
-            local ok, ret = pcall(Cluster.call, node, '.'..g_service, api, ...)
+            local ok, ret = pcall(
+                Cluster.call, center_node_name, '.'..g_service, api, ...
+            )
+            
             if ok then return ret end
+            
             return {errcode = ERRNO.E_SERVICE_UNAVAILABLE, errdata=ret}
         end
     end

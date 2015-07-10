@@ -12,11 +12,12 @@ skynet.start(function()
 	skynet.uniqueservice("sproto_loader")
 	skynet.uniqueservice("crab_loader")
 	skynet.uniqueservice("gamedb")
-	
+	skynet.monitor('node_monitor')
 	skynet.newservice('chat_listener')
 	
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 
+	    skynet.uniqueservice(true, 'cluster_monitor')
 	    skynet.uniqueservice(true, 'chat_speaker')
 	    skynet.uniqueservice(true, 'mailbox')
 	end

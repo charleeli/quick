@@ -104,5 +104,6 @@ res:
 
 clean :
 	-rm -rf build
+	-rm -rf log
 	cd 3rd/skynet && $(MAKE) clean
 	
