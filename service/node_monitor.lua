@@ -53,7 +53,7 @@ function Cmd.register(service_addr, service_name)
     services_monitered[service_addr] = service_name
     
     LOG_INFO(
-        "register service_addr<%s> service_name<%s>", 
+        "register service_addr<%x> service_name<%s>", 
         service_addr, service_name
     )
     
@@ -79,7 +79,7 @@ function Cmd.unregister(service_addr)
     services_monitered[service_addr] = nil
     
     LOG_INFO(
-        "service<%s> exit, unregister type<%s>", 
+        "service<%s> exit, unregister service_name<%s>", 
         service_addr,service_name
     )
 end

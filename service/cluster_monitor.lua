@@ -159,7 +159,7 @@ function Cmd.register_node(node_name, node_monitor_addr)
 
     node_monitors[node_name] = {
         addr = node_monitor_addr,
-        connector = connector,
+        connector = node_monitor_connector,
         version = version,
     }
     node_monitor_connector:start()
