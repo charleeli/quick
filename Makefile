@@ -16,7 +16,7 @@ BUILD_CSERVICE_DIR =    $(BUILD_DIR)/cservice
 CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR) 
 LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -pthread -lm -ldl -lrt
 
-all : build libcrab.so skynet lua53 proto res
+all : build libenet.so libcrab.so skynet lua53 proto res
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -27,6 +27,12 @@ build:
 	-mkdir $(BUILD_CSERVICE_DIR)
 	-mkdir $(BUILD_SPROTO_DIR)
 	-mkdir $(BUILD_CLIB_DIR)
+	
+libenet.so:3rd/enet/callbacks.c 3rd/enet/compress.c 3rd/enet/host.c \
+           3rd/enet/list.c 3rd/enet/packet.c 3rd/enet/peer.c \
+           3rd/enet/protocol.c 3rd/enet/unix.c
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libenet.so 
+	cp -r 3rd/enet/include/enet/ $(BUILD_INCLUDE_DIR)/
 	
 libcrab.so : 3rd/crab/crab.c
 	cp 3rd/crab/crab.h $(BUILD_INCLUDE_DIR)
