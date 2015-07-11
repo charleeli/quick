@@ -4,7 +4,7 @@ PLAT ?= linux
 SHARED := -fPIC --shared
 CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR) 
 LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -pthread -lm -ldl -lrt
-DEFS = -DHAS_SOCKLEN_T=1
+DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
 
 TOP=$(PWD)
 BUILD_DIR =             build
@@ -58,8 +58,7 @@ skynet : skynet/Makefile
 	cp 3rd/skynet/skynet-src/skynet_env.h $(BUILD_INCLUDE_DIR)
 	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
 	
-CLIB = libcrab
-LUACLIB = log ctime lfs lcrab
+LUACLIB = log ctime lfs lcrab lenet
 CSERVICE = zinc_client
 
 all : \
@@ -75,6 +74,9 @@ $(BUILD_CSERVICE_DIR) :
 	
 $(BUILD_CLIB_DIR) :
 	mkdir $(BUILD_CLIB_DIR)
+	
+$(BUILD_LUACLIB_DIR)/lenet.so : 3rd/lua-enet/enet.c  | $(BUILD_LUACLIB_DIR)
+	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet 
 	
 $(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c  | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lcrab 
