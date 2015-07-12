@@ -18,6 +18,7 @@ skynet.start(function()
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 
 	    skynet.uniqueservice(true, 'cluster_monitor')
+	    skynet.uniqueservice(true, 'web_master')
 	    skynet.uniqueservice(true, 'chat_speaker')
 	    skynet.uniqueservice(true, 'mailbox')
 	end

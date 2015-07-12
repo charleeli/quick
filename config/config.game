@@ -7,6 +7,8 @@ start = "main"	-- main script
 bootstrap = "snlua bootstrap"	-- The service for bootstrap
 
 debug_port = 8001
+web_master_port = 8080
+web_worker_port = 8081
 
 -- 集群名称配置文件
 cluster = "./config/clustername.lua"
