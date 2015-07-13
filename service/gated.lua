@@ -2,6 +2,7 @@ local msgserver = require "snax.msg_server"
 local crypt = require "crypt"
 local skynet = require "skynet"
 local cluster = require "cluster"
+local OnlineClient = require 'client.online'
 
 local server = {}
 local users = {}		-- uid -> u
@@ -60,6 +61,7 @@ function server.login_handler(uid, secret)
 	end
 
 	local u = {
+	    node = NODE_NAME,
 		username = username,
 		agent = agent,
 		uid = uid,
@@ -106,7 +108,7 @@ function server.kick_handler(uid, subid)
 		pcall(skynet.call, u.agent, "lua", "logout")
 	else
 		--这里是为了防止msgserver崩溃后，未通知loginserver而导致卡号
-		pcall(cluster.call, "login", ".loginmaster", "logout", uid, subid)
+		pcall(cluster.call, "login", ".login_master", "logout", uid, subid)
 	end
 end
 
@@ -144,6 +146,14 @@ function server.is_online(uid)
 	else
 		return false
 	end
+end
+
+function server.get_users()
+    local _users = {}
+    for _,v in pairs(users) do
+        table.insert(_users,v)
+    end
+    return _users
 end
 
 msgserver.start(server)		-- 启动游戏服务器

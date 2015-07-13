@@ -16,7 +16,7 @@ BUILD_STATIC_LIB_DIR =  $(BUILD_DIR)/static_lib
 BUILD_CLIB_DIR =        $(BUILD_DIR)/clib
 BUILD_CSERVICE_DIR =    $(BUILD_DIR)/cservice
 
-all : build skynet libenet.so libcrab.so lua53 proto res
+all : build skynet libenet.so libcrab.so lua53
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -93,6 +93,8 @@ $(BUILD_LUACLIB_DIR)/lfs.so: 3rd/luafilesystem/src/lfs.c | $(BUILD_LUACLIB_DIR)
 $(BUILD_CSERVICE_DIR)/zinc_client.so : service-src/zinc_client.c | $(BUILD_CSERVICE_DIR) 
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
+all : proto res
+
 proto:
 	cd $(TOP) && cp 3rd/skynet/luaclib/lpeg.so $(TOP)/3rd/sproto_dump/
 

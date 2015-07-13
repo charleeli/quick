@@ -1,7 +1,12 @@
 local Skynet = require "skynet"
 local Acceptor = require 'acceptor'
 local Connector = require 'connector'
+local OnlineClient = require 'client.online'
+local ServiceStateClient = require "client.service_state"
 local ClusterMonitorClient = require 'client.cluster_monitor'
+local Quick = require 'quick'
+
+local _call_gated = Quick.caller('gated')
 
 local is_shutdown = false
 local services_monitered = {}
@@ -22,6 +27,39 @@ local function connected_cluster_monitor_cb()
             ret.errcode
         )
         return false
+    end
+    
+    ret = OnlineClient.clear_node(NODE_NAME)
+    if ret.errcode ~= ERRNO.E_OK then
+        LOG_ERROR("online service clear node fail, errcode<%s>", ret.errcode)
+        return false
+    end
+    
+    if not ServiceStateClient.is_useable('gated') then
+        return true
+    end
+   
+    local users = _call_gated('get_users')
+    if users then
+        ret = OnlineClient.register_node(NODE_NAME, users)
+        if ret.errcode ~= ERRNO.E_OK then
+            LOG_ERROR('register online users fail, errcode<%s>', ret.errcode)
+            return false
+        end
+        
+        if table.empty(ret.fail_list) then
+            return true
+        end
+        
+        for _, item in ipairs(fail_list) do
+            local ok, ret = _call_gated('kick', item.uid, item.subid)
+            if not ok then
+                LOG_INFO(
+                    'kick fail, user uid<%s> subid<%s> node<%s> , err<%s>',
+                    item.uid, item.subid,node,  ret
+                )
+            end
+        end
     end
     
     return true

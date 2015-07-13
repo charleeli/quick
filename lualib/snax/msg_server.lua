@@ -139,6 +139,7 @@ function server.start(conf)
 	local handler = {}
 
 	local CMD = {
+	    get_users = assert(conf.get_users),
 		login = assert(conf.login_handler),
 		logout = assert(conf.logout_handler),
 		kick = assert(conf.kick_handler),

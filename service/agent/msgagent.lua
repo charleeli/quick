@@ -1,5 +1,4 @@
 local skynet = require "skynet"
-require "skynet.manager"
 local queue = require "skynet.queue"
 local snax = require "snax"
 local netpack = require "netpack"
@@ -8,6 +7,7 @@ local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
 local Env = require 'global'
 local RoleApi = require 'apis.role_api'
+local OnlineClient = require 'client.online'
 
 local c2s_sp = SprotoLoader.load(SprotoEnv.PID_C2S)
 local c2s_host = c2s_sp:host(SprotoEnv.BASE_PACKAGE)
@@ -77,6 +77,8 @@ local function logout()
 	if gate then
 		skynet.call(gate, "lua", "logout", UID, SUB_ID)
 	end
+	
+	OnlineClient.offline(UID)
 
 	gate = nil
 	UID = nil
@@ -92,7 +94,7 @@ local function logout()
 
 	--skynet.call("dcmgr", "lua", "unload", UID)	-- 卸载玩家数据
 	RoleApi.apis.close()
-
+	
 	--这里不退出agent服务，以便agent能复用
 	--skynet.exit()	-- 玩家显示登出，需要退出agent服务
 end
@@ -138,6 +140,11 @@ function CMD.auth(source, uid,fd)
 	    uid, fd,zinc_client
     )
 	RoleApi.apis.start({uid = uid,zinc_client = zinc_client})
+	
+    local ret = OnlineClient.online(NODE_NAME, skynet.self(),UID,SUB_ID)
+    if ret.errcode ~= ERRNO.E_OK then
+        LOG_INFO('OnlineClient.online fail, ac:<%s>, errcode<%s>', UID, ret.errcode)
+    end
 	
 	if not running then
 		running = true
