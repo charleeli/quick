@@ -13,6 +13,7 @@ Mail {
 }
 
 MailBox {
+    role_uuid string                #角色自己的uuid
     private_mails <string, Mail>    #个人邮件
     system_mails <string, Mail>     #系统邮件
 }

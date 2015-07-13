@@ -53,19 +53,11 @@ function Cmd.online(node,agent,uid,subid)
         Skynet.retpack({errcode = ERRNO.E_LOGIN_CONFLICT })
     end
     
-    print('+++++++++++++++++++++')
-table.print(users)
-print('+++++++++++++++++++++')
-    
     return Skynet.retpack({errcode = ERRNO.E_OK})
 end
 
 function Cmd.offline(uid)
     _del_user(uid)
-    
-    print('***************************')
-table.print(users)
-print('************************')
     
     return Skynet.retpack({errcode = ERRNO.E_OK})
 end
