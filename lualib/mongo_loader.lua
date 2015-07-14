@@ -34,6 +34,13 @@ function M.save_role(account, obj)
     return _call('update', RoleTable, {account=account}, data)
 end
 
+--base
+function M.load_base(role_uuid)
+    local data = _call('find_one', RoleTable, {uuid = role_uuid},{base = 1})
+    if not data then return nil end
+    return data
+end
+
 --mailbox
 function M.load_mailbox(role_uuid)
     local data = _call('find_one', MailboxTable, {role_uuid = role_uuid})

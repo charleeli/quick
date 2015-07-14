@@ -4,6 +4,7 @@ local Lcrab = require 'crab'
 local ChatClient = require 'client.chat'
 local Const = require 'const'
 local Notify = require 'notify'
+local UscClient = require 'client.usc'
 
 local CHAT_MSG_MAXLEN = 128
 
@@ -96,11 +97,17 @@ function apis:send_private_chat(to_uuid, msg_data)
     
     LOG_INFO('<%s>send private chat succeed :<%s>', my_uuid, msg_data)
     
+    local to_name = ""
+    local ret = UscClient.query_basic(to_uuid)
+    if ret.errcode ~= ERRNO.E_OK then
+        to_name = ret.base.name
+    end
+    
     Notify.chat{
         type = Const.CHAT_TYPE_PRIVATE,
         sub_type = Const.CHAT_SUB_TYPE_RECEIPT,
         uuid = to_uuid,
-        name = "",
+        name = to_name,
         time = Date.second(),
         msg = msg_data,
     }

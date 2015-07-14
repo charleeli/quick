@@ -19,11 +19,12 @@ skynet.start(function()
 	
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 
-	    skynet.uniqueservice(true, 'online')
 	    skynet.uniqueservice(true, 'cluster_monitor')
 	    skynet.uniqueservice(true, 'web_master')
 	    skynet.uniqueservice(true, 'chat_speaker')
+	    skynet.uniqueservice(true, 'online')
 	    skynet.uniqueservice(true, 'mailbox')
+	    skynet.uniqueservice(true, 'usc')
 	end
 
 	local gate = skynet.uniqueservice("gated")		-- 启动游戏服务器

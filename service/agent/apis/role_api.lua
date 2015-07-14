@@ -61,7 +61,14 @@ function M._load_role(role_orm)
     Env.timer_mgr:add_timer(
         Const.MAIL_UPDATE_INTERVAL,
         function()
-             Env.role:lock_session('update_mailbox')
+            role:lock_session('update_mailbox')
+        end
+    )
+    
+    Env.timer_mgr:add_timer(
+        600,
+        function()
+            role:update_usc_data()
         end
     )
 

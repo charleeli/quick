@@ -1,11 +1,17 @@
 local Date = require 'date'
 local Const = require 'const'
 local Notify = require 'notify'
+local UscClient = require 'client.usc'
 
 local apis = {}
 
 function apis:get_base()
     return self._role_orm.base
+end
+
+function apis:update_usc_data()
+    UscClient.update(self:get_uuid())
+    LOG_INFO('update usc')
 end
 
 function apis:_need_daily_update()

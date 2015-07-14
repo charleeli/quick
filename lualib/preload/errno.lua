@@ -12,4 +12,5 @@ ERRNO = {
 	E_SUBJECT_LONG              = -10,      -- 标题太长
 	E_CONTENT_LONG              = -11,      -- 内容太长
 	E_LOGIN_CONFLICT            = -12,      -- 登陆冲突
+	E_ROLE_NOT_EXISTS           = -13,		-- 玩家角色不存在
 }
