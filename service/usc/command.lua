@@ -33,8 +33,9 @@ function M.gen_basic(base)
     if not base then
         return nil
     end
-
+   
     return {
+        uid = base.uid,
         name = base.name,
         gender = base.gender,
         exp = base.exp,
@@ -52,15 +53,15 @@ function M.query_basic(role_uuid)
         return Skynet.retpack{errcode = ERRNO.E_ERROR}
     end
 
-    local base = m:get_obj()
-
-    if not base then
+    local cache = m:get_obj()
+    
+    if not cache then
         return Skynet.retpack({errcode = ERRNO.E_ROLE_NOT_EXISTS})
     end
-
+ 
     return Skynet.retpack{
         errcode = ERRNO.E_OK,
-        base = M.gen_basic(base),
+        base = M.gen_basic(cache.base),
     }
 end
 
