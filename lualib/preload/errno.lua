@@ -13,4 +13,5 @@ ERRNO = {
 	E_CONTENT_LONG              = -11,      -- 内容太长
 	E_LOGIN_CONFLICT            = -12,      -- 登陆冲突
 	E_ROLE_NOT_EXISTS           = -13,		-- 玩家角色不存在
+	E_ROLE_NOT_ONLINE           = -14,		-- 玩家角色不在线
 }

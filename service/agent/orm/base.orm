@@ -1,4 +1,5 @@
 Base {
+    uid number          #quick游服账号，来自登陆系统mysql自增
     name string         #姓名
     gender number       #性别
     exp number          #经验

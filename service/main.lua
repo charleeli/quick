@@ -16,6 +16,7 @@ skynet.start(function()
 	skynet.uniqueservice("gamedb")
 	skynet.monitor('node_monitor')
 	skynet.newservice('chat_listener')
+	skynet.newservice('rpc_proxy')
 	
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 

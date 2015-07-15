@@ -109,6 +109,7 @@ function M.create_role(name, gender)
     role.account = Env.account
     role.uuid = new_uuid
     
+    role.base.uid = Env.uid
     role.base.name = name or 'anonym'
     role.base.gender = gender or 1
     role.base.exp = 0

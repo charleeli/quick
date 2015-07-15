@@ -63,12 +63,12 @@ function Cmd.offline(uid)
 end
 
 function Cmd.query(uid)
-    local find = _get_user(uid)
-    if not find then
-        return Skynet.retpack({errcode = ERRNO.E_OK})
+    local user = _get_user(uid)
+    if not user then
+        return Skynet.retpack{errcode = ERRNO.E_ROLE_NOT_ONLINE}
     end
 
-    return Skynet.retpack({errcode = ERRNO.E_OK, agent=find.agent})
+    return Skynet.retpack({errcode = ERRNO.E_OK, user = user})
 end
 
 function Cmd.clear_node(node)

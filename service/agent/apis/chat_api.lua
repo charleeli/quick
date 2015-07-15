@@ -99,7 +99,7 @@ function apis:send_private_chat(to_uuid, msg_data)
     
     local to_name = ""
     local ret = UscClient.query_basic(to_uuid)
-    if ret.errcode ~= ERRNO.E_OK then
+    if ret.errcode == ERRNO.E_OK then
         to_name = ret.base.name
     end
     
