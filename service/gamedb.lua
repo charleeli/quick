@@ -1,5 +1,5 @@
 local Skynet = require 'skynet'
-require 'skynet.manager'
+local Config = require 'config'
 local Mongo = require "mongo"
 local MongoObj = require 'mongo_obj'
 
@@ -37,19 +37,23 @@ function CMD.get_role_count()
     return Skynet.retpack(c:count())
 end
 
-local function init_db()
-    local db_cfg = Skynet.getenv('gamedb')
+local function get_mongodb(name)
+    local mdb_file = Skynet.getenv('database')
+    local mdb_cfg = Config(mdb_file)
+    local db_cfg = mdb_cfg[name] 
     if not db_cfg then
-        error("no game db cfg!")
+        return nil
     end
-    
-    local f, err = load("return "..db_cfg)
-    assert(f)    
-    
-    local ok, conf = pcall(f)
-    assert(ok and type(conf) == 'table')
+    return db_cfg
+end
 
-    db = MongoObj.new(conf)
+local function init_db()
+    local db_cfg = get_mongodb('gamedb')
+    if not db_cfg then
+        error("no gamedb cfg!")
+    end
+
+    db = MongoObj.new(db_cfg)
 end
 
 Skynet.start(function()

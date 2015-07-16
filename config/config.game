@@ -16,6 +16,8 @@ cluster = "./config/clustername.lua"
 nodename = "game"  
 --集群中心节点配置文件     
 center = './config/centernode.lua'
+--集群的数据库配置文件
+database = './config/config.database'
 
 log_dirname = "log"
 log_basename = "game"
@@ -63,9 +65,6 @@ open_server_time = [[{
     min = 16,--分
     sec = 56,--秒
 }]]
-
--- 角色数据库
-gamedb = "{host='127.0.0.1', port=27017, db='quick'}"
 
 port = 5189					-- 监听端口
 maxclient = 100				-- 最大连接数
