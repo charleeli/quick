@@ -215,6 +215,35 @@ function Cmd.shutdown()
     Skynet.abort()
 end
 
+function Cmd.reload_res()
+    LOG_INFO("system begin reload_res")
+    
+    local count = 0
+    local result = {}
+    
+    for node_name, info in pairs(node_monitors) do
+        local ok, ret = pcall(
+            Cluster.call,node_name, info.addr, 'reload_res'
+        )
+        
+        if not ok then
+            LOG_ERROR(
+                "reload_res fail, node:<%s>, err<%s>",
+                node_name, ret
+            )
+        end
+        
+        count = count + 1
+        table.insert(result,{
+            node = node_name,
+            reloaded = ret.errcode == ERRNO.E_OK
+        })
+    end
+
+    LOG_INFO("system end reload_res")
+    Skynet.retpack({errcode = ERRNO.E_OK, result = result})
+end
+
 Skynet.start(function ()
     Skynet.dispatch("lua", function(session, addr, cmd, ...)
         local f = assert(Cmd[cmd], cmd)

@@ -6,13 +6,11 @@ local ServiceStateClient = require "client.service_state"
 skynet.start(function()
     local log = skynet.uniqueservice("log")
 	skynet.call(log, "lua", "start")
-	
-	skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
-	skynet.newservice("res_mgr")
-	skynet.newservice("service_state")
-	
 	skynet.uniqueservice("sproto_loader")
 	skynet.uniqueservice("crab_loader")
+	
+	skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
+	skynet.newservice("service_state")
 	skynet.uniqueservice("gamedb")
 	skynet.monitor('node_monitor')
 	skynet.newservice('chat_listener')
@@ -27,6 +25,8 @@ skynet.start(function()
 	    skynet.uniqueservice(true, 'mailbox')
 	    skynet.uniqueservice(true, 'usc')
 	end
+	
+	skynet.newservice("res_mgr")
 
 	local gate = skynet.uniqueservice("gated")		-- 启动游戏服务器
 	skynet.call(gate, "lua", "init")				-- 初始化，预先分配若干agent

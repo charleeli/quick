@@ -160,6 +160,21 @@ function Cmd.close_node()
     Skynet.abort()
 end
 
+function Cmd.reload_res()
+    for _addr, _name in pairs(services_monitered) do
+        if _name == 'res_mgr' then
+            LOG_INFO(
+                "reload_res, service_addr<%s>, service_name<%s>", 
+                _addr, _name
+            )
+            
+            Skynet.call(_addr,'lua', "reload_res")
+        end
+    end
+    
+    Skynet.retpack({errcode = ERRNO.E_OK})
+end
+
 Skynet.register_protocol {
     name = "client",
     id = 3,

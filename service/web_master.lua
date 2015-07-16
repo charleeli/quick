@@ -3,6 +3,7 @@ local socket = require "socket"
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
+local json = require "json"
 local ClusterMonitorClient = require 'client.cluster_monitor'
 
 local function response(id, ...)
@@ -19,8 +20,15 @@ local function quick_shutdown(args)
     return "the whole quick cluster will shutdown\n"
 end
 
+local function quick_reload_res(args)
+    LOG_INFO('request the whole quick cluster reload_res')
+    local ret = ClusterMonitorClient.reload_res()
+    return json:encode(ret.result)
+end
+
 local Cmd = {
-    ['shutdown'] = quick_shutdown --http://0.0.0.0:8080/quick?cmd=shutdown
+    ['shutdown']    = quick_shutdown, --http://0.0.0.0:8080/quick?cmd=shutdown
+    ['reload_res']  = quick_reload_res, --http://0.0.0.0:8080/quick?cmd=reload_res
 }
 
 skynet.start(function()

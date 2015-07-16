@@ -20,4 +20,8 @@ function M.shutdown(...)
     return _call('shutdown', ...)
 end
 
+function M.reload_res(...)
+    return _call('reload_res', ...)
+end
+
 return M
