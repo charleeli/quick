@@ -4,9 +4,12 @@ local Connector = require 'connector'
 local OnlineClient = require 'client.online'
 local ServiceStateClient = require "client.service_state"
 local ClusterMonitorClient = require 'client.cluster_monitor'
-local Quick = require 'quick'
 
-local _call_gated = Quick.caller('gated')
+local _call_gated = function(api, ...)
+    local ok, ret = pcall(Cluster.call, NODE_NAME, 'gated', api, ...)
+    if ok then return ret end
+    return {errcode = ERRNO.E_SERVICE_UNAVAILABLE, errdata=ret}
+end
 
 local is_shutdown = false
 local services_monitered = {}

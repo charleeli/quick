@@ -1,6 +1,6 @@
 local Skynet = require 'skynet'
 local Acceptor = require 'acceptor'
-local Quick = require 'quick'
+local Cluster = require "cluster"
 
 --{uid:{node,agent,uid,subid,timestamp}}
 local users = {} 
@@ -119,7 +119,7 @@ function Cmd.kick(uid, reason)
     local user = _get_user(uid)
     if not user then
         LOG_INFO("kick user<%s> not find", uid)
-        return Skynet.retpack({errcode = ERRNO.E_OK, ret = true})
+        return Skynet.retpack({errcode = ERRNO.E_ROLE_NOT_ONLINE, ret = true})
     end
 
     local node = user.node
@@ -128,21 +128,25 @@ function Cmd.kick(uid, reason)
         uid, node, reason
     )
     
-    local _call = Quick.caller('gated')
+    local _call_gated = function(api, ...)
+        local ok, ret = pcall(Cluster.call, node, 'gated', api, ...)
+        if ok then return ret end
+        return {errcode = ERRNO.E_SERVICE_UNAVAILABLE, errdata=ret}
+    end
 
-    local ok, ret = pcall(_call, 'kick', user.uid, user.subid)
+    local ok, ret = pcall(_call_gated, 'kick', user.uid, user.subid)
     if not ok then
         LOG_INFO(
             'kick fail, user<%s> node<%s> reason<%s>, err<%s>',
             user.uid, node, reason, ret
         )
         
-        return Skynet.retpack({errcode = ERRNO.E_OK, ret=false})
+        return Skynet.retpack({errcode = ERRNO.E_ERROR, ret=false})
     end
     
     LOG_INFO(
-        'kick suc, user<%s> node<%s> reason:<%s>, ret<%s>',
-        user.uid, node, reason, ret
+        'kick, uid<%s> subid<%s> node<%s> reason:<%s>, ret<%s>',
+        user.uid, user.subid,node, reason, ret
     )
     
     return Skynet.retpack({errcode = ERRNO.E_OK, ret = ret})

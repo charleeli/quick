@@ -4,6 +4,7 @@ local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
 local json = require "json"
+local OnlineClient = require 'client.online'
 local ClusterMonitorClient = require 'client.cluster_monitor'
 
 local function response(id, ...)
@@ -26,9 +27,21 @@ local function quick_reload_res(args)
     return json:encode(ret.result)
 end
 
+local function quick_kick(args)
+    LOG_INFO('request the whole quick cluster kick')
+    
+    local ret = OnlineClient.kick(tonumber(args.uid),"force kick")
+    if ret.errcode ~= ERRNO.E_OK then
+        LOG_INFO("kick uid<%s> fail,errcode<%s>",uid,ret.errcode)
+    end
+    
+    return json:encode(ret)
+end
+
 local Cmd = {
-    ['shutdown']    = quick_shutdown, --http://0.0.0.0:8080/quick?cmd=shutdown
+    ['shutdown']    = quick_shutdown,   --http://0.0.0.0:8080/quick?cmd=shutdown
     ['reload_res']  = quick_reload_res, --http://0.0.0.0:8080/quick?cmd=reload_res
+    ['kick']        = quick_kick,       --http://0.0.0.0:8080/quick?cmd=kick&uid=6
 }
 
 skynet.start(function()

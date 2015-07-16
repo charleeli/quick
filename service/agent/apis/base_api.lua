@@ -33,7 +33,7 @@ function apis:daily_update()
     LOG_INFO("daily update begin")
     
     self._role_orm.base.daily_update_time = Date.second()
-    self.messager:pub(Const.EVT_DAILY_UPDATE)
+    self.message:pub(Const.EVT_DAILY_UPDATE)
     Notify.daily_update()
     
     LOG_INFO("daily update end")
@@ -41,7 +41,7 @@ end
 
 function apis:check_cron_update()
     if self:_need_daily_update() then
-        Env.role:lock_session('daily_update')
+        self:lock_session('daily_update')
     end
 end
 
