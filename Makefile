@@ -75,7 +75,7 @@ $(BUILD_CSERVICE_DIR) :
 $(BUILD_CLIB_DIR) :
 	mkdir $(BUILD_CLIB_DIR)
 	
-$(BUILD_LUACLIB_DIR)/lenet.so : 3rd/lua-enet/enet.c  | $(BUILD_LUACLIB_DIR)
+$(BUILD_LUACLIB_DIR)/lenet.so : lualib-src/lua-enet.c  | $(BUILD_LUACLIB_DIR)
 	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet 
 	
 $(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c  | $(BUILD_LUACLIB_DIR)
