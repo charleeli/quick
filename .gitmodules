@@ -13,3 +13,6 @@
 [submodule "3rd/enet"]
 	path = 3rd/enet
 	url = https://github.com/lsalzman/enet.git
+[submodule "3rd/lua-enet"]
+    path = 3rd/lua-enet
+    url = https://github.com/charleeli/lua-enet.git
