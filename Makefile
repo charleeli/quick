@@ -58,7 +58,7 @@ skynet : skynet/Makefile
 	cp 3rd/skynet/skynet-src/skynet_env.h $(BUILD_INCLUDE_DIR)
 	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
 	
-LUACLIB = log ctime lfs lcrab lenet
+LUACLIB = log ctime lfs lcrab enet lsocket lutil
 CSERVICE = zinc_client
 
 all : \
@@ -75,10 +75,16 @@ $(BUILD_CSERVICE_DIR) :
 $(BUILD_CLIB_DIR) :
 	mkdir $(BUILD_CLIB_DIR)
 	
-$(BUILD_LUACLIB_DIR)/lenet.so : lualib-src/lua-enet.c  | $(BUILD_LUACLIB_DIR)
+$(BUILD_LUACLIB_DIR)/lsocket.so:3rd/lsocket/lsocket.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
+	
+$(BUILD_LUACLIB_DIR)/lutil.so: lualib-src/lua-util.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+	
+$(BUILD_LUACLIB_DIR)/enet.so : lualib-src/lua-enet.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet 
 	
-$(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c  | $(BUILD_LUACLIB_DIR)
+$(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lcrab 
 
 $(BUILD_LUACLIB_DIR)/log.so : lualib-src/lua-log.c | $(BUILD_LUACLIB_DIR)
