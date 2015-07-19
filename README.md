@@ -1,3 +1,10 @@
+## Build
+```
+git clone https://github.com/charleeli/quick.git
+cd quick
+make
+```
+
 ## Test
 ```
 安装 mongo mysql
@@ -13,8 +20,11 @@
 ./3rd/skynet/skynet config/config.game
 ./3rd/skynet/skynet config/config.game2
 
+cd ./battle
+../build/bin/lua main.lua
+
 cd ./tools
-lua client.lua
-lua client2.lua
+../build/bin/lua client.lua
+../build/bin/lua client2.lua
 ```
 
