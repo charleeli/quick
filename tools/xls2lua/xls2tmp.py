@@ -16,9 +16,11 @@ from collections import defaultdict
 from xlrd import open_workbook, XLRDError
 import unicodecsv as csv
 
+
 if not sys.stdout.encoding:
     reload(sys)
     sys.setdefaultencoding("utf-8")
+
 
 if sys.stderr.encoding == 'cp936':
     class UnicodeStreamFilter(object):
@@ -70,7 +72,6 @@ def csv_from_excel(xls_name):
             for rownum in range(sheet.nrows):
                 writer.writerow(sheet.row_values(rownum))
 
-#基础类型
 type_tbl = {
     'int': int,
     'float': float,
@@ -94,9 +95,9 @@ row_values_ = {}
 def cell_to_value(col_type, value):
     if col_type.startswith('struct'):
         templates = col_type.split("(")[1].split(")")[0]
-        template_lst = templates.split(",")
+        template_lst = templates.split("|")
         values = value.strip()
-        value_lst = values.split(",")
+        value_lst = values.split("|")
 
         value = {}
         for i, j in enumerate(template_lst):
@@ -191,7 +192,6 @@ def sheet_to_dict(sheet):
     list_name_tbl = defaultdict(list)
     for i, name in enumerate(name_row):
         if name.find('|') != -1:
-            #print(name)
             list_name_tbl[name].append(i)
         else:
             normal_name_tbl[name] = i

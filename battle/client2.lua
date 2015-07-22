@@ -21,7 +21,7 @@ while true do
 		end
 	end
 	
-	local data = '{"uuid":"55a73e95e428a67e8e5e1189"}'
+	local data = '{"uuid":"55a79566e428a6ad2b9f4ad9"}'
 
 	if count == 4 then
 	    print (string.format("sending message:%s",data))

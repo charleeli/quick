@@ -14,4 +14,8 @@ ERRNO = {
 	E_LOGIN_CONFLICT            = -12,      -- 登陆冲突
 	E_ROLE_NOT_EXISTS           = -13,		-- 玩家角色不存在
 	E_ROLE_NOT_ONLINE           = -14,		-- 玩家角色不在线
+	E_ROLE_NOT_IN_LOBBY         = -15,		-- 战斗大厅里没这个人
+	E_STAGE_NOT_EXIST           = -16,		-- 关卡不存在
+	E_ROOM_NOT_EXIST            = -17,		-- 房间不存在
+	E_ROLE_NOT_IN_CACHE         = -18,		-- 战斗缓存里没这个人
 }

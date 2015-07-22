@@ -58,4 +58,14 @@ M.VIRTUAL_NAME2ID = {
     gold = 1004,
     sign_score = 1005,
 }
+
+M.VIRTUAL_ID2NAME = {
+    [1000] = "coupon",
+    [1001] = "exp",
+    [1002] = "level",
+    [1003] = "vip",
+    [1004] = "gold",
+    [1005] = "sign_score",
+}
+    
 return M

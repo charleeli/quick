@@ -29,5 +29,11 @@ M.ResignCost    = require_file 'resign_cost'
 M.FullDutyAward = require_file 'full_duty_award'
 --sign system end
 
+--stage system start
+M.Stage         = require_file "stage"
+M.StageDrop     = require_file "stage_drop"
+M.SubDrop       = require_file "sub_drop"
+--stage system end
+
 return M
 

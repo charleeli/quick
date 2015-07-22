@@ -1,0 +1,13 @@
+.RoomInfo {
+    room_id 0: integer
+}
+
+.RoomRole {
+    uuid 0: string
+}
+
+.RoomDetail {
+    room_id 0: integer
+    roles   1: *RoomRole
+}
+

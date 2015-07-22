@@ -4,6 +4,9 @@ local Loader = require 'mongo_loader'
 local Message = require 'message'
 local Const = require 'const'
 local Env = require 'global'
+local Notify = require 'notify'
+local LobbyClient = require 'client.lobby'
+local BattleProxyClient = require 'client.battle_proxy'
 
 local Role = class()
 
@@ -89,6 +92,14 @@ end
 function Role:online()
     LOG_INFO("role online begin")
     self.message:pub(Const.EVT_ONLINE)
+    
+    LobbyClient.register(NODE_NAME, skynet.self(), self:get_uuid())
+    
+    skynet.fork(function()
+        local t = BattleProxyClient.query_udp_addr()
+        Notify.notify_udp_addr(t.udp_ip, t.udp_port)
+    end)
+    
     LOG_INFO("role online end")
 end
 
@@ -98,6 +109,8 @@ function Role:_offline()
     Env.timer_mgr:stop()
 
     self.message:pub(Const.EVT_OFFLINE_BEGIN)
+    
+    LobbyClient.unregister(self:get_uuid())
     
     LOG_INFO("session lock quit begin")
     Env.session_lock:lock_quit()

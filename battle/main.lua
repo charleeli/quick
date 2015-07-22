@@ -65,7 +65,7 @@ local function _bs2gs_send(sock, data)
 end
 
 local function _gs2bs_logic(sock, ptype, plength, pcontent)
-    if ptype == GsBsCmd.APPLY_BATTLE then
+    if ptype == GsBsCmd.APPLY_TEAM_BATTLE then
         local t = Json:decode(pcontent)
         local room_id = math.floor(t.room_id)
         local uuid_list = t.uuid_list
@@ -110,7 +110,7 @@ local function _gs2bs_logic(sock, ptype, plength, pcontent)
         end
       
         local send_data = Json:encode(result)
-        local send_type = Lutil.uint322netbytes(GsBsCmd.APPLY_BATTLE_RESULT)
+        local send_type = Lutil.uint322netbytes(GsBsCmd.APPLY_TEAM_BATTLE_RESULT)
         local send_length = Lutil.uint322netbytes(#send_data)
         _bs2gs_send(sock, send_type .. send_length .. send_data)
     end
@@ -145,7 +145,7 @@ local function _tcp_work(tcp_server_sock)
 			local str, err = sock:recv()
 			if str ~= nil then
 				print("recv from "..info[1]..":"..info[2])
-				_gs2bs_cmd(s, str)
+				_gs2bs_cmd(sock, str)
 			elseif err == nil then
 				print("client "..info[1]..":"..info[2].." disconnected")
 				sock:close()
@@ -176,7 +176,7 @@ local function _client2bs_cmd(event)
     local peer = event.peer
     local t = Json:decode(data)
     local uuid = t.uuid
-  
+
     local user = userinfo[uuid]
     if not user then
         user = {peer = peer}

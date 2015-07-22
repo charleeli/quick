@@ -16,12 +16,12 @@ make
 启动redis
 ./tools/redis.sh
 
+cd ./battle
+../build/bin/lua main.lua
+
 ./3rd/skynet/skynet config/config.login
 ./3rd/skynet/skynet config/config.game
 ./3rd/skynet/skynet config/config.game2
-
-cd ./battle
-../build/bin/lua main.lua
 
 cd ./tools
 ../build/bin/lua client.lua

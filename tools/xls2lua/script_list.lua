@@ -10,4 +10,7 @@ return {
     { {'resign_count'},         'resign_count'              },
     { {'resign_cost'},          'resign_cost'               },
     { {'full_duty_award'},      'full_duty_award',      true},
+    { {'stage'},                'stage'                     },
+    { {'stage_drop'},           'stage_drop',           true},
+    { {'sub_drop'},             'sub_drop'                  },
 }

@@ -6,6 +6,7 @@ local lfs = require"lfs"
 local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
 local Env = require 'global'
+local Cmd = require 'command'
 local RoleApi = require 'apis.role_api'
 local OnlineClient = require 'client.online'
 
@@ -230,10 +231,14 @@ skynet.register_protocol {
 }
 
 skynet.start(function()
-	-- If you want to fork a work thread , you MUST do it in CMD.login
+    -- If you want to fork a work thread , you MUST do it in CMD.login
 	skynet.dispatch("lua", function(session, source, command, ...)
-		local f = assert(CMD[command])
-		skynet.retpack(cs(f, source, ...))
+		if Cmd[command] then 
+		    Cmd[command](...)
+		else
+		    local f = assert(CMD[command],string.format('illegal command:%s',command))
+		    skynet.retpack(cs(f, source, ...))
+	    end
 	end)
 	
 	load_request_handlers()

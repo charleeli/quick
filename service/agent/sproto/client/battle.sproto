@@ -1,0 +1,73 @@
+# [agent] ------ [600, 699) ------
+enter_single_battle 601 {
+    request {
+        stage_id 0: integer
+    }
+
+    response {
+        errcode 0: integer
+        drop 1: BattleDrop
+    }
+}
+
+end_single_battle 602 {
+    request {
+        is_complete 0: integer
+    }
+
+    response {
+        errcode 0: integer
+        settle 1: BattleSettle
+    }
+}
+
+apply_team_battle 603 {
+    request {
+        stage_id 0: integer
+    }
+
+    response {
+        errcode 0: integer
+    }
+}
+
+enter_team_battle 604 {
+    response {
+        errcode 0: integer
+        seed 1: integer
+        role_list 2: *Role
+        drop 3: BattleDrop
+    }
+}
+
+send_team_battle_event 605 {
+    request {
+        event 0: BattleEvent
+    }
+
+    response {
+        errcode 0: integer
+    }
+}
+
+team_apply_control 606 {
+    request {
+        apply_list 0: *integer
+    }
+
+    response {
+        errcode 0: integer
+    }
+}
+
+end_team_battle 607 {
+    request {
+        is_complete 0: integer
+    }
+
+    response {
+        errcode 0: integer
+        settle 1: BattleSettle
+    }
+}
+
