@@ -16,6 +16,7 @@ skynet.start(function()
 	skynet.newservice('chat_listener')
 	skynet.newservice('rpc_proxy')
 	skynet.newservice("res_mgr")
+	skynet.newservice("ranking")
 	
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 

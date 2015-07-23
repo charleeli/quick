@@ -20,6 +20,8 @@ center = './config/centernode.lua'
 database = './config/config.database'
 --战斗同步服务器配置文件
 battle = './config/config.battle'
+--排行榜配置文件
+ranking= './config/config.ranking'
 
 log_dirname = "log"
 log_basename = "game2"
