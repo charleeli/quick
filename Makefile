@@ -16,7 +16,7 @@ BUILD_STATIC_LIB_DIR =  $(BUILD_DIR)/static_lib
 BUILD_CLIB_DIR =        $(BUILD_DIR)/clib
 BUILD_CSERVICE_DIR =    $(BUILD_DIR)/cservice
 
-all : build skynet libenet.so libcrab.so lua53
+all : build skynet libenet.so libcrab.so lua53 redis
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -47,6 +47,12 @@ lua53:
 	install -p -m 0644 3rd/skynet/3rd/lua/lauxlib.h $(BUILD_INCLUDE_DIR)
 	install -p -m 0644 3rd/skynet/3rd/lua/lualib.h $(BUILD_INCLUDE_DIR)
 	install -p -m 0644 3rd/skynet/3rd/lua/luaconf.h $(BUILD_INCLUDE_DIR)
+	
+redis:
+	cd 3rd/redis/ && make
+	install -p -m 0755 3rd/redis/src/redis-cli $(BUILD_BIN_DIR)/redis-cli
+	install -p -m 0755 3rd/redis/src/redis-server $(BUILD_BIN_DIR)/redis-server
+	install -p -m 0755 3rd/redis/src/redis-benchmark $(BUILD_BIN_DIR)/redis-benchmark
 
 skynet/Makefile :
 	git submodule update --init
@@ -123,4 +129,5 @@ clean :
 	-rm -rf build
 	-rm -rf log
 	cd 3rd/skynet && $(MAKE) clean
+	cd 3rd/redis && $(MAKE) clean
 	

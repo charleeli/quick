@@ -1,10 +1,10 @@
 #!/bin/bash
-./config/redis/redis-server ./config/redis/redis1.conf
-./config/redis/redis-server ./config/redis/redis2.conf
-./config/redis/redis-server ./config/redis/redis3.conf
-./config/redis/redis-server ./config/redis/redis4.conf
-./config/redis/redis-server ./config/redis/redis5.conf
-./config/redis/redis-server ./config/redis/redis6.conf
-./config/redis/redis-server ./config/redis/redis7.conf
-./config/redis/redis-server ./config/redis/redis8.conf
+./build/bin/redis-server ./config/redispool/redis1.conf
+./build/bin/redis-server ./config/redispool/redis2.conf
+./build/bin/redis-server ./config/redispool/redis3.conf
+./build/bin/redis-server ./config/redispool/redis4.conf
+./build/bin/redis-server ./config/redispool/redis5.conf
+./build/bin/redis-server ./config/redispool/redis6.conf
+./build/bin/redis-server ./config/redispool/redis7.conf
+./build/bin/redis-server ./config/redispool/redis8.conf
 

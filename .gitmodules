@@ -16,3 +16,6 @@
 [submodule "3rd/lsocket"]
 	path = 3rd/lsocket
 	url = https://github.com/cloudwu/lsocket.git
+[submodule "3rd/redis"]
+	path = 3rd/redis
+	url = https://github.com/antirez/redis.git
