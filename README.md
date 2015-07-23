@@ -1,5 +1,10 @@
 ## Build
 ```
+sudo apt-get install autoconf
+sudo apt-get install libreadline-dev
+sudo apt-get install git
+sudo apt-get install gitg
+
 git clone https://github.com/charleeli/quick.git
 cd quick
 make
@@ -7,7 +12,9 @@ make
 
 ## Test
 ```
-安装 mongo
+安装 MongoDB[http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/]
+安装 Robomongo[http://robomongo.org/]
+安装 Redis Desktop Manager [http://redisdesktop.com/]
 
 启动账号中心服务器
 ./build/bin/redis-server ./config/redis/accountdc.conf
@@ -16,8 +23,7 @@ make
 ./build/bin/redis-server ./config/redis/ranking.conf
 
 启动战斗同步服务器
-cd ./battle
-../build/bin/lua main.lua
+./build/bin/lua ./battle/main.lua
 
 启动登陆服和游戏服
 ./3rd/skynet/skynet config/config.login

@@ -6,16 +6,16 @@ local config = require "config"
 local db
 
 function init(...)
-    local ranking_file = skynet.getenv('accountdc')
-    local cfg = config(ranking_file)
-    local ranking_cfg = cfg['redis']
+    local accountdc_file = skynet.getenv('accountdc')
+    local cfg = config(accountdc_file)
+    local accountdc_cfg = cfg['redis']
 
     db = assert(redis.connect{
-	    host = ranking_cfg.host,
-	    port = ranking_cfg.port,
+	    host = accountdc_cfg.host,
+	    port = accountdc_cfg.port,
 	    db = 0,
-	    auth = ranking_cfg.auth,
-    },'ranking redis connect error')
+	    auth = accountdc_cfg.auth,
+    },'accountdc redis connect error')
 end
 
 function exit(...)
