@@ -1,3 +1,6 @@
+## Quick
+OS: Ubuntu 14.04+
+
 ## Build
 ```
 sudo apt-get install autoconf
@@ -12,9 +15,9 @@ make
 
 ## Test
 ```
-安装 MongoDB[http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/]
-安装 Robomongo[http://robomongo.org/]
-安装 Redis Desktop Manager [http://redisdesktop.com/]
+安装 Redis Desktop Manager (http://redisdesktop.com/)
+安装 MongoDB(http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
+安装 Robomongo(http://robomongo.org/)
 
 启动账号中心服务器
 ./build/bin/redis-server ./config/redis/accountdc.conf
