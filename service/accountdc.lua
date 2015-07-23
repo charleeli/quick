@@ -1,35 +1,51 @@
 local skynet = require "skynet"
 local snax = require "snax"
-local entity = require "Entity"
+local redis = require "redis"
+local config = require "config"
 
-local EntAccount
+local db
 
 function init(...)
-	EntAccount = entity.Get("d_account")
-	EntAccount:Init()
-	EntAccount:Load()
+    local ranking_file = skynet.getenv('accountdc')
+    local cfg = config(ranking_file)
+    local ranking_cfg = cfg['redis']
+
+    db = assert(redis.connect{
+	    host = ranking_cfg.host,
+	    port = ranking_cfg.port,
+	    db = 0,
+	    auth = ranking_cfg.auth,
+    },'ranking redis connect error')
 end
 
 function exit(...)
 
 end
 
-function response.add(row)
-	return EntAccount:Add(row)
+function response.get_nextid()
+	return db:incr('nextid')
 end
 
-function response.delete(row)
-	return EntAccount:Delete(row)
+function response.add(row)
+    local data = {}
+	for k, v in pairs(row) do
+		table.insert(data, k)
+		table.insert(data, v)
+	end
+
+    local key = row.sdkid..':'..row.pid
+	local result = db:hmset(key, table.unpack(data))
+    if result ~= 'OK' then
+        return false
+    end
+
+    return true
 end
 
 function response.get(sdkid, pid)
-	return EntAccount:Get(sdkid, pid)
+    local key = sdkid..':'..pid
+    local result = db:hgetall(key)
+
+	return result
 end
 
-function response.update(row)
-	return EntAccount:Update(row)
-end
-
-function response.get_nextid()
-	return EntAccount:GetNextId()
-end

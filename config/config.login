@@ -9,6 +9,9 @@ bootstrap = "snlua bootstrap"	-- The service for bootstrap
 -- 集群名称配置文件
 cluster = "./config/clustername.lua"
 
+--账号中心配置文件
+accountdc= './config/config.accountdc'
+
 log_dirname = "log"
 log_basename = "login"
 

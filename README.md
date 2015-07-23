@@ -7,17 +7,13 @@ make
 
 ## Test
 ```
-安装 mongo mysql
+安装 mongo
 
-将tools/quick.sql导入到mysql
-
-配置config/config.login中mysql连接信息
-
-启动redis缓存池
-./tools/redis.sh
+启动账号中心服务器
+./build/bin/redis-server ./config/redis/accountdc.conf
 
 启动排行榜服务器
-./build/bin/redis-server ./config/ranking.conf
+./build/bin/redis-server ./config/redis/ranking.conf
 
 启动战斗同步服务器
 cd ./battle

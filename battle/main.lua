@@ -1,5 +1,5 @@
-package.cpath = "../3rd/skynet/luaclib/?.so;../build/luaclib/?.so"
-package.path = package.path..';'.."../lualib/?.lua;../lualib/preload/?.lua"
+package.cpath = "./3rd/skynet/luaclib/?.so;./build/luaclib/?.so"
+package.path = package.path..';'.."./lualib/?.lua;./lualib/preload/?.lua"
 require "luaext"
 
 local Lsocket = require "lsocket"
@@ -7,12 +7,12 @@ local Lutil = require "lutil"
 local Enet = require 'enet'
 local Json = require 'json'
 local Cfg = require 'config'
-local GsBsCmd = require 'gsbscmd'
-local BufferMgr = require 'buffer_mgr'
+local GsBsCmd = require 'battle.gsbscmd'
+local BufferMgr = require 'battle.buffer_mgr'
 
 local BS_KEEP_RUN = true
 
-local cfg = Cfg('../config/config.battle')
+local cfg = Cfg('./config/config.battle')
 local TCP_ADDR = cfg.tcp.ip
 local TCP_PORT = cfg.tcp.port
 local TCP_BUFFER_ID = 1
