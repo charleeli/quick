@@ -1,8 +1,10 @@
-## Quick
-OS: Ubuntu 14.04+
-
 ## Build
 ```
+安装 [ubuntu 14.04.2 lts](http://www.ubuntu.com/download/desktop)
+安装 [redis desktop manager](http://redisdesktop.com/)
+安装 [mongo](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
+安装 [robomongo](http://robomongo.org/)
+
 sudo apt-get install autoconf
 sudo apt-get install libreadline-dev
 sudo apt-get install git
@@ -15,10 +17,6 @@ make
 
 ## Test
 ```
-安装 Redis Desktop Manager (http://redisdesktop.com/)
-安装 MongoDB(http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
-安装 Robomongo(http://robomongo.org/)
-
 启动账号中心服务器
 ./build/bin/redis-server ./config/redis/accountdc.conf
 
@@ -28,7 +26,7 @@ make
 启动战斗同步服务器
 ./build/bin/lua ./battle/main.lua
 
-启动登陆服和游戏服
+启动登陆服务器和游戏服务器
 ./3rd/skynet/skynet config/config.login
 ./3rd/skynet/skynet config/config.game
 ./3rd/skynet/skynet config/config.game2
@@ -38,4 +36,3 @@ cd ./tools
 ../build/bin/lua client.lua
 ../build/bin/lua client2.lua
 ```
-

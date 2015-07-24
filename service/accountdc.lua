@@ -5,6 +5,24 @@ local config = require "config"
 
 local db
 
+function make_pairs_table(t, fields)
+	assert(type(t) == "table", "make_pairs_table t is not table")
+
+	local data = {}
+
+	if not fields then
+		for i=1, #t, 2 do
+			data[t[i]] = t[i+1]
+		end
+	else
+		for i=1, #t do
+			data[fields[i]] = t[i]
+		end
+	end
+
+	return data
+end
+
 function init(...)
     local accountdc_file = skynet.getenv('accountdc')
     local cfg = config(accountdc_file)
@@ -44,7 +62,9 @@ end
 
 function response.get(sdkid, pid)
     local key = sdkid..':'..pid
+ 
     local result = db:hgetall(key)
+    result = make_pairs_table(result)
 
 	return result
 end
