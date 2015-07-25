@@ -1,10 +1,11 @@
+## Install
+        [ubuntu 14.04.2 lts](http://www.ubuntu.com/download/desktop)
+        [redis desktop manager](http://redisdesktop.com/)
+        [mongo](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
+        [robomongo](http://robomongo.org/)
+
 ## Build
 ```
-安装 [ubuntu 14.04.2 lts](http://www.ubuntu.com/download/desktop)
-安装 [redis desktop manager](http://redisdesktop.com/)
-安装 [mongo](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
-安装 [robomongo](http://robomongo.org/)
-
 sudo apt-get install autoconf
 sudo apt-get install libreadline-dev
 sudo apt-get install git

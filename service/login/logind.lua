@@ -50,7 +50,7 @@ local function auth(token, sdkid)
 		uid = account.id
 	end
 
-	return uid
+	return tonumber(uid)
 end
 
 function server.auth_handler(args)
