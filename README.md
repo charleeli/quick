@@ -1,8 +1,8 @@
 ## Install
-        [ubuntu 14.04.2 lts](http://www.ubuntu.com/download/desktop)
-        [redis desktop manager](http://redisdesktop.com/)
-        [mongo](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
-        [robomongo](http://robomongo.org/)
+    [ubuntu 14.04.2 lts](http://www.ubuntu.com/download/desktop)
+    [redis desktop manager](http://redisdesktop.com/)
+    [mongo](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
+    [robomongo](http://robomongo.org/)
 
 ## Build
 ```

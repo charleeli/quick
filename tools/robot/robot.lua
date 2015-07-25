@@ -1,7 +1,10 @@
-package.cpath = "../../3rd/skynet/luaclib/?.so;../../build/luaclib/?.so"
+package.cpath = "../../3rd/skynet/luaclib/?.so;../../build/luaclib/?.so;../../3rd/levent/?.so"
 local service_path = "../../lualib/?.lua;" .. "../../service/?.lua;" .. "../../lualib/preload/?.lua"
-package.path = "../../3rd/skynet/lualib/?.lua;../../3rd/skynet/service/?.lua;" .. service_path
+package.path = "../../3rd/levent/?.lua;../../3rd/skynet/lualib/?.lua;../../3rd/skynet/service/?.lua;" .. service_path
 
+local levent = require "levent.levent"
+local queue  = require "levent.queue"
+local ctime = require "ctime"
 local netpack = require "netpack"
 local socket = require "clientsocket"
 local crypt = require "crypt"
@@ -41,6 +44,14 @@ function Robot:ctor()
     
     self.last = ""
     self.fd = nil
+    
+    self.sendCh = queue.queue()
+    self.recvCh = queue.queue()
+    self.account = ""
+    self.first_send_time = 0--第一个请求发送时间
+    self.last_send_time = 0 --最后一个请求发送时间
+    self.first_recv_time = 0--第一个请求接收时间
+    self.last_recv_time = 0 --最后一个请求接收时间
 end
 
 function Robot:send_package(pack)
@@ -119,6 +130,7 @@ function Robot:print_package(t, ...)
 end
 
 function Robot:dispatch_package()
+    local msg_type, session, resp
     while true do
         local v
         v, self.last = self:recv_package()
@@ -129,8 +141,15 @@ function Robot:dispatch_package()
         local size = #v - 5
         local content, ok, session = string.unpack("c"..tostring(size).."B>I4", v)
         
-        self:print_package(sproto_server:dispatch(content))
+        msg_type, session, resp = sproto_server:dispatch(content)
+        self:print_package(msg_type, session, resp)
+        if msg_type == "RESPONSE" then
+            return msg_type, session, resp
+        end
+        break
     end
+    
+    return msg_type, session, resp
 end
 
 local function unpack_f(f,self)
@@ -300,14 +319,55 @@ end
 
 function Robot:run_cmd(cmd, args)
     print('[COMMAND]', cmd, args)
+    if cmd == 'login' then
+        return login("dg56vs38", 1, true)
+    end
+    
     local ok, err = pcall(self.send_request, self, cmd, args)
     if not ok then
         print('run cmd fail', cmd, args, err)
         return false
     end
+    
+    --记录请求发送时间
+    local str = ""
+    if type(args) == 'table' then
+        for k,v in pairs(args) do
+            str = str..k.."="..v..","
+        end
+    end
+    
+    local send_time = ctime.timestamp()
+    if self.first_send_time == 0 then
+        self.first_send_time = send_time
+    end
+    self.last_send_time = send_time
+    
+    self.sendCh:put({cmd = cmd,args = str,session = self.session,send_time = send_time})
 
     if req_has_resp(sp_c2s, cmd) then
-        self:dispatch_package()
+        while true do
+            local msg_type, session, resp =  self:dispatch_package()
+            if msg_type == "RESPONSE" and session == self.session then
+                --记录响应接收时间
+                local recv_time = ctime.timestamp()
+                if self.first_recv_time == 0 then
+                    self.first_recv_time = recv_time
+                end
+                self.last_recv_time = recv_time
+                
+                self.recvCh:put({
+                    cmd = cmd,
+                    args = str,
+                    session = session,
+                    recv_time = recv_time,
+                    errcode= resp.errcode,
+                    elapse = recv_time - send_time,
+                })
+            
+                return true, resp 
+            end
+        end
     end
 end
 
@@ -330,6 +390,7 @@ end
 
 function Robot:console()
     print('enter console mode, please input cmd:')
+ 
     while true do
         self:dispatch_package()
         local s = socket.readstdin()
