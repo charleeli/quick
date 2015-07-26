@@ -171,10 +171,19 @@ local function _tcp_work(tcp_server_sock)
     end
 end
 
+function Json:onDecodeError(message, text, location, etc)
+    print('error: '..message..' , in text: '..text..' @byte '..location)
+    
+    if type(etc) == 'table' then
+        table.print(etc)
+    end
+end
+
 local function _client2bs_cmd(event)
     local data = event.data
     local peer = event.peer
     local t = Json:decode(data)
+    if not t then return end
     local uuid = t.uuid
 
     local user = userinfo[uuid]
