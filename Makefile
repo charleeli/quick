@@ -1,11 +1,5 @@
 .PHONY: all skynet clean
 
-PLAT ?= linux
-SHARED := -fPIC --shared
-CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR) 
-LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -pthread -lm -ldl -lrt
-DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
-
 TOP=$(PWD)
 BUILD_DIR =             build
 BUILD_BIN_DIR =         $(BUILD_DIR)/bin
@@ -15,6 +9,12 @@ BUILD_SPROTO_DIR =      $(BUILD_DIR)/sproto
 BUILD_STATIC_LIB_DIR =  $(BUILD_DIR)/static_lib
 BUILD_CLIB_DIR =        $(BUILD_DIR)/clib
 BUILD_CSERVICE_DIR =    $(BUILD_DIR)/cservice
+
+PLAT ?= linux
+SHARED := -fPIC --shared
+CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR) 
+LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -pthread -lm -ldl -lrt
+DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
 
 all : build skynet libenet.so libcrab.so lua53 redis
 
@@ -31,8 +31,9 @@ build:
 libenet.so:3rd/enet/callbacks.c 3rd/enet/compress.c 3rd/enet/host.c \
            3rd/enet/list.c 3rd/enet/packet.c 3rd/enet/peer.c \
            3rd/enet/protocol.c 3rd/enet/unix.c
-	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libenet.so 
 	cp -r 3rd/enet/include/enet/ $(BUILD_INCLUDE_DIR)/
+	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libenet.so 
+	
 	
 libcrab.so : 3rd/crab/crab.c
 	cp 3rd/crab/crab.h $(BUILD_INCLUDE_DIR)
