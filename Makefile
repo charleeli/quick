@@ -16,7 +16,7 @@ CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR)
 LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -pthread -lm -ldl -lrt
 DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
 
-all : build skynet libenet.so libcrab.so lua53 redis
+all : build skynet lua53 libenet.so libcrab.so redis
 
 build:
 	-mkdir $(BUILD_DIR)
