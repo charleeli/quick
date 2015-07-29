@@ -56,8 +56,21 @@ local function init_db()
     db = MongoObj.new(db_cfg)
 end
 
+local function init_index()
+    local role = db._db['role']
+    --给role集合建立索引
+    role:ensureIndex( { account = 1 },{ } )
+    role:ensureIndex( { uid = 1 }, { unique = true } )
+    role:ensureIndex( { uuid = 1 }, { unique = true } )
+
+    --给mailbox集合建立索引
+    local mailbox = db._db['mailbox']
+    mailbox:ensureIndex( { role_uuid = 1 }, { unique = true } )
+end
+
 Skynet.start(function()
     init_db()
+    init_index()
 
     Skynet.dispatch("lua", function(session, address, cmd, ...)
         local f = assert(CMD[cmd])
