@@ -36,4 +36,9 @@ make
 cd ./tools
 ../build/bin/lua client.lua
 ../build/bin/lua client2.lua
+
+命令行输入
+load_role
+view_sign
+gm  {cmd="set level 99"}
 ```
