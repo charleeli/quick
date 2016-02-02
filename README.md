@@ -19,9 +19,6 @@ make
 
 ## Test
 ```
-启动mongo服务器
-sudo mongod &
-
 启动账号中心服务器
 ./build/bin/redis-server ./config/redis/accountdc.conf
 
