@@ -6,6 +6,7 @@
 
 ## Build
 ```
+sudo apt-get install cmake
 sudo apt-get install autoconf
 sudo apt-get install libreadline-dev
 sudo apt-get install git
@@ -18,6 +19,9 @@ make
 
 ## Test
 ```
+启动mongo服务器
+sudo mongod &
+
 启动账号中心服务器
 ./build/bin/redis-server ./config/redis/accountdc.conf
 

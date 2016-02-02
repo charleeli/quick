@@ -20,3 +20,4 @@ core*
 *.tar.gz
 *.pid
 *.a
+.idea
