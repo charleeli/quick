@@ -49,7 +49,8 @@ lua_path = skynetroot .. "lualib/?.lua;" ..
 		   "./lualib/preload/?.lua;" ..
 		   "./lualib/entity/?.lua;"..
 		   "./service/agent/?.lua;"..
-		   "./service/?.lua"
+		   "./service/?.lua;"..
+		   "./build/lualib/?.lua"
 
 -- 将添加到 package.cpath 中的路径，供 require 调用。
 lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"

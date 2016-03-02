@@ -1,16 +1,17 @@
 local skynet = require "skynet"
+local snax = require "snax"
 local Cluster = require 'cluster'
-local Loader = require 'mongo_loader'
 local Lock = require 'lock'
 local SessionLock = require 'session_lock'
-local Factory = require 'factory'
 local Date = require 'date'
 local TimerMgr = require 'timer_mgr'
 local Const = require 'const'
 local Bson   = require 'bson'
 local Env = require 'global'
-local Res = require 'res'
-local Role = require 'crud.role'
+local Role = require 'cls.role'
+local td = require "td"
+
+local redis_cli
 
 local M = {}
 
@@ -83,7 +84,18 @@ function M.load_role()
         Env.account = tostring(Env.uid) --TODO:暂时第三方账号即为游戏服账号
         
         if not Env.role then
-            local role_orm = Loader.load_role(Env.account)
+            if not redis_cli then
+                redis_cli = snax.uniqueservice("redis_cli")
+            end
+            local raw_json_text = redis_cli.req.get(Env.account)
+
+            local role_orm
+            if not raw_json_text then
+                role_orm = M.create_role("charleeli", 1)
+            else
+                role_orm =  td.LoadFromJSON('Role',raw_json_text)
+            end
+
             if not role_orm then
                 M.create_role() -- TODO: 暂时帮忙创建
             else
@@ -102,7 +114,7 @@ function M.load_role()
 end
 
 function M.create_role(name, gender)
-    local role = Factory.create_obj(Loader.TYPE_ROLE)
+    local role = td.CreateObject('Role')
     local _,new_uuid = Bson.type(Bson.objectid())
     
     role.uid = Env.uid
@@ -119,16 +131,13 @@ function M.create_role(name, gender)
     role.base.coupon = 0
     role.base.sign_score = 0
 
-    local ret, detail = Loader.create_role(Env.account, role)
-    local retcode = 0
+    local ret = redis_cli.req.set(Env.account,td.DumpToJSON('Role', role))
+
     if not ret then
-        LOG_ERROR('ac: <%s> create fail: %s', Env.account, detail)
-        
-        if detail:find('duplicate key error index') ~= nil then
-            return {errcode = -1}
-        else
-            return {errcode = -2}
-        end
+        LOG_ERROR('ac: <%s> create fail', Env.account)
+
+        return {errcode = -2}
+
     end
 
     LOG_INFO(

@@ -1,4 +1,5 @@
 local Skynet = require "skynet"
+
 local ShareData = require "sharedata"
 local NodeMonitorClient = require 'client.node_monitor'
 

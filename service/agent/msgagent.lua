@@ -169,7 +169,7 @@ end
 local request_handlers = {}
 
 local function load_request_handlers()
-    local path = skynet.getenv('handlerpath') or './service/agent/handler'
+    local path = skynet.getenv('rpc_path') or './service/agent/rpc'
     for file in lfs.dir(path) do
         local _,suffix = file:match "([^.]*).(.*)"
         if suffix == 'lua' then

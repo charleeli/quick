@@ -4,9 +4,8 @@ local Bson = require 'bson'
 local Lcrab = require 'crab'
 local Const = require 'const'
 local Notify = require 'notify'
-local Factory = require 'factory'
-local Loader = require 'mongo_loader'
-local MailBox = require 'crud.mailbox'
+local td = require 'td'
+local MailBox = require 'cls.mailbox'
 local MailboxClient = require 'client.mailbox'
 
 local function _check_message(subject, content)
@@ -80,7 +79,7 @@ function apis:read_mail(mail_uuid, mail_type)
 end
 
 function apis:send_agent_mail(sub_type, attachment, subject, content)
-    local mailobj = Factory.create_obj(Loader.TYPE_MAIL)
+    local mailobj = td.CreateObject('Mail')
     local _,new_uuid = Bson.type(Bson.objectid())
     
     mailobj.uuid = new_uuid

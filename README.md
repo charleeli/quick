@@ -1,17 +1,14 @@
-## Install
-    [ubuntu 14.04.2 lts](http://www.ubuntu.com/download/desktop)
+## Basic requirements
+    [ubuntu 14.04 lts](http://www.ubuntu.com/download/desktop)
     [redis desktop manager](http://redisdesktop.com/)
-    [mongo](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/)
-    [robomongo](http://robomongo.org/)
 
-## Build
+## Ubuntu setup
 ```
-sudo apt-get install cmake
-sudo apt-get install autoconf
-sudo apt-get install libreadline-dev
-sudo apt-get install git
-sudo apt-get install gitg
+sudo apt-get install cmake autoconf libreadline-dev git gitg
+```
 
+## Building from source
+```
 git clone https://github.com/charleeli/quick.git
 cd quick
 make
@@ -20,18 +17,15 @@ make
 ## Test
 ```
 启动账号中心服务器
-./build/bin/redis-server ./config/redis/accountdc.conf
+./build/bin/redis-server ./config/accountdc.conf
 
-启动排行榜服务器
-./build/bin/redis-server ./config/redis/ranking.conf
-
-启动战斗同步服务器
-./build/bin/lua ./battle/main.lua
+启动存储服务器
+./build/bin/redis-server ./config/redis.conf
 
 启动登陆服务器和游戏服务器
-./3rd/skynet/skynet config/config.login
-./3rd/skynet/skynet config/config.game
-./3rd/skynet/skynet config/config.game2
+./build/bin/skynet config/config.login
+./build/bin/skynet config/config.game
+./build/bin/skynet config/config.game2
 
 启动客户端
 cd ./tools
@@ -40,6 +34,5 @@ cd ./tools
 
 命令行输入
 load_role
-view_sign
 gm  {cmd="set level 99"}
 ```

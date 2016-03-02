@@ -11,12 +11,11 @@ skynet.start(function()
 	
 	skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
 	skynet.newservice("service_state")
-	skynet.uniqueservice("gamedb")
+	--skynet.uniqueservice("gamedb")
 	skynet.monitor('node_monitor')
 	skynet.newservice('chat_listener')
-	skynet.newservice('rpc_proxy')
+	--skynet.newservice('rpc_proxy')
 	skynet.newservice("res_mgr")
-	skynet.newservice("ranking")
 	
 	local quick = require "quick"
 	if NODE_NAME == quick.center_node_name() then 
@@ -24,10 +23,7 @@ skynet.start(function()
 	    skynet.uniqueservice(true, 'web_master')
 	    skynet.uniqueservice(true, 'chat_speaker')
 	    skynet.uniqueservice(true, 'online')
-	    skynet.uniqueservice(true, 'mailbox')
-	    skynet.uniqueservice(true, 'usc')
-	    skynet.uniqueservice(true, 'battle_proxy')
-	    skynet.uniqueservice(true, 'lobby')
+	    --skynet.uniqueservice(true, 'mailbox')
 	end
 	
 	local gate = skynet.uniqueservice("gated")		-- 启动游戏服务器

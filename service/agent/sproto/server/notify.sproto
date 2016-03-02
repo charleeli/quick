@@ -20,30 +20,3 @@ notify_udp_addr 4 {
         udp_port 1: integer
     }
 }
-
-room_action 5 { 
-    request {
-        action 0 : integer # 1 enter 2 exit
-        uuid 1 : string
-    }   
-}
-
-battle_team_apply_result 6 {
-    request {
-        flag 0: boolean
-    }
-}
-
-battle_server_event 7 {
-    request {
-        event 0: BattleEvent
-    }
-}
-
-battle_control_action 8 {
-    request {
-        uuid 0: string        #nil代表没人控制
-        control_list 1: *integer
-    }
-}
-

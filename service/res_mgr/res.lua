@@ -1,4 +1,5 @@
-M = {}
+
+local M = {}
 
 local res_dir_path = "./service/res_mgr/res/"
 

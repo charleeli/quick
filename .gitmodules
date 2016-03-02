@@ -1,21 +1,30 @@
 [submodule "3rd/skynet"]
 	path = 3rd/skynet
 	url = https://github.com/cloudwu/skynet.git
+[submodule "3rd/luafilesystem"]
+	path = 3rd/luafilesystem
+	url = https://github.com/keplerproject/luafilesystem.git
+[submodule "3rd/Penlight"]
+	path = 3rd/Penlight
+	url = https://github.com/stevedonovan/Penlight.git
+[submodule "3rd/json-lua"]
+	path = 3rd/json-lua
+	url = https://github.com/jiyinyiyong/json-lua.git
+[submodule "3rd/redis"]
+	path = 3rd/redis
+	url = https://github.com/antirez/redis.git
+[submodule "3rd/lua-orm"]
+	path = 3rd/lua-orm
+	url = https://github.com/pigparadise/lua-orm.git
 [submodule "3rd/sproto_dump"]
 	path = 3rd/sproto_dump
 	url = https://github.com/lvzixun/sproto_dump.git
 [submodule "3rd/levent"]
 	path = 3rd/levent
 	url = https://github.com/xjdrew/levent.git
-[submodule "3rd/luafilesystem"]
-	path = 3rd/luafilesystem
-	url = https://github.com/keplerproject/luafilesystem.git
 [submodule "3rd/enet"]
 	path = 3rd/enet
 	url = https://github.com/lsalzman/enet.git
 [submodule "3rd/lsocket"]
 	path = 3rd/lsocket
 	url = https://github.com/cloudwu/lsocket.git
-[submodule "3rd/redis"]
-	path = 3rd/redis
-	url = https://github.com/antirez/redis.git
