@@ -1,9 +1,9 @@
 local Skynet  = require "skynet"
-local Lcrab = require 'crab'
-local Bson   = require 'bson'
+local Lcrab   = require 'crab'
+local Bson    = require 'bson'
 local Date    = require "date"
 local Const   = require "const"
-local Quick = require 'quick'
+local Quick   = require 'quick'
 
 local _call_mailbox = Quick.caller('mailbox')
 
@@ -55,4 +55,3 @@ function M.pull_mails(role_uuid)
 end
 
 return M
-

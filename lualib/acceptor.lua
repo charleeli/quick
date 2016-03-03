@@ -1,4 +1,4 @@
-local Skynet = require 'skynet'
+local skynet = require 'skynet'
 
 local M = {}
 
@@ -8,10 +8,10 @@ function M.connect_handler(delay)
     end
     
     if delay > 0 then 
-        Skynet.sleep(delay * 100)
+        skynet.sleep(delay * 100)
     end
     
-    return Skynet.retpack({ errcode = ERRNO.E_OK })
+    return skynet.retpack({ errcode = ERRNO.E_OK })
 end
 
 return M

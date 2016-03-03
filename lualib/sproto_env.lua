@@ -2,7 +2,7 @@ local SprotoLoader = require "sprotoloader"
 local SprotoCore = require "sproto.core"
 
 local M = {}
-M.BASE_PACKAGE = "base_package"
+M.PACKAGE = "package"
 M.PID_C2S = 1
 M.PID_S2C = 2
 

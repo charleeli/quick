@@ -11,24 +11,24 @@ web_master_port = 8080
 web_worker_port = 8081
 
 -- 集群名称配置文件
-cluster = "./config/clustername.lua"
+cluster = "./config/common/clustername.lua"
 --本节点名
-nodename = "game2"  
+nodename = "game2"
 --集群中心节点配置文件     
-center = './config/centernode.lua'
+center = './config/common/centernode.lua'
 --集群的数据库配置文件
-database = './config/config.database'
---战斗同步服务器配置文件
-battle = './config/config.battle'
---排行榜配置文件
-ranking= './config/config.ranking'
+gamedb = './config/common/config.gamedb'
+--集群的账号数据库配置文件
+accountdb = './config/common/config.accountdb'
+--敏感词文件
+black_words_path = './config/common/words.txt'
 
 log_dirname = "log"
 log_basename = "game2"
 
+--游戏服务所在位置
 gameservice = "./service/?.lua;" ..
-              "./service/?/main.lua;"..
-              "./service/agent/?.lua"
+              "./service/?/main.lua"
   
 -- LUA服务所在位置
 luaservice = skynetroot .. "service/?.lua;" .. gameservice
@@ -44,57 +44,18 @@ preload = "./lualib/preload/preload.lua"
 cpath = skynetroot .. "cservice/?.so;".."./build/cservice/?.so"
 
 -- 将添加到 package.path 中的路径，供 require 调用。
-lua_path = skynetroot .. "lualib/?.lua;" ..
-		   "./lualib/?.lua;" ..
-		   "./lualib/preload/?.lua;" ..
-		   "./lualib/entity/?.lua;"..
-		   "./service/agent/?.lua;"..
-		   "./service/?.lua;"..
-		   "./build/lualib/?.lua"
+lua_path = skynetroot .."lualib/?.lua;" ..
+            "./lualib/?.lua;" ..
+		    "./lualib/preload/?.lua;" ..
+		    "./service/agent/?.lua;"..
+		    "./service/?.lua;"..
+		    "./build/lualib/?.lua"
 
 -- 将添加到 package.cpath 中的路径，供 require 调用。
 lua_cpath = skynetroot .. "luaclib/?.so;" .. "./build/luaclib/?.so"
 
 -- 后台模式
---daemon = "./game.pid"
+--daemon = "./game2.pid"
 
---测试环境
-test_environment = true
-
---开服时间
-open_server_time = [[{
-    year =  2015,--年
-    month = 7,--月
-    day = 1,--日
-    hour = 17,--时
-    min = 16,--分
-    sec = 56,--秒
-}]]
-
-port = 5190					-- 监听端口
-maxclient = 100				-- 最大连接数
-
-mysql_maxconn = 10			-- mysql数据库最大连接数
-mysql_host = "127.0.0.1"	-- mysql数据库主机
-mysql_port = 3306			-- mysql数据库端口
-mysql_db = "quick"			-- mysql数据库库名
-mysql_user = "root"			-- mysql数据库帐号
-mysql_pwd = ""		        -- mysql数据库密码
-
-redis_maxinst = 4			-- redis最大实例数
-
-redis_host1 = "127.0.0.1"	-- redis数据库IP
-redis_port1 = 6380			-- redis数据库端口
-redis_auth1 = "123456"		-- redis数据库密码
-
-redis_host2 = "127.0.0.1"	-- redis数据库IP
-redis_port2 = 6381			-- redis数据库端口
-redis_auth2 = "123456"		-- redis数据库密码
-
-redis_host3 = "127.0.0.1"	-- redis数据库IP
-redis_port3 = 6382			-- redis数据库端口
-redis_auth3 = "123456"		-- redis数据库密码
-
-redis_host4 = "127.0.0.1"	-- redis数据库IP
-redis_port4 = 6383			-- redis数据库端口
-redis_auth4 = "123456"		-- redis数据库密码
+-- 监听端口
+port = 5190

@@ -1,5 +1,5 @@
 local Skynet = require "skynet"
-local Env = require "global"
+local Env = require "env"
 local Date = require "date"
 local Const = require 'const'
 

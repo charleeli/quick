@@ -137,7 +137,7 @@ function Cmd.register_node(node_name, node_monitor_addr)
 
     local version = string.format("%s-%s",Date.second(),math.random(1, 1000000))
   
-    local node_monitor_connector = Connector.new(
+    local node_monitor_connector = Connector(
         function(...)
             local ok, ret = _call(node_name, node_monitor_addr,'connect', ...)
             if not ok then

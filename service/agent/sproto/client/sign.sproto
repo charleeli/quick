@@ -3,37 +3,5 @@ view_sign 200 {
     response {
         errcode 0: integer
         sign 1:Sign
-        left_resign_count 2:integer #本月还剩补签次数
-        can_sign_count 3:integer    #本月到今天为止可签到数量
-    }
-}
-
-sign_in 201 {
-    response {
-        errcode 0: integer
-        base 1:Base
-        sign 2:Sign
-        left_resign_count 3:integer 
-        can_sign_count 4:integer
-    }
-}
-
-resign 202 {
-    response {
-        errcode 0: integer
-        base 1:Base
-        sign 2:Sign
-        left_resign_count 3:integer
-        can_sign_count 4:integer
-    }
-}
-
-full_duty 203 {
-    response {
-        errcode 0: integer
-        base 1:Base
-        sign 2:Sign
-        left_resign_count 3:integer
-        can_sign_count 4:integer
     }
 }

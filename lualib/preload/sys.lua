@@ -1,35 +1,47 @@
-local Skynet = require 'skynet'
+local skynet = require 'skynet'
 
-assert(Skynet['atexit'] == nil)
-assert(Skynet['get_exit_cb'] == nil)
+assert(skynet['atexit'] == nil)
+assert(skynet['get_exit_cb'] == nil)
 
 local SYS_CONTROL = 17
 
-local exit_cb = nil
-function Skynet.atexit(cb)
+local exit_cb
+
+function skynet.atexit(cb)
     exit_cb = cb
 end
 
-function Skynet.get_exit_cb()
+function skynet.get_exit_cb()
     return exit_cb
 end
 
 local cmd = {}
 function cmd.EXIT()
-    local cb = Skynet.get_exit_cb()
+    local cb = skynet.get_exit_cb()
     if cb then
         cb()
     end
-    Skynet.exit()
+    skynet.exit()
 end
 
-Skynet.register_protocol {
+skynet.register_protocol {
     name = 'sys',
     id = SYS_CONTROL,
-    unpack = Skynet.unpack,
-    pack = Skynet.pack,
+    unpack = skynet.unpack,
+    pack = skynet.pack,
     dispatch = function(session, address, cmd_name, ...)
         local f = assert(cmd[cmd_name], cmd_name)
         f(...)
+    end,
+}
+
+local ZINC_CLIENT = 16
+
+skynet.register_protocol {
+    name = "zinc_client",
+    id = ZINC_CLIENT,
+
+    pack = function (...)
+        return ...
     end,
 }

@@ -5,7 +5,7 @@ local Lcrab = require 'crab'
 local Const = require 'const'
 local Notify = require 'notify'
 local td = require 'td'
-local MailBox = require 'cls.mailbox'
+local Mailbox = require 'cls.mailbox'
 local MailboxClient = require 'client.mailbox'
 
 local function _check_message(subject, content)
@@ -49,7 +49,7 @@ function apis:init_mailbox()
         mail_scount = mail_scount +1
     end
     
-    self.mailbox = MailBox.new(self._role_orm.mailbox,mail_pcount,mail_scount)
+    self.mailbox = Mailbox.new(self._role_orm.mailbox,mail_pcount,mail_scount)
 end
 
 function apis:send_private_mail(to_uuid, subject, content)
@@ -215,4 +215,3 @@ local triggers = {
 }
 
 return {apis = apis, triggers = triggers}
-

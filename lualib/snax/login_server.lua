@@ -1,6 +1,5 @@
 -- 该模块以snax.loginserver为模板修改而来
 local skynet = require "skynet"
-require "skynet.manager"
 local socket = require "socket"
 local crypt = require "crypt"
 local table = table

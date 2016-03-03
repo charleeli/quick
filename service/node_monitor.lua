@@ -193,7 +193,7 @@ Skynet.start(function()
         f(...)
     end)
     
-    cluster_monitor_connector = Connector.new(
+    cluster_monitor_connector = Connector(
         connect_cluster_monitor_cb,
         connected_cluster_monitor_cb,
         disconnect_cluster_monitor_cb

@@ -13,7 +13,7 @@ local SprotoEnv = require "sproto_env"
 SprotoEnv.init('../build/sproto')
 
 local sp_s2c = SprotoLoader.load(SprotoEnv.PID_S2C)
-local sproto_server = sp_s2c:host(SprotoEnv.BASE_PACKAGE)
+local sproto_server = sp_s2c:host(SprotoEnv.PACKAGE)
 local sproto_client = sproto_server:attach(SprotoLoader.load(SprotoEnv.PID_C2S))
 
 local LOGIN_HOST = "127.0.0.1"
@@ -178,6 +178,8 @@ local function login(token, sdkid, noclose)
 	send_package(fd,crypt.base64encode(hmac))		-- 回应服务器第一步握手的挑战码，确认握手正常
 
 	token = string.format("%s:%s:%s", gameserver, token, sdkid)
+    print('token: ' ,token)
+
 	local etoken = crypt.desencode(secret, token)
 	send_package(fd,crypt.base64encode(etoken))
 

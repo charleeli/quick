@@ -1,15 +1,12 @@
 local Date = require 'date'
-
+local class = require 'pl.class'
 local Cache = class()
 
-function Cache:ctor(obj,...)
+function Cache:_init(obj,...)
     self._obj = obj
     self._ref_cnt = 0
     self.last_access_time = Date.second()
     self.last_save_time = Date.second()
-end
-
-function Cache:dtor()
 end
 
 function Cache:get_id()

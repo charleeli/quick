@@ -1,22 +1,16 @@
 local Date = require 'date'
 local Const = require 'const'
 local Notify = require 'notify'
-local UscClient = require 'client.usc'
 
 local apis = {}
 
 function apis:get_base()
-    return self._role_orm.base
-end
-
-function apis:update_usc_data()
-    UscClient.update(self:get_uuid())
-    LOG_INFO('update usc')
+    return self._role_td.base
 end
 
 function apis:_need_daily_update()
     local t_now = Date.second()
-    local t_prev = self._role_orm.base.daily_update_time
+    local t_prev = self._role_td.base.daily_update_time
     
     if t_now > t_prev + Const.ONE_DAY_SECONDS then
         return true
@@ -32,7 +26,7 @@ end
 function apis:daily_update()
     LOG_INFO("daily update begin")
     
-    self._role_orm.base.daily_update_time = Date.second()
+    self._role_td.base.daily_update_time = Date.second()
     self.message:pub(Const.EVT_DAILY_UPDATE)
     Notify.daily_update()
     

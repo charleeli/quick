@@ -1,5 +1,4 @@
 local skynet = require "skynet"
-require "skynet.manager"
 local gateserver = require "snax.gateserver"
 local netpack = require "netpack"
 local crypt = require "crypt"

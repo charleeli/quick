@@ -17,7 +17,7 @@ CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR)
 LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -lpthread -lm -ldl -lrt
 DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
 
-all : build skynet lua53 Penlight json lua-orm libenet.so libcrab.so redis
+all : build skynet lua53 Penlight argparse json lua-orm libenet.so libcrab.so redis
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -43,6 +43,9 @@ lua53:
 
 Penlight:
 	cp -r 3rd/Penlight/lua/pl/* $(BUILD_LUALIB_DIR)/pl/
+
+argparse:
+	cp 3rd/argparse/src/argparse.lua $(BUILD_LUALIB_DIR)/
 
 json:
 	cp 3rd/json-lua/JSON.lua $(BUILD_LUALIB_DIR)/

@@ -83,4 +83,3 @@ function M.new(check_interval)
 end
 
 return M
-

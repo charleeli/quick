@@ -1,4 +1,3 @@
-local Skynet = require 'skynet'
 local Quick = require 'quick'
 
 local _call = Quick.caller('online')

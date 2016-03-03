@@ -4,36 +4,30 @@ local lfs = require"lfs"
 local td = require "td"
 local Message = require 'message'
 local Const = require 'const'
-local Env = require 'global'
-local Notify = require 'notify'
-
-local redis_cli
-
+local Env = require 'env'
+local class = require 'pl.class'
 local Role = class()
 
-function Role:ctor(role_orm)
-    assert(role_orm, "new role has no role_orm")
-    self._role_orm = role_orm
-    self.message = Message.new()
-end
-
-function Role:dtor()
+function Role:_init(role_td)
+    assert(role_td, "new role has no role_td")
+    self._role_td = role_td
+    self.message = Message()
 end
 
 function Role:get_uid()
-    return self._role_orm.uid
+    return self._role_td.uid
 end
 
 function Role:get_account()
-    return self._role_orm.account
+    return self._role_td.account
 end
 
 function Role:get_uuid()
-    return self._role_orm.uuid
+    return self._role_td.uuid
 end
 
 function Role:get_role()
-    return self._role_orm
+    return self._role_td
 end
 
 function Role:init_apis()
@@ -94,10 +88,6 @@ function Role:online()
     LOG_INFO("role online begin")
     self.message:pub(Const.EVT_ONLINE)
 
-    skynet.fork(function()
-        --Notify.notify_udp_addr(t.udp_ip, t.udp_port)
-    end)
-    
     LOG_INFO("role online end")
 end
 
@@ -132,13 +122,11 @@ function Role:offline()
 end
 
 function Role:save_db()
-    if not redis_cli then
-		redis_cli = snax.uniqueservice("redis_cli")
-    end
+    local gamedb_snax = snax.uniqueservice("gamedb_snax")
 
-    local suc = redis_cli.req.set(self:get_account(),td.DumpToJSON('Role', self._role_orm))
+    local suc = gamedb_snax.req.set(self:get_account(),td.DumpToJSON('Role', self._role_td))
 
-    LOG_INFO('save db<%s>', suc)
+    LOG_INFO('role <account = %s> save db <%s>', self:get_account(), suc)
     return suc
 end
 
@@ -155,17 +143,14 @@ function Role:gen_base_proto()
         exp = base.exp,
         level = base.level,
         vip = base.vip,
-        gold = base.gold,
-        coupon = base.coupon,
-        sign_score = base.sign_score,
     }
 end
 
 function Role:gen_proto()
     local ret = {}
-    ret.uid = self._role_orm.uid
-    ret.account = self._role_orm.account
-    ret.uuid = self._role_orm.uuid
+    ret.uid = self._role_td.uid
+    ret.account = self._role_td.account
+    ret.uuid = self._role_td.uuid
     ret.base = self:gen_base_proto()
     
     return ret

@@ -43,7 +43,7 @@ delete_mails 403 {
 
 get_mailbox 405 {
     response {
-        mailbox 0: MailBox
+        mailbox 0: Mailbox
     }
 }
 

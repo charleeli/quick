@@ -1,16 +1,13 @@
 local Utf8 = require "utf8"
 local Const = require 'const'
-
+local class = require 'pl.class'
 local MailBox = class()
 
-function MailBox:ctor(mailbox_orm,mail_pcount,mail_scount)
-    assert(mailbox_orm, "new mailbox has no mailbox_orm")
-    self.mailbox = mailbox_orm
+function MailBox:_init(mailbox_td,mail_pcount,mail_scount)
+    assert(mailbox_td, "new mailbox has no mailbox_td")
+    self.mailbox = mailbox_td
     self.mail_pcount = mail_pcount
     self.mail_scount = mail_scount
-end
-
-function MailBox:dtor()
 end
 
 function MailBox:get_mailbox()

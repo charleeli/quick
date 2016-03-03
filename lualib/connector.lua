@@ -1,20 +1,18 @@
 local Skynet = require 'skynet'
+local class = require 'pl.class'
 
 local STAT_NONE = 0         
 local STAT_CONNECTED = 1   
 
 local Connector = class()
 
-function Connector:ctor(connect_cb, connected_cb, disconnect_cb, reconnect_wait)
+function Connector:_init(connect_cb, connected_cb, disconnect_cb, reconnect_wait)
     self.useable = true
     self.status = STAT_NONE
     self.connect_cb = connect_cb
     self.connected_cb = connected_cb
     self.disconnect_cb = disconnect_cb
     self.reconnect_wait = reconnect_wait or 3
-end
-
-function Connector:dtor()
 end
 
 function Connector:set_status_none()

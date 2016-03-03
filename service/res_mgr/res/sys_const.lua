@@ -1,1 +1,0 @@
-return { sign_open_level=1 }

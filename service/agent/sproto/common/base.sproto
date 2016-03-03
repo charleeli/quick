@@ -4,7 +4,5 @@
     exp 2: integer
     level 3: integer
     vip 4: integer
-    coupon 5:integer
-    gold 6: integer
-    sign_score 7: integer
+    daily_update_time 5: integer
 }

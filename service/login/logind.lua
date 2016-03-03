@@ -14,18 +14,17 @@ local server = {
 
 local user_online = {}	-- 记录玩家所登录的服务器
 
-local account_dc
+local accountdb_snax
 
 local function register(token, sdkid)
-	--local uid = do_redis({ "incr", "d_account:id" })
-	local uid = account_dc.req.get_nextid()
+	local uid = accountdb_snax.req.get_nextid()
 	if uid < 1 then
 		LOG_ERROR("register account get nextid failed")
 		return
 	end
 
 	local row = { id = uid, pid = token, sdkid = sdkid }
-	local ret = account_dc.req.add(row)
+	local ret = accountdb_snax.req.add(row)
 
 	if not ret then
 		LOG_ERROR("register account failed")
@@ -37,11 +36,9 @@ local function register(token, sdkid)
 end
 
 local function auth(token, sdkid)
-	if not account_dc then
-		account_dc = snax.uniqueservice("accountdc")
-	end
+	accountdb_snax = snax.uniqueservice("accountdb_snax")
 
-	local account = account_dc.req.get(sdkid, token)
+	local account = accountdb_snax.req.get(sdkid, token)
 
 	local uid
 	if table.empty(account) then
@@ -54,6 +51,7 @@ local function auth(token, sdkid)
 end
 
 function server.auth_handler(args)
+	print(args)
 	local ret = string.split(args, ":")
 	assert(#ret == 3)
 	local server = ret[1]

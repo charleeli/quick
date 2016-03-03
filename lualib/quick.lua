@@ -5,20 +5,9 @@ local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
 
 local c2s_sp = SprotoLoader.load(SprotoEnv.PID_C2S)
-local c2s_host = c2s_sp:host(SprotoEnv.BASE_PACKAGE)
+local c2s_host = c2s_sp:host(SprotoEnv.PACKAGE)
 local s2c_sp = SprotoLoader.load(SprotoEnv.PID_S2C)
 local s2c_encode_req = c2s_host:attach(s2c_sp)
-
-local ZINC_CLIENT = 16
-
-Skynet.register_protocol {
-    name = "zinc_client",
-    id = ZINC_CLIENT,
-    
-    pack = function (...) 
-        return ...
-    end,
-}
 
 local Quick = {}
 

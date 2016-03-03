@@ -1,6 +1,4 @@
 .Sign {
-    full_duty_awarded 0:boolean  #全勤奖励是否已经领取
-    resigned_this_month 1:integer#本月已经补签的次数
-    signed_today 2:boolean       #今天是否已经签到
-    signed_this_month 3:integer  #本月签到的次数
+    signed_today 1:boolean       #今天是否已经签到
+    signed_this_month 2:integer  #本月签到的次数
 }

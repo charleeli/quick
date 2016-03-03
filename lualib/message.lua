@@ -1,10 +1,8 @@
+local class = require 'pl.class'
 local Message = class()
 
-function Message:ctor()
+function Message:_init()
     self._handlers = {}
-end
-
-function Message:dtor()
 end
 
 function Message:sub(topic, handler)

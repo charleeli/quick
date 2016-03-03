@@ -1,1 +1,0 @@
-return { { amount=1000, id=1001 }, { amount=1, id=1004 }, { amount=3, id=1005 } }

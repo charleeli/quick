@@ -1,9 +1,10 @@
-local Skynet = require "skynet"
-local starttime = Skynet.starttime()
+local skynet = require "skynet"
+
+local starttime = skynet.starttime()
 
 local date = {}
 
-local TZ = tonumber(Skynet.getenv("TZ")) or 8
+local TZ = tonumber(skynet.getenv("TZ")) or 8
 local TD =  TZ * 3600
 
 function date.now()
@@ -11,11 +12,7 @@ function date.now()
 end
 
 function date.second()
-    return math.floor(Skynet.now()/100) + starttime
-end
-
-function date.client_timestamp()
-    return date.second() - 30
+    return math.floor(skynet.now()/100) + starttime
 end
 
 function date.format(sec, ms)
@@ -39,43 +36,4 @@ function date.get_today_time(hour, min, sec)
     return os.time(dt)
 end
 
-function date.max_mday(month)
-    if month < 1 or month > 12 then
-        assert(false,"para err!")
-    end
-
-    local max_mdays = {
-        [1] = 31,
-        [3] = 31,
-        [5] = 31,
-        [7] = 31,
-        [8] = 31,
-        [10]= 31,
-        [12]= 31,
-        [4] = 30,
-        [6] = 30,
-        [9] = 30,
-        [11]= 30,
-    }
-    
-    if month == 2 then
-        local now = date.localtime()
-        if now.year%100 == 0 then
-            if now.year%400 == 0 then
-                max_mdays[2] = 29
-            else
-                max_mdays[2] = 28
-            end
-        else
-            if now.year%4 == 0 then
-                max_mdays[2] = 29
-            else
-                max_mdays[2] = 28
-            end
-        end
-    end
-
-    return max_mdays[month]
-end
-    
 return date

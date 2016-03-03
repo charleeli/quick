@@ -10,13 +10,6 @@ chat 2 {
 mail 3 {
     request {
         private_mails 0: *Mail   #私人邮件
-        system_mails 1: *Mail   #系统邮件
-    }
-}
-
-notify_udp_addr 4 {
-    request {
-        udp_ip 0: string
-        udp_port 1: integer
+        system_mails 1: *Mail    #系统邮件
     }
 }

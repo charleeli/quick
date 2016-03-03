@@ -1,19 +1,12 @@
 local Skynet = require "skynet"
 local Quick = require 'quick'
-local UscClient = require 'client.usc'
 local OnlineClient = require 'client.online'
 
 local Cmd = {}
 
 function Cmd.call_agent(uuid, op, ...)
     local uid,node,agent
-    
-    local ret = UscClient.query_basic(uuid)
-    if ret.errcode ~= ERRNO.E_OK then
-        LOG_INFO("call_agent fail,query_basic<%s>,errcode<%s>",uuid,ret.errcode)
-        return Skynet.retpack{errcode = ret.errcode}
-    end
-    
+
     uid = ret.base.uid
     
     ret = OnlineClient.query(uid)

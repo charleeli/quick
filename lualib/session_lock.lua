@@ -1,14 +1,12 @@
+local class = require 'pl.class'
 local Lock = require "lock"
 
-SessionLock = class()
+local SessionLock = class()
 
-function SessionLock:ctor()
+function SessionLock:_init()
     self.quit = false
     self.lock = Lock.new()
     self.pending = {}
-end
-
-function SessionLock:dtor()
 end
 
 function SessionLock:lock_session(reason, f, ...)
@@ -38,4 +36,3 @@ function SessionLock:lock_quit()
 end
 
 return SessionLock
-

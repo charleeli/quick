@@ -1,5 +1,4 @@
-local Env = require 'global'
-local Const = require 'const'
+local Env = require 'env'
 local RoleApi = require 'apis.role_api'
 
 function load_role(args)

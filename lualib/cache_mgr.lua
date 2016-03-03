@@ -2,10 +2,10 @@ local Skynet = require 'skynet'
 local Date = require 'date'
 local Lock = require 'lock'
 local Fork = require 'fork'
-
+local class = require 'pl.class'
 local CacheMgr = class()
 
-function CacheMgr:ctor(opts)
+function CacheMgr:_init(opts)
     self.hot_map = {}
     self.cold_map = {}
     self.gc_map = {}
@@ -20,9 +20,6 @@ function CacheMgr:ctor(opts)
     self.cache_save_cd = opts.save_cd or 600
     self.fork_max = opts.fork_max or 1024
     self.is_running = false
-end
-
-function CacheMgr:dtor()
 end
 
 function CacheMgr:add_hot(item_id, item)

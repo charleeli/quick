@@ -3,7 +3,7 @@ local socket = require "socket"
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
-local json = require "json"
+local json = require "JSON"
 local OnlineClient = require 'client.online'
 local ClusterMonitorClient = require 'client.cluster_monitor'
 

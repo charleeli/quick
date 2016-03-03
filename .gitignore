@@ -1,22 +1,47 @@
-log/
-tools/xls2lua/tmp
-build/bin/skynet
-*.so
-*.o
-*.lo
-*~
-build/bin/lua
-build/bin/luac
-build/
-*.swp
-*.tmp
-*.out
-nohup.out
-nohup.out.bak
-core*
-*.pyc
-*.md5
+# Compiled Lua sources
+luac.out
+
+# luarocks build files
+*.src.rock
+*.zip
 *.tar.gz
-*.pid
+
+# Object files
+*.o
+*.os
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
 *.a
-.idea
+*.la
+*.lo
+*.def
+*.exp
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+build/
+.idea/
+log/
+*.*~
+*.rdb
+

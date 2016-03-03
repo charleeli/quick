@@ -152,7 +152,7 @@ Skynet.start(function()
         end
     )
     
-    speaker_connector = Connector.new(
+    speaker_connector = Connector(
         Cmd.connect_speaker_cb,
         Cmd.connected_speaker_cb,
         Cmd.disconnect_speaker_cb

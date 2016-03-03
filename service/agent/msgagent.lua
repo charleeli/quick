@@ -5,19 +5,18 @@ local netpack = require "netpack"
 local lfs = require"lfs"
 local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
-local Env = require 'global'
+local Env = require 'env'
 local Cmd = require 'command'
 local RoleApi = require 'apis.role_api'
 local OnlineClient = require 'client.online'
 
 local c2s_sp = SprotoLoader.load(SprotoEnv.PID_C2S)
-local c2s_host = c2s_sp:host(SprotoEnv.BASE_PACKAGE)
+local c2s_host = c2s_sp:host(SprotoEnv.PACKAGE)
 
 local cs = queue()
 local UID
 local SUB_ID
 local SECRET
---local user_dc
 local afktime = 0
 
 local gate		-- 游戏服务器gate地址
@@ -93,7 +92,7 @@ local function logout()
 	skynet.kill(zinc_client)
 	zinc_client = nil
 
-	--skynet.call("dcmgr", "lua", "unload", UID)	-- 卸载玩家数据
+	-- 卸载玩家数据
 	RoleApi.apis.close()
 	
 	--这里不退出agent服务，以便agent能复用
@@ -129,8 +128,6 @@ end
 -- 玩家登录游服，握手成功后调用
 function CMD.auth(source, uid,fd)
 	LOG_INFO(string.format("%d is real login", uid))
-	--LOG_INFO("call dcmgr to load user data uid=%d", uid)
-	--skynet.call("dcmgr", "lua", "load", uid)	-- 加载玩家数据，重复加载是无害的
 	
 	fd = fd
 	

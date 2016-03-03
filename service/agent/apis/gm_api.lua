@@ -1,10 +1,9 @@
 local Skynet = require "skynet"
-local Env = require 'global'
 
 local apis = {}
 
 function apis:gm(cmd)
-    assert(Skynet.getenv('test_environment'))
+    --assert(Skynet.getenv('test_environment'))
     
     local base_ops = {
         ['set'] = true,

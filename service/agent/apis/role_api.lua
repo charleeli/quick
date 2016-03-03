@@ -7,11 +7,9 @@ local Date = require 'date'
 local TimerMgr = require 'timer_mgr'
 local Const = require 'const'
 local Bson   = require 'bson'
-local Env = require 'global'
+local Env = require 'env'
 local Role = require 'cls.role'
 local td = require "td"
-
-local redis_cli
 
 local M = {}
 
@@ -26,7 +24,7 @@ function M.start(env)
         return false
     end
 
-    Env.session_lock = SessionLock.new()
+    Env.session_lock = SessionLock()
 
     LOG_INFO('msgagent start, uid<%s>', Env.uid)
     return true
@@ -39,14 +37,14 @@ function M.reset_timer()
     Env.timer_mgr = TimerMgr.new(8)
 end
 
-function M._load_role(role_orm)
-    local role = Role.new(role_orm)
+function M._load_role(role_td)
+    local role = Role(role_td)
     Env.role = role
     role:init_apis()
  
     M.reset_timer()
     Env.timer_mgr:add_timer(
-        180,
+        120,
         function()
             role:save_db() 
         end
@@ -65,13 +63,6 @@ function M._load_role(role_orm)
             role:lock_session('update_mailbox')
         end
     )
-    
-    Env.timer_mgr:add_timer(
-        600,
-        function()
-            role:update_usc_data()
-        end
-    )
 
     Env.timer_mgr:start()
     collectgarbage("collect")
@@ -84,24 +75,19 @@ function M.load_role()
         Env.account = tostring(Env.uid) --TODO:暂时第三方账号即为游戏服账号
         
         if not Env.role then
-            if not redis_cli then
-                redis_cli = snax.uniqueservice("redis_cli")
-            end
-            local raw_json_text = redis_cli.req.get(Env.account)
+            local gamedb_snax = snax.uniqueservice("gamedb_snax")
 
-            local role_orm
+            local raw_json_text = gamedb_snax.req.get(Env.account)
+
+            local role_td
             if not raw_json_text then
-                role_orm = M.create_role("charleeli", 1)
+                role_td = M.create_role("charleeli", 1)
             else
-                role_orm =  td.LoadFromJSON('Role',raw_json_text)
+                role_td =  td.LoadFromJSON('Role',raw_json_text)
             end
 
-            if not role_orm then
-                M.create_role() -- TODO: 暂时帮忙创建
-            else
-                M._load_role(role_orm)
-                Env.role:online()
-            end
+            M._load_role(role_td)
+            Env.role:online()
         end
         
         LOG_INFO(
@@ -127,11 +113,10 @@ function M.create_role(name, gender)
     role.base.exp = 0
     role.base.level = 1
     role.base.vip = 0
-    role.base.gold = 100
-    role.base.coupon = 0
-    role.base.sign_score = 0
 
-    local ret = redis_cli.req.set(Env.account,td.DumpToJSON('Role', role))
+    local gamedb_snax = snax.uniqueservice("gamedb_snax")
+
+    local ret = gamedb_snax.req.set(Env.account,td.DumpToJSON('Role', role))
 
     if not ret then
         LOG_ERROR('ac: <%s> create fail', Env.account)
@@ -158,6 +143,7 @@ function M.close()
         if alread_close then
             return 2
         end
+
         skynet.fork(function()
             local ts = Date.second()
             while true do
@@ -192,4 +178,3 @@ local triggers = {
 }
 
 return {apis = M, triggers = triggers}
-

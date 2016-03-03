@@ -1,4 +1,4 @@
-local Env = require 'global'
+local Env = require 'env'
 
 function send_private_mail(args)
     return Env.role:send_private_mail(args.to_uuid, args.subject, args.content)

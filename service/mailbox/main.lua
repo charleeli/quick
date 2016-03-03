@@ -1,7 +1,7 @@
 local Skynet = require "skynet"
-local Env = require "global"
+local Env = require "env"
 local Cmd = require "command"
-local MailBoxMgr = require 'mailbox.mailbox_mgr'
+local MailboxMgr = require 'mailbox.mailbox_mgr'
 local NodeMonitorClient = require 'client.node_monitor'
 
 Skynet.start(function()
@@ -10,7 +10,7 @@ Skynet.start(function()
         f(...)
     end)
 
-    Env.mailbox_mgr = MailBoxMgr.new{
+    Env.mailbox_mgr = MailboxMgr{
         max_cnt = Env.cache_max_cnt,
         ttl = Env.cache_ttl,
         save_cd = Env.cache_save_cd,

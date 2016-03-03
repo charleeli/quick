@@ -1,6 +1,4 @@
-local Skynet = require 'skynet'
 local Lcrab = require 'lcrab'
-local UTF8 = require 'utf8'
 local M = {}
 
 local function _toutf8(line) 

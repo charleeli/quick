@@ -24,16 +24,16 @@ function make_pairs_table(t, fields)
 end
 
 function init(...)
-    local accountdc_file = skynet.getenv('accountdc')
-    local cfg = config(accountdc_file)
-    local accountdc_cfg = cfg['redis']
+    local accountdb_file = skynet.getenv('accountdb')
+    local cfg = config(accountdb_file)
+    local accountdb_cfg = cfg['accountdb']
 
     db = assert(redis.connect{
-	    host = accountdc_cfg.host,
-	    port = accountdc_cfg.port,
+	    host = accountdb_cfg.host,
+	    port = accountdb_cfg.port,
 	    db = 0,
-	    auth = accountdc_cfg.auth,
-    },'accountdc redis connect error')
+	    auth = accountdb_cfg.auth,
+    },'accountdb redis connect error')
 end
 
 function exit(...)

@@ -16,11 +16,11 @@ make
 
 ## Test
 ```
-启动账号中心服务器
-./build/bin/redis-server ./config/accountdc.conf
+启动账号服务器
+./build/bin/redis-server ./config/db/accountdb.conf
 
 启动存储服务器
-./build/bin/redis-server ./config/redis.conf
+./build/bin/redis-server ./config/db/gamedb.conf
 
 启动登陆服务器和游戏服务器
 ./build/bin/skynet config/config.login

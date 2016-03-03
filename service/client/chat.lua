@@ -1,8 +1,8 @@
-local Skynet = require "skynet"
-local Quick = require 'quick'
-local Const = require 'const'
-local Date = require 'date'
-local Env   = require "global"
+local Skynet = require 'skynet'
+local Quick  = require 'quick'
+local Const  = require 'const'
+local Date   = require 'date'
+local Env    = require 'env'
 
 local _send_speaker = function(...)
     local _call_speaker = Quick.caller('chat_speaker')

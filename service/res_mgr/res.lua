@@ -1,4 +1,3 @@
-
 local M = {}
 
 local res_dir_path = "./service/res_mgr/res/"
@@ -20,21 +19,5 @@ local function require_file(modname)
 end
 
 M.ErrCode = require_file "errcode"
-M.SysConst = require_file "sys_const"
-
---sign system start
-M.SignAwardBase = require_file 'sign_award_base'
-M.SignAwardRate = require_file 'sign_award_rate'
-M.ResignCount   = require_file 'resign_count'
-M.ResignCost    = require_file 'resign_cost'
-M.FullDutyAward = require_file 'full_duty_award'
---sign system end
-
---stage system start
-M.Stage         = require_file "stage"
-M.StageDrop     = require_file "stage_drop"
-M.SubDrop       = require_file "sub_drop"
---stage system end
 
 return M
-

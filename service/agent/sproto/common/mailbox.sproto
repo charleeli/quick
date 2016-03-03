@@ -13,7 +13,7 @@
     
 }
 
-.MailBox {
+.Mailbox {
    private_mails 0: *Mail
    system_mails 1: *Mail
    update_time 2: integer
