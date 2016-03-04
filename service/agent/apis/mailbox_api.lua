@@ -41,15 +41,15 @@ function apis:init_mailbox()
     local mail_pcount = 0
     local mail_scount = 0
     
-    for _,_ in pairs(self._role_orm.mailbox.private_mails) do
+    for _,_ in pairs(self._role_td.mailbox.private_mails) do
         mail_pcount = mail_pcount +1
     end
     
-    for _, _ in pairs(self._role_orm.mailbox.system_mails) do
+    for _, _ in pairs(self._role_td.mailbox.system_mails) do
         mail_scount = mail_scount +1
     end
     
-    self.mailbox = Mailbox.new(self._role_orm.mailbox,mail_pcount,mail_scount)
+    self.mailbox = Mailbox(self._role_td.mailbox,mail_pcount,mail_scount)
 end
 
 function apis:send_private_mail(to_uuid, subject, content)

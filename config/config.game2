@@ -28,7 +28,8 @@ log_basename = "game2"
 
 --游戏服务所在位置
 gameservice = "./service/?.lua;" ..
-              "./service/?/main.lua"
+              "./service/?/main.lua;"..
+              "./service/agent/?.lua"
   
 -- LUA服务所在位置
 luaservice = skynetroot .. "service/?.lua;" .. gameservice

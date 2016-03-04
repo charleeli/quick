@@ -35,10 +35,18 @@ cd ./tools
 命令行输入
 load_role
 gm  {cmd="set level 99"}
+view_sign
+send_world_chat {msg = "hello everyone!"}
+send_private_chat {uuid = '56d92ba7e428a68d57000486', msg = 'hi 486'}
+send_private_mail {to_uuid = '56d92ba7e428a68d57000486',subject='quick',content='quick is good'}
 ```
 
 ## Benchmark
 ```
+cd ./3rd/levent
+cmake .
+make
+
 cd ./tools/robot
 ../../build/bin/lua client.lua
 script ./script/sign.lua

@@ -1,4 +1,6 @@
 local class = require 'pl.class'
+local snax = require "snax"
+local td = require 'td'
 local CacheMgr = require 'cache_mgr'
 local Mailbox = require 'mailbox.mailbox'
 
@@ -14,12 +16,12 @@ function MailboxMgr:get_item(role_uuid)
         return item
     end
 
-    --local data = Loader.load_mailbox(role_uuid)
-    local data = nil
-    if not data then
-        --if not Loader.has_role(role_uuid) then
-            --return nil
-        --end
+    local gamedb_snax = snax.uniqueservice("gamedb_snax")
+    local raw_json_text = gamedb_snax.req.get('Mailbox:'..role_uuid)
+
+    local data
+    if raw_json_text then
+        data =  td.LoadFromJSON('Mailbox',raw_json_text)
     end
     
     item = self:get_cache(role_uuid)
@@ -42,11 +44,10 @@ function MailboxMgr:get_item(role_uuid)
     
     obj.role_uuid = role_uuid
     
-    item = Mailbox.new(obj,role_uuid)
+    item = Mailbox(td.LoadFromLUA('Mailbox',obj),role_uuid)
 
     self:add_cache(item)
     return item
 end
 
 return MailboxMgr
-

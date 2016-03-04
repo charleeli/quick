@@ -23,7 +23,7 @@ skynet.start(function()
 	    skynet.uniqueservice(true, 'web_master')
 	    skynet.uniqueservice(true, 'chat_speaker')
 	    skynet.uniqueservice(true, 'online')
-		--skynet.uniqueservice(true, 'mailbox')
+		skynet.uniqueservice(true, 'mailbox')
 	end
 	
 	local gate = skynet.uniqueservice("gated")

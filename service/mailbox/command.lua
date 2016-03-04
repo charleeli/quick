@@ -2,6 +2,8 @@ local Skynet = require "skynet"
 local Env = require "env"
 local Date = require "date"
 local Const = require 'const'
+local pretty = require 'pl.pretty'
+local td = require 'td'
 
 local M = {}
 
@@ -18,7 +20,7 @@ function M.send_mail(mail_type, mailobj)
     if not m then
        Skynet.retpack({errcode = ERRNO.E_ERROR}) 
     end
-    
+
     local mailbox = m:get_obj()
     if not mailbox then
         Skynet.retpack({errcode = ERRNO.E_ERROR})
@@ -36,11 +38,14 @@ function M.send_mail(mail_type, mailobj)
    
     table.insert(mailbox[mail_key], mailobj)
 
+    --print(mailbox)
+
     Skynet.retpack({errcode = ERRNO.E_OK})
 end
 
 function M.pull_mails(role_uuid)
     local m = Env.mailbox_mgr:get_item(role_uuid)
+    --print(m)
     if not m then
         Skynet.retpack({private_mails= {}, system_mails = {}})
         return
@@ -80,7 +85,8 @@ function M.pull_mails(role_uuid)
     end
     tmp = {table.unpack(system_mails, s+1)}
     mailbox.system_mails = tmp
-     
+
+    --print(ret_p_mails)
     Skynet.retpack{ 
         private_mails = ret_p_mails,
         system_mails = ret_s_mails,

@@ -35,29 +35,11 @@ M.CHAT_SUB_TYPE_SYSTEM_2 = 1
 M.MAIL_TYPE_SYSTEM = 0
 M.MAIL_TYPE_PRIVATE = 1
 M.MAIL_EXPIRE_TIME = 30 * 24 * 3600 -- 一个月之前的邮件强制删除
-M.MAIL_UPDATE_INTERVAL = 100        -- 玩家更新邮箱时间间隔 100秒
+M.MAIL_UPDATE_INTERVAL = 180        -- 玩家更新邮箱时间间隔 180秒
 M.MAIL_SUBJECT_LIMIT = 10           -- 邮件标题长度限制 
 M.MAIL_CONTENT_LIMIT = 50           -- 邮件内容长度限制
 M.MAILBOX_LIMIT = 5                 -- 系统和用户邮箱上限
 M.MAIL_CACHE_LIMIT = 10             -- 缓存中某个玩家的邮箱中邮件数量限制
 -- mailbox end
 
-M.VIRTUAL_NAME2ID = {
-    coupon = 1000,
-    exp = 1001,
-    level = 1002,
-    vip = 1003,
-    gold = 1004,
-    sign_score = 1005,
-}
-
-M.VIRTUAL_ID2NAME = {
-    [1000] = "coupon",
-    [1001] = "exp",
-    [1002] = "level",
-    [1003] = "vip",
-    [1004] = "gold",
-    [1005] = "sign_score",
-}
-    
 return M

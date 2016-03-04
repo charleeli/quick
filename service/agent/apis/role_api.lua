@@ -44,7 +44,7 @@ function M._load_role(role_td)
  
     M.reset_timer()
     Env.timer_mgr:add_timer(
-        120,
+        60,
         function()
             role:save_db() 
         end

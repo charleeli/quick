@@ -216,6 +216,7 @@ local function login(token, sdkid, noclose)
 	end
 
 	print("handshake ok...")
+    print('-------------------------------------------')
 end
 
 local function check_cmd(s)
