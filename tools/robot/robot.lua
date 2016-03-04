@@ -1,13 +1,13 @@
 package.cpath = "../../3rd/skynet/luaclib/?.so;../../build/luaclib/?.so;../../3rd/levent/?.so"
-local service_path = "../../lualib/?.lua;" .. "../../service/?.lua;" .. "../../lualib/preload/?.lua"
+local service_path = "../../lualib/?.lua;" .. "../../service/?.lua;"
+        .. "../../lualib/preload/?.lua;".."../../build/lualib/?.lua;"
 package.path = "../../3rd/levent/?.lua;../../3rd/skynet/lualib/?.lua;../../3rd/skynet/service/?.lua;" .. service_path
 
-local levent = require "levent.levent"
 local queue  = require "levent.queue"
 local ctime = require "ctime"
-local netpack = require "netpack"
 local socket = require "clientsocket"
 local crypt = require "crypt"
+local class = require 'pl.class'
 require "luaext"
 
 local SprotoLoader = require "sprotoloader"
@@ -17,7 +17,7 @@ SprotoEnv.init('../../build/sproto')
 
 local sp_s2c = SprotoLoader.load(SprotoEnv.PID_S2C)
 local sp_c2s = SprotoLoader.load(SprotoEnv.PID_C2S)
-local sproto_server = sp_s2c:host(SprotoEnv.BASE_PACKAGE)
+local sproto_server = sp_s2c:host(SprotoEnv.PACKAGE)
 local sproto_client = sproto_server:attach(sp_c2s)
 
 local function req_has_resp(sp, name)
@@ -27,7 +27,7 @@ end
 
 local Robot = class()
 
-function Robot:ctor()
+function Robot:_init()
     self.LOGIN_HOST = "127.0.0.1"
     self.LOGIN_PORT = 5188
 

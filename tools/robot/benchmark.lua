@@ -1,6 +1,8 @@
 package.cpath = "../../3rd/skynet/luaclib/?.so;../../build/luaclib/?.so;../../3rd/levent/?.so"
-local service_path = "../../lualib/?.lua;" .. "../../service/?.lua;" .. "../../lualib/preload/?.lua"
-package.path = "../../3rd/levent/?.lua;./?.lua;../../3rd/skynet/service/?.lua;" .. service_path
+local service_path = "../../lualib/?.lua;" .. "../../service/?.lua;"
+        .. "../../lualib/preload/?.lua;".."../../build/lualib/?.lua;"
+package.path = package.path ..";../../3rd/levent/?.lua;../../3rd/skynet/lualib/?.lua;../../3rd/skynet/service/?.lua;"
+        .. service_path
 
 local levent = require "levent.levent"
 local timeout = require "levent.timeout"
@@ -24,10 +26,10 @@ local function init_argparse()
     local parser = argparse()
     parser:description("Cmd Client")
 
-    parser:option("-a", "--host"):default("127.0.0.1"):description("Server IP")
-    parser:option("-p", "--port"):default("5189"):description("Server Port"):convert(tonumber)
-    parser:option("-c", "--concurrency"):default("1"):description("Concurrency"):convert(tonumber)
-    parser:option("-s", "--script"):description("Script")
+    parser:option("-a --host"):default("127.0.0.1"):description("Server IP")
+    parser:option("-p --port"):default("5189"):description("Server Port"):convert(tonumber)
+    parser:option("-c --concurrency"):default("2"):description("Concurrency"):convert(tonumber)
+    parser:option("-s --script"):description("Script")
     return parser
 end
 
@@ -35,7 +37,7 @@ local function asyncCall(co_id,concurrency,host,port,script)
     local interval = 1/concurrency
     levent.sleep(co_id * interval)
 
-    local robot = Robot.new()
+    local robot = Robot()
     robot.account = "test_account_"..co_id
     robot:login("dg56vs38", co_id, true) --登陆
     
@@ -60,7 +62,8 @@ end
 
 local function main()
     local args = init_argparse():parse()
-    if not args.script then 
+    table.print(args)
+    if not args.script then
         print('no script!')
         return 
     end
@@ -112,7 +115,7 @@ local function main()
         print(k,v.elapse/v.count,v.count)
     end
     
-    if args.concurrency > 1 then
+    if args.concurrency >= 2 then
         local duration = last_send_time - first_send_time
         print("duration:",duration)
         print("qps:",send_count/duration)

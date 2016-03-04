@@ -84,10 +84,9 @@ function M.load_role()
                 role_td = M.create_role("charleeli", 1)
             else
                 role_td =  td.LoadFromJSON('Role',raw_json_text)
+                M._load_role(role_td)
+                Env.role:online()
             end
-
-            M._load_role(role_td)
-            Env.role:online()
         end
         
         LOG_INFO(

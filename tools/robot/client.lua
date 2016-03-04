@@ -1,5 +1,5 @@
 package.cpath = package.cpath .. ";../../build/luaclib/?.so"
-package.path = package.path .. ";../../lualib/?.lua;../../3rd/skynet/lualib/?.lua"
+package.path = package.path .. ";../../lualib/?.lua;../../3rd/skynet/lualib/?.lua;".."../../build/lualib/?.lua;"
 
 local argparse = require "argparse"
 local Robot = require 'robot'
@@ -18,7 +18,7 @@ end
 
 local function main()
     local args = init_argparse():parse()
-    local client = Robot.new()
+    local client = Robot()
     client:login("dg56vs38", 1, true)
     
     if args.script then

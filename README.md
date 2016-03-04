@@ -36,3 +36,12 @@ cd ./tools
 load_role
 gm  {cmd="set level 99"}
 ```
+
+## Benchmark
+```
+cd ./tools/robot
+../../build/bin/lua client.lua
+script ./script/sign.lua
+
+../../build/bin/lua benchmark.lua -script ./script/sign.lua
+```
