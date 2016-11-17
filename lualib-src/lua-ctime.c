@@ -37,14 +37,14 @@ timestamp(lua_State *L) {
 
 int 
 luaopen_ctime(lua_State *L) { 
- 	luaL_checkversion(L); 
- 	luaL_Reg l[] ={ 
- 		{"microtime", microtime},
- 		{"timestamp", timestamp},
- 		{ NULL, NULL }, 
- 	}; 
+    luaL_checkversion(L); 
+    luaL_Reg l[] ={ 
+        {"microtime", microtime},
+        {"timestamp", timestamp},
+        { NULL, NULL }, 
+    }; 
  
- 	luaL_newlib(L,l); 
- 	return 1; 
+    luaL_newlib(L,l); 
+    return 1; 
 } 
 

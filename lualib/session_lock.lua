@@ -5,7 +5,7 @@ local SessionLock = class()
 
 function SessionLock:_init()
     self.quit = false
-    self.lock = Lock.new()
+    self.lock = Lock()
     self.pending = {}
 end
 

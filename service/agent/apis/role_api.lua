@@ -13,7 +13,7 @@ local td = require "td"
 
 local M = {}
 
-M.load_role_lock = Lock.new()
+M.load_role_lock = Lock()
 
 function M.start(env)
     Env.uid = env.uid
@@ -34,7 +34,7 @@ function M.reset_timer()
     if Env.timer_mgr then
         Env.timer_mgr:stop()
     end
-    Env.timer_mgr = TimerMgr.new(8)
+    Env.timer_mgr = TimerMgr(8)
 end
 
 function M._load_role(role_td)

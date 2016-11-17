@@ -139,7 +139,7 @@ Skynet.start(function()
         f(...)
     end)
 
-    local timers = TimerMgr.new(1)
+    local timers = TimerMgr(1)
     timers:start()
     timers:add_timer(
         Const.GLOBAL_CHAT_BROADCAST_INTERVAL,

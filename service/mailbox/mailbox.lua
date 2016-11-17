@@ -11,7 +11,6 @@ function Mailbox:_init(obj,role_uuid)
 end
 
 function Mailbox:_save()
-    print('+++++++++++++++++++')
     local gamedb_snax = snax.uniqueservice("gamedb_snax")
     gamedb_snax.req.set('Mailbox:'..self.role_uuid,td.DumpToJSON('Mailbox', self:get_obj()))
 end

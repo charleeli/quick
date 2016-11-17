@@ -3,10 +3,10 @@ local snax = require "snax"
 local cluster = require "cluster"
 
 skynet.start(function()
-	local log = skynet.uniqueservice("log")
-	skynet.call(log, "lua", "start")
-	snax.uniqueservice("accountdb_snax")
+    local log = skynet.uniqueservice("log")
+    skynet.call(log, "lua", "start")
+    snax.uniqueservice("accountdb_snax")
 
-	skynet.uniqueservice("logind")		-- 启动登录服务器
-	cluster.open("login")
+    skynet.uniqueservice("logind")      -- 启动登录服务器
+    cluster.open("login")
 end)

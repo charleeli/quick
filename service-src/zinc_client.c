@@ -60,13 +60,13 @@ int zinc_client_init(struct client* c,
 
 struct client * zinc_client_create(void) 
 {
-	struct client *c = malloc(sizeof(*c));
-	memset(c,0,sizeof(*c));
-	return c;
+    struct client *c = malloc(sizeof(*c));
+    memset(c,0,sizeof(*c));
+    return c;
 }
 
 void zinc_client_release(struct client *c) 
 {
-	free(c);
+    free(c);
 }
 

@@ -12,7 +12,7 @@ function CacheMgr:_init(opts)
     self.hot_cnt = 0
     self.cold_cnt = 0
     self.gc_cnt = 0
-    self.gc_lock = Lock.new()
+    self.gc_lock = Lock()
     self.last_swap_time = Date.second()
 
     self.cache_max_cnt = opts.max_cnt or 5000

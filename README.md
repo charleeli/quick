@@ -1,5 +1,5 @@
 ## Basic requirements
-    [ubuntu 14.04 lts](http://www.ubuntu.com/download/desktop)
+    [ubuntu 16.04 lts](http://www.ubuntu.com/download/desktop)
     [redis desktop manager](http://redisdesktop.com/)
 
 ## Ubuntu setup

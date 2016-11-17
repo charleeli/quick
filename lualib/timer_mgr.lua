@@ -1,10 +1,20 @@
 local Skynet = require "skynet"
 local Date   = require "date"
+local class = require 'pl.class'
 
-local mt = {}
-mt.__index = mt
+local TimerMgr = class()
 
-function mt:add_timer(interval, func, immediate, times)
+function TimerMgr:_init(check_interval)
+    self.check_interval = check_interval
+    self.running = false
+    self.timestamp = 0
+    self.handle = 1
+    self.to_deleted = {}
+    self.pending = {}
+    self.timers = {}
+end
+
+function TimerMgr:add_timer(interval, func, immediate, times)
     assert(interval >= self.check_interval, interval)
     local handle = self.handle
     self.handle = handle + 1
@@ -18,11 +28,11 @@ function mt:add_timer(interval, func, immediate, times)
     return handle
 end
 
-function mt:remove_timer(handle)
+function TimerMgr:remove_timer(handle)
     self.to_deleted[handle] = true
 end
 
-function mt:update()
+function TimerMgr:update()
     for k,v in pairs(self.pending) do
         self.timers[k] = v
     end
@@ -49,7 +59,7 @@ function mt:update()
     end
 end
 
-function mt:start()
+function TimerMgr:start()
     if self.running then
         return
     end
@@ -64,22 +74,8 @@ function mt:start()
     return
 end
 
-function mt:stop()
+function TimerMgr:stop()
     self.running = false
 end
 
-local M = {}
-
-function M.new(check_interval)
-    local obj = {}
-    obj.running = false
-    obj.timestamp = 0
-    obj.check_interval = check_interval
-    obj.handle = 1
-    obj.to_deleted = {}
-    obj.pending = {}
-    obj.timers = {}
-    return setmetatable(obj, mt)
-end
-
-return M
+return TimerMgr

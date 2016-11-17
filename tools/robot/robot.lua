@@ -153,92 +153,92 @@ function Robot:dispatch_package()
 end
 
 local function unpack_f(f,self)
-	local function try_recv(fd, last)
-		local result
-		result, last = f(last)
-		if result then
-			return result, last
-		end
-		local r = socket.recv(fd)
-		if not r then
-			return nil, last
-		end
-		
-		if r == "" then
-			error "Server closed"
-		end
-		
-		return f(last .. r)
-	end
+    local function try_recv(fd, last)
+        local result
+        result, last = f(last)
+        if result then
+            return result, last
+        end
+        local r = socket.recv(fd)
+        if not r then
+            return nil, last
+        end
+        
+        if r == "" then
+            error "Server closed"
+        end
+        
+        return f(last .. r)
+    end
 
-	return function()
-		while true do
-			local result
-			result, self.last = try_recv(self.fd, self.last)
-			if result then
-				return result
-			end
-			socket.usleep(100)
-		end
-	end
+    return function()
+        while true do
+            local result
+            result, self.last = try_recv(self.fd, self.last)
+            if result then
+                return result
+            end
+            socket.usleep(100)
+        end
+    end
 end
 
 function Robot:login(token, sdkid, noclose)
-	assert(token and sdkid)
-	
-	-- 以下代码登录 loginserver
-	self.fd = assert(socket.connect(self.LOGIN_HOST, self.LOGIN_PORT))
+    assert(token and sdkid)
+    
+    -- 以下代码登录 loginserver
+    self.fd = assert(socket.connect(self.LOGIN_HOST, self.LOGIN_PORT))
 
     local read_package = unpack_f(unpack_package,self)
-	local challenge = crypt.base64decode(read_package())	-- 读取用于握手验证的challenge
-	local clientkey = crypt.randomkey()	-- 用于交换secret的clientkey
-	self:send_package(crypt.base64encode(crypt.dhexchange(clientkey)))	
-	local serverkey = crypt.base64decode(read_package())	-- 读取serverkey	
-	self.secret = crypt.dhsecret(serverkey, clientkey)		-- 计算私钥
+    local challenge = crypt.base64decode(read_package())    -- 读取用于握手验证的challenge
+    local clientkey = crypt.randomkey() -- 用于交换secret的clientkey
+    self:send_package(crypt.base64encode(crypt.dhexchange(clientkey)))  
+    local serverkey = crypt.base64decode(read_package())    -- 读取serverkey    
+    self.secret = crypt.dhsecret(serverkey, clientkey)      -- 计算私钥
 
-	print("sceret is ", crypt.hexencode(self.secret))
+    print("sceret is ", crypt.hexencode(self.secret))
 
-	local hmac = crypt.hmac64(challenge, self.secret)
-	self:send_package(crypt.base64encode(hmac))		-- 回应服务器第一步握手的挑战码，确认握手正常
+    local hmac = crypt.hmac64(challenge, self.secret)
+    self:send_package(crypt.base64encode(hmac))     -- 回应服务器第一步握手的挑战码，确认握手正常
 
-	token = string.format("%s:%s:%s", self.gameserver, token, sdkid)
-	local etoken = crypt.desencode(self.secret, token)
-	self:send_package(crypt.base64encode(etoken))
+    token = string.format("%s:%s:%s", self.gameserver, token, sdkid)
+    local etoken = crypt.desencode(self.secret, token)
+    self:send_package(crypt.base64encode(etoken))
 
-	local result = read_package()
-	local code = tonumber(string.sub(result, 1, 3))
-	assert(code == 200)
-	socket.close(self.fd)	-- 认证成功，断开与登录服务器的连接
+    local result = read_package()
+    local code = tonumber(string.sub(result, 1, 3))
+    assert(code == 200)
+    socket.close(self.fd)   -- 认证成功，断开与登录服务器的连接
 
-	local user = crypt.base64decode(string.sub(result, 4,#result))		-- base64(uid:subid)
-	local result = string.split(user, ":")
-	self.UID = tonumber(result[1])
+    local user = crypt.base64decode(string.sub(result, 4,#result))      -- base64(uid:subid)
+    local result = string.split(user, ":")
+    self.UID = tonumber(result[1])
 
-	print(string.format("login ok, user %s, uid %d", user, self.UID))
+    print(string.format("login ok, user %s, uid %d", user, self.UID))
 
-	-- 以下代码与游戏服务器握手
-	self.fd = assert(socket.connect(self.GAME_HOST, self.GAME_PORT))
-	self.index = self.index + 1
-	local handshake = string.format("%s@%s#%s:%d",
-		crypt.base64encode(result[1]),
-		crypt.base64encode(self.gameserver),
-		crypt.base64encode(result[2]),
-		self.index)
-	print("handshake=%s", handshake)
-	local hmac = crypt.hmac64(crypt.hashkey(handshake), self.secret)
+    -- 以下代码与游戏服务器握手
+    self.fd = assert(socket.connect(self.GAME_HOST, self.GAME_PORT))
+    self.index = self.index + 1
+    local handshake = string.format("%s@%s#%s:%d",
+        crypt.base64encode(result[1]),
+        crypt.base64encode(self.gameserver),
+        crypt.base64encode(result[2]),
+        self.index)
+    print("handshake=%s", handshake)
+    local hmac = crypt.hmac64(crypt.hashkey(handshake), self.secret)
 
-	self:send_package(handshake .. ":" .. crypt.base64encode(hmac))
+    self:send_package(handshake .. ":" .. crypt.base64encode(hmac))
 
-	result = read_package()
-	code = tonumber(string.sub(result, 1, 3))
-	assert(code == 200)
+    result = read_package()
+    code = tonumber(string.sub(result, 1, 3))
+    assert(code == 200)
 
-	if not noclose then
-		socket.close(self.fd)
-	end
+    if not noclose then
+        socket.close(self.fd)
+    end
 
-	print("handshake ok...")
-	print('-------------------------------------------')
+    print("handshake ok...")
+    print('-------------------------------------------')
 end
 
 function Robot:check_cmd(s)

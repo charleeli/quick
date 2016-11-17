@@ -38,11 +38,11 @@ end
 
 -- 返回table大小
 table.size = function(t)
-	local count = 0
-	for _ in pairs(t) do
-		count = count + 1
-	end
-	return count
+    local count = 0
+    for _ in pairs(t) do
+        count = count + 1
+    end
+    return count
 end
 
 -- 判断table是否为空
@@ -192,15 +192,15 @@ end
 
 -- math扩展
 do
-	local _floor = math.floor
-	math.floor = function(n, p)
-		if p and p ~= 0 then
-			local e = 10 ^ p
-			return _floor(n * e) / e
-		else
-			return _floor(n)
-		end
-	end
+    local _floor = math.floor
+    math.floor = function(n, p)
+        if p and p ~= 0 then
+            local e = 10 ^ p
+            return _floor(n * e) / e
+        else
+            return _floor(n)
+        end
+    end
 end
 
 math.round = function(n, p)

@@ -1,15 +1,21 @@
 local Skynet = require "skynet"
+local class = require 'pl.class'
 
-local mt = {}
-mt.__index = mt
+local Lock = class()
 
-function mt:_lock(co)
+function Lock:_init()
+    self.locked = false
+    self.lock_count = 0
+    self.lock_waiter = {}
+end
+
+function Lock:_lock(co)
     assert(self.locked == false)
     self.locked = co
     self.lock_count = 1
 end
 
-function mt:lock()
+function Lock:lock()
     local co = coroutine.running()
     if self.locked == co then
         self.lock_count = self.lock_count + 1
@@ -25,7 +31,7 @@ function mt:lock()
     assert(self.locked == co)
 end
 
-function mt:unlock()
+function Lock:unlock()
     local co = coroutine.running()
     assert(self.locked == co)
     self.lock_count = self.lock_count - 1
@@ -42,7 +48,7 @@ function mt:unlock()
     end
 end
 
-function mt:lock_func(func, ...)
+function Lock:lock_func(func, ...)
     self:lock()
     local ret = { xpcall(func, debug.traceback, ...) }
     self:unlock()
@@ -50,16 +56,4 @@ function mt:lock_func(func, ...)
     return table.unpack(ret, 2)
 end
 
-local M = {}
-
-function M.new()
-    local obj = {
-        locked = false,
-        lock_count = nil,
-        lock_waiter = {}
-    }
-    return setmetatable(obj, mt)
-end
-
-return M
-
+return Lock
