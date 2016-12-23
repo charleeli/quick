@@ -1,6 +1,7 @@
-## Basic requirements
-    [ubuntu 16.04 lts](http://www.ubuntu.com/download/desktop)
-    [redis desktop manager](http://redisdesktop.com/)
+##Basic requirements
+[ubuntu kylin 14.04/16.04 lts](http://www.ubuntukylin.com/downloads/)
+
+[redis desktop manager](https://github.com/uglide/RedisDesktopManager/releases)
 
 ## Ubuntu setup
 ```
