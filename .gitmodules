@@ -31,3 +31,6 @@
 [submodule "3rd/argparse"]
 	path = 3rd/argparse
 	url = https://github.com/mpeterv/argparse.git
+[submodule "3rd/unqlite"]
+	path = 3rd/unqlite
+	url = https://github.com/symisc/unqlite.git

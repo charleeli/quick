@@ -17,7 +17,7 @@ CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR)
 LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -lpthread -lm -ldl -lrt
 DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
 
-all : build skynet lua53 Penlight argparse json lua-orm libenet.so libcrab.so redis
+all : build skynet lua53 Penlight argparse json lua-orm libenet.so libunqlite.so libcrab.so redis
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -58,9 +58,12 @@ libenet.so:3rd/enet/callbacks.c 3rd/enet/compress.c 3rd/enet/host.c \
            3rd/enet/list.c 3rd/enet/packet.c 3rd/enet/peer.c \
            3rd/enet/protocol.c 3rd/enet/unix.c
 	cp -r 3rd/enet/include/enet/ $(BUILD_INCLUDE_DIR)/
-	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libenet.so 
-	
-	
+	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libenet.so
+
+libunqlite.so : 3rd/unqlite/unqlite.c
+	cp 3rd/unqlite/unqlite.h $(BUILD_INCLUDE_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libunqlite.so
+
 libcrab.so : 3rd/crab/crab.c
 	cp 3rd/crab/crab.h $(BUILD_INCLUDE_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libcrab.so
@@ -81,7 +84,7 @@ skynet : skynet/Makefile
 	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
 	install -p -m 0755 3rd/skynet/skynet $(BUILD_BIN_DIR)/skynet
 	
-LUACLIB = lsocket enet log ctime lfs lcrab
+LUACLIB = lsocket enet log ctime lfs lcrab unqlite
 CSERVICE = zinc_client
 
 all : \
@@ -101,7 +104,10 @@ $(BUILD_LUACLIB_DIR)/lsocket.so:3rd/lsocket/lsocket.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
 $(BUILD_LUACLIB_DIR)/enet.so : lualib-src/lua-enet.c | $(BUILD_LUACLIB_DIR)
-	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet 
+	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet
+
+$(BUILD_LUACLIB_DIR)/unqlite.so : lualib-src/lua-unqlite.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lunqlite
 	
 $(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lcrab 
