@@ -21,7 +21,7 @@ gamedb = './config/common/config.gamedb'
 --集群的账号数据库配置文件
 accountdb = './config/common/config.accountdb'
 --冷备份unqlite配置
-unqlitedb = 'gamedb.unqlite'
+unqlitedb = 'game2db.unqlite'
 --敏感词文件
 black_words_path = './config/common/words.txt'
 
