@@ -3,4 +3,6 @@
     account 1: string
     uuid 2: string
     base 3: Base
+    sign 4: Sign
+    mailbox 5: Mailbox
 }

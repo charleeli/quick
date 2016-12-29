@@ -4,8 +4,8 @@ local TypeDef = require 'typedef'
 local Orm = require 'orm'
 
 Orm.init(TypeDef.parse(
-    skynet.getenv("td_main") or 'main.td',
-    skynet.getenv("td_path") or './service/agent/td'
+    skynet.getenv("td_main") or 'main.sproto',
+    skynet.getenv("td_path") or './service/agent/sproto/common'
 ))
 
 local M = {}

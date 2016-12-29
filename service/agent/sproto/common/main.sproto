@@ -1,0 +1,5 @@
+#include base.sproto
+#include chat.sproto
+#include mailbox.sproto
+#include sign.sproto
+#include role.sproto
