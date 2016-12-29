@@ -13,9 +13,6 @@
 [submodule "3rd/redis"]
 	path = 3rd/redis
 	url = https://github.com/antirez/redis.git
-[submodule "3rd/lua-orm"]
-	path = 3rd/lua-orm
-	url = https://github.com/pigparadise/lua-orm.git
 [submodule "3rd/sproto_dump"]
 	path = 3rd/sproto_dump
 	url = https://github.com/lvzixun/sproto_dump.git
