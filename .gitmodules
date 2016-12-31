@@ -7,9 +7,6 @@
 [submodule "3rd/Penlight"]
 	path = 3rd/Penlight
 	url = https://github.com/stevedonovan/Penlight.git
-[submodule "3rd/json-lua"]
-	path = 3rd/json-lua
-	url = https://github.com/jiyinyiyong/json-lua.git
 [submodule "3rd/redis"]
 	path = 3rd/redis
 	url = https://github.com/antirez/redis.git
@@ -31,3 +28,6 @@
 [submodule "3rd/unqlite"]
 	path = 3rd/unqlite
 	url = https://github.com/symisc/unqlite.git
+[submodule "3rd/lua-cjson"]
+	path = 3rd/lua-cjson
+	url = https://github.com/mpx/lua-cjson.git

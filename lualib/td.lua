@@ -1,17 +1,17 @@
 local skynet = require 'skynet'
-local JSON = require "JSON"
-local TypeDef = require 'typedef'
-local Orm = require 'orm'
+local json = require "cjson"
+local typedef = require 'typedef'
+local orm = require 'orm'
 
-Orm.init(TypeDef.parse(
-    skynet.getenv("td_main") or 'main.sproto',
-    skynet.getenv("td_path") or './service/agent/sproto/common'
+orm.init(typedef.parse(
+    skynet.getenv("sproto_main") or 'main.sproto',
+    skynet.getenv("sproto_path") or './service/agent/sproto/common'
 ))
 
 local M = {}
 
 function M.CreateObject(cls_type, raw_lua_value)
-    return Orm.create(cls_type, raw_lua_value)
+    return orm.create(cls_type, raw_lua_value)
 end
 
 function M.dump(td_object)
@@ -28,12 +28,12 @@ end
 
 function M.DumpToJSON(cls_type, td_object)
     assert(td_object.__cls.name == cls_type, "dump to json, class type unmatch")
-    return JSON:encode(M.dump(td_object))
+    return json.encode(M.dump(td_object))
 end
 
 function M.LoadFromJSON(cls_type , raw_json_text)
     assert(raw_json_text, "load from json, no raw_json_text")
-    return M.CreateObject(cls_type, JSON:decode(raw_json_text))
+    return M.CreateObject(cls_type, json.decode(raw_json_text))
 end
 
 function M.DumpToLUA(cls_type, td_object)

@@ -3,7 +3,7 @@ local socket = require "socket"
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
-local json = require "JSON"
+local json = require "cjson"
 local OnlineClient = require 'client.online'
 local ClusterMonitorClient = require 'client.cluster_monitor'
 
@@ -24,7 +24,7 @@ end
 local function quick_reload_res(args)
     LOG_INFO('request the whole quick cluster reload_res')
     local ret = ClusterMonitorClient.reload_res()
-    return json:encode(ret.result)
+    return json.encode(ret.result)
 end
 
 local function quick_kick(args)
@@ -35,7 +35,7 @@ local function quick_kick(args)
         LOG_INFO("kick uid<%s> fail,errcode<%s>",uid,ret.errcode)
     end
     
-    return json:encode(ret)
+    return json.encode(ret)
 end
 
 local Cmd = {
