@@ -10,10 +10,10 @@ skynet.start(function()
         worker[i] = skynet.newservice("ws_worker")
     end
 
-    local ws_worker_port = tonumber(skynet.getenv("ws_worker_port")) or 9527
+    local ws_port = tonumber(skynet.getenv("ws_port")) or 9555
     local balance = 1
-    local id = socket.listen("0.0.0.0", ws_worker_port)
-    LOG_INFO("Listen ws worker port %s",ws_worker_port)
+    local id = socket.listen("0.0.0.0", ws_port)
+    LOG_INFO("Listen ws port %s",ws_port)
 
     socket.start(id , function(id, addr)
         if not worker[balance] then
@@ -32,4 +32,7 @@ skynet.start(function()
             balance = 1
         end
     end)
+
+    skynet.register('.ws_master')
+    LOG_INFO("web_master booted, ws_port<%s>", ws_port)
 end)

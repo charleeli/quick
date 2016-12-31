@@ -7,8 +7,9 @@ start = "main"	-- main script
 bootstrap = "snlua bootstrap"	-- The service for bootstrap
 
 debug_port = 8002
-web_master_port = 8080
-web_worker_port = 8081
+admin_port = 10086
+web_port = 9090
+ws_port = 9091
 maxclient = 100
 
 -- 集群名称配置文件

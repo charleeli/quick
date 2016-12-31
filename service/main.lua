@@ -11,6 +11,7 @@ skynet.start(function()
     
     skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
     skynet.newservice('ws_master')
+    skynet.newservice('web_master')
     skynet.newservice("service_state")
     skynet.monitor('node_monitor')
     skynet.newservice('chat_listener')
@@ -20,8 +21,8 @@ skynet.start(function()
     snax.uniqueservice("accountdb_snax")
 
     if NODE_NAME == require("quick").center_node_name() then
+        skynet.uniqueservice(true, 'admin')
         skynet.uniqueservice(true, 'cluster_monitor')
-        skynet.uniqueservice(true, 'web_master')
         skynet.uniqueservice(true, 'chat_speaker')
         skynet.uniqueservice(true, 'online')
         skynet.uniqueservice(true, 'mailbox')
