@@ -10,9 +10,6 @@
 [submodule "3rd/redis"]
 	path = 3rd/redis
 	url = https://github.com/antirez/redis.git
-[submodule "3rd/sproto_dump"]
-	path = 3rd/sproto_dump
-	url = https://github.com/lvzixun/sproto_dump.git
 [submodule "3rd/levent"]
 	path = 3rd/levent
 	url = https://github.com/xjdrew/levent.git

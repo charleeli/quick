@@ -77,7 +77,7 @@ skynet : skynet/Makefile
 	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
 	install -p -m 0755 3rd/skynet/skynet $(BUILD_BIN_DIR)/skynet
 	
-LUACLIB = lsocket enet log ctime lfs lcrab unqlite cjson
+LUACLIB = lsocket enet log ctime lfs lcrab unqlite cjson base64
 CSERVICE = zinc_client
 
 all : \
@@ -117,6 +117,9 @@ $(BUILD_LUACLIB_DIR)/lfs.so: 3rd/luafilesystem/src/lfs.c | $(BUILD_LUACLIB_DIR)
 $(BUILD_LUACLIB_DIR)/cjson.so: 3rd/lua-cjson/lua_cjson.c 3rd/lua-cjson/fpconv.c \
     3rd/lua-cjson/strbuf.c| $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+
+$(BUILD_LUACLIB_DIR)/base64.so : lualib-src/lua-base64.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
 $(BUILD_CSERVICE_DIR)/zinc_client.so : service-src/zinc_client.c | $(BUILD_CSERVICE_DIR) 
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
@@ -124,14 +127,14 @@ $(BUILD_CSERVICE_DIR)/zinc_client.so : service-src/zinc_client.c | $(BUILD_CSERV
 all : spb
 
 spb:
-	cd $(TOP) && cp $(TOP)/3rd/skynet/luaclib/lpeg.so $(TOP)/3rd/sproto_dump/
+	cd $(TOP) && cp $(TOP)/3rd/skynet/luaclib/lpeg.so $(TOP)/3rd/sprotodump/
 
-	cd $(TOP)/3rd/sproto_dump/ && $(BUILD_BIN_DIR)/lua sprotodump.lua \
+	cd $(TOP)/3rd/sprotodump/ && $(BUILD_BIN_DIR)/lua sprotodump.lua \
 	-spb `find -L $(TOP)/service/agent/sproto/client  -name "*.sproto"`   \
 	`find -L $(TOP)/service/agent/sproto/common  -name "*.sproto"`    \
 	-o $(BUILD_SPROTO_DIR)/c2s.spb
 
-	cd $(TOP)/3rd/sproto_dump/ && $(BUILD_BIN_DIR)/lua sprotodump.lua \
+	cd $(TOP)/3rd/sprotodump/ && $(BUILD_BIN_DIR)/lua sprotodump.lua \
 	-spb `find -L $(TOP)/service/agent/sproto/server  -name "*.sproto"`   \
 	`find -L $(TOP)/service/agent/sproto/common  -name "*.sproto"`    \
 	-o $(BUILD_SPROTO_DIR)/s2c.spb

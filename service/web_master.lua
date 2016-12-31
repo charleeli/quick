@@ -102,7 +102,7 @@ skynet.start(function()
         socket.close(master_id)
     end)
 
-    local worker_num = tonumber(skynet.getenv("thread"))
+    local worker_num = tonumber(skynet.getenv("web_worker_num")) or 4
 
     local worker = {}
     for i= 1, worker_num do

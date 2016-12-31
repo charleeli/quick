@@ -10,6 +10,7 @@ skynet.start(function()
     skynet.uniqueservice("crab_loader")
     
     skynet.newservice("debug_console", tonumber(skynet.getenv("debug_port")))
+    skynet.newservice('ws_master')
     skynet.newservice("service_state")
     skynet.monitor('node_monitor')
     skynet.newservice('chat_listener')
