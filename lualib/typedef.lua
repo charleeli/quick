@@ -88,7 +88,7 @@ local typedef = P {
              )
         )
         +
-        (P"." * name * blanks *
+        (P"."^0 * name * blanks * R"09"^0 * blank0 *
             namedpat(
                 "struct",
                 P"{" * multipat(V"FIELD") * P"}"
@@ -98,7 +98,7 @@ local typedef = P {
 
     STRUCT = namedpat(
         "struct", 
-        blank0 * P"." * name * blank0 * P"{" * multipat(V"FIELD") * P"}"
+        blank0 * P"."^0 * name * blank0 * R"09"^0 * blank0 * P"{" * multipat(V"FIELD") * P"}"
     ),
 
     LIST = namedpat(
