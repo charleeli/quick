@@ -28,3 +28,6 @@
 [submodule "3rd/lua-cjson"]
 	path = 3rd/lua-cjson
 	url = https://github.com/mpx/lua-cjson.git
+[submodule "3rd/sprotodump"]
+	path = 3rd/sprotodump
+	url = https://github.com/lvzixun/sprotodump.git
