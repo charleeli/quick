@@ -1,5 +1,6 @@
 local skynet = require "skynet"
 local socket = require "socket"
+local string = string
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
@@ -7,8 +8,11 @@ local json = require "cjson"
 local OnlineClient = require 'client.online'
 local ClusterMonitorClient = require 'client.cluster_monitor'
 
-local function response(id, ...)
-    local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
+local function response(id, code, result,header)
+    local statusline = string.format("HTTP/1.1 %03d %s\r\n", code, "")
+	sockethelper.writefunc(id)(statusline)
+    sockethelper.writefunc(id)(string.format("content-type: text/html\r\n"))
+    local ok, err = httpd.write_response(sockethelper.writefunc(id), code, result)
     if not ok then
         -- if err == sockethelper.socket_error , that means socket closed.
         skynet.error(string.format("fd = %d, %s", id, err))
@@ -38,10 +42,20 @@ local function quick_kick(args)
     return json.encode(ret)
 end
 
+local function index()
+    local webpage = require "webpage"
+
+    webpage.load("./service/admin/html/index.html")
+    webpage.set("prompt", "Welcome to index page!")
+    webpage.set_bloc("INDEX")
+    return webpage.render()
+end
+
 local Cmd = {
-    ['shutdown']    = quick_shutdown,   --http://0.0.0.0:8080/quick?cmd=shutdown
-    ['reload_res']  = quick_reload_res, --http://0.0.0.0:8080/quick?cmd=reload_res
-    ['kick']        = quick_kick,       --http://0.0.0.0:8080/quick?cmd=kick&uid=6
+    ['shutdown']    = quick_shutdown,   --http://0.0.0.0:10086/quick?cmd=shutdown
+    ['reload_res']  = quick_reload_res, --http://0.0.0.0:10086/quick?cmd=reload_res
+    ['kick']        = quick_kick,       --http://0.0.0.0:10086/quick?cmd=kick&uid=6
+    ['index']       = index,            --http://0.0.0.0:10086/quick?cmd=index
 }
 
 skynet.start(function()
@@ -58,17 +72,10 @@ skynet.start(function()
             if code ~= 200 then
                 response(master_id, code)
             else
-                local tmp = {}
-                
-                if header.host then
-                    table.insert(tmp, string.format("host: %s", header.host))
-                end
-                
                 local path, query = urllib.parse(url)
                 if path ~= '/quick' then
                     response(master_id, code, "path error")
                 end
-                table.insert(tmp, string.format("path: %s", path))
                 
                 if query then
                     local q = urllib.parse_query(query)
@@ -76,21 +83,9 @@ skynet.start(function()
                     local cmd = q['cmd']
                     if cmd and Cmd[cmd] then
                         local result = Cmd[cmd](q)
-                        table.insert(tmp, string.format("result = %s",result))
-                    end
-                    
-                    for k, v in pairs(q) do
-                        table.insert(tmp, string.format("query: %s = %s", k,v))
+                        response(master_id, code, result)
                     end
                 end
-                table.insert(tmp, "-----header----")
-                
-                for k,v in pairs(header) do
-                    table.insert(tmp, string.format("%s = %s",k,v))
-                end
-                table.insert(tmp, "-----body----\n" .. body)
-                
-                response(master_id, code, table.concat(tmp,"\n"))
             end
         else
             if url == sockethelper.socket_error then

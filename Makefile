@@ -77,7 +77,7 @@ skynet : skynet/Makefile
 	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
 	install -p -m 0755 3rd/skynet/skynet $(BUILD_BIN_DIR)/skynet
 	
-LUACLIB = lsocket enet log ctime lfs lcrab unqlite cjson base64
+LUACLIB = lsocket enet log ctime lfs lcrab unqlite cjson base64 webpage
 CSERVICE = zinc_client
 
 all : \
@@ -119,6 +119,9 @@ $(BUILD_LUACLIB_DIR)/cjson.so: 3rd/lua-cjson/lua_cjson.c 3rd/lua-cjson/fpconv.c 
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 
 $(BUILD_LUACLIB_DIR)/base64.so : lualib-src/lua-base64.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+
+$(BUILD_LUACLIB_DIR)/webpage.so : lualib-src/lua-webpage.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 	
 $(BUILD_CSERVICE_DIR)/zinc_client.so : service-src/zinc_client.c | $(BUILD_CSERVICE_DIR) 

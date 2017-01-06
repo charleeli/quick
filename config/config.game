@@ -33,6 +33,7 @@ log_basename = "game"
 --游戏服务所在位置
 gameservice = "./service/?.lua;" ..
               "./service/?/main.lua;"..
+              "./service/admin/?.lua;"..
               "./service/agent/?.lua"
   
 -- LUA服务所在位置
