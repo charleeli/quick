@@ -1,6 +1,7 @@
 local skynet = require "skynet"
 local socket = require "socket"
 local string = string
+local webpage = require "webpage"
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
@@ -43,12 +44,20 @@ local function quick_kick(args)
 end
 
 local function index()
-    local webpage = require "webpage"
-
     webpage.load("./service/admin/html/index.html")
     webpage.set("prompt", "Welcome to index page!")
-    webpage.set_bloc("INDEX")
+    webpage.set("runtime", math.floor(skynet.now()/100))
+    webpage.set_block("INDEX")
     return webpage.render()
+end
+
+local function login(args)
+    if(args["username"] ~= "admin" or args["password"] ~= "admin") then
+        webpage.load("./service/admin/html/login.html");
+        return webpage.render()
+    end
+
+    return index()
 end
 
 local Cmd = {
@@ -56,6 +65,7 @@ local Cmd = {
     ['reload_res']  = quick_reload_res, --http://0.0.0.0:10086/quick?cmd=reload_res
     ['kick']        = quick_kick,       --http://0.0.0.0:10086/quick?cmd=kick&uid=6
     ['index']       = index,            --http://0.0.0.0:10086/quick?cmd=index
+    ['login']       = login,            --http://0.0.0.0:10086/quick?cmd=login&username='admin'&password='admin'
 }
 
 skynet.start(function()

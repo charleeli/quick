@@ -58,7 +58,7 @@ static int                      length;
 
 int load(const char * filename);
 void set(const char *  token, const char *  val);
-void set_bloc(const char *  block);
+void set_block(const char *  block);
 void render();
 
 static void init();
@@ -424,7 +424,7 @@ void del_block(tpl_block_t * pst)
     pst = tmp;
 }
 
-void set_bloc(const char * block)
+void set_block(const char * block)
 {
     tpl_block_t     *pst, *begin;
     int             i, nb;
@@ -538,10 +538,10 @@ int lset (lua_State *L) {
 }
 
 static
-int lset_bloc (lua_State *L) {
+int lset_block (lua_State *L) {
     size_t l;
     const char *block = luaL_checklstring(L, 1, &l);
-    set_bloc(block);
+    set_block(block);
     return 0;
 }
 
@@ -560,7 +560,7 @@ luaopen_webpage(lua_State *L) {
 	luaL_Reg l[] = {
 		{ "load", lload },
 		{ "set", lset },
-		{ "set_bloc", lset_bloc },
+		{ "set_block", lset_block },
 		{ "render", lrender },
 		{ NULL, NULL },
 	};
@@ -569,16 +569,3 @@ luaopen_webpage(lua_State *L) {
 
 	return 1;
 }
-
-//gcc webpage.c -o webpage
-/*
-int main()
-{
-    load("./index.html");
-    set("prompt","Welcome to index page!");
-    set_bloc("INDEX");
-    render();
-    printf("%s",result);
-    return 1;
-}
-*/

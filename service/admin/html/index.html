@@ -8,20 +8,50 @@
 		<style type="text/css">
 			html{font-size:12px;}
 			fieldset{width:520px; margin: 0 auto;}
-			legend{font-weight:bold; font-size:14px;}
+			legend{font-weight:bold; font-size:22px;}
 			label{float:left; width:70px; margin-left:10px;}
 			.left{margin-left:80px;}
 			.input{width:150px;}
-			span{color: #666666;}
+			span{color: #ff1827;}
+
+			div.box {
+                position: absolute;
+                width:400px;
+                height:200px;
+                left:50%;
+                top:50%;
+                margin-left:-200px;
+                margin-top:-100px;
+            }
 		</style>
+
+		<script>
+			window.onload=function(){
+				var old_timestamp = (new Date()).valueOf();
+				var old_val = Math.floor(parseInt(document.getElementById("div1").innerHTML));
+
+				setInterval(function(){
+					var new_timestamp = (new Date()).valueOf();
+
+					var oDiv = document.getElementById("div1")
+					oDiv.innerHTML = Math.floor((new_timestamp - old_timestamp)/1000) + old_val;
+				},1000);
+			}
+	 	</script>
 	</head>
 
 	<body bgcolor="#6699FF">
-		<div>
+		<div class="box">
 			<!-- #BeginBlock INDEX-->
 			<legend> ##prompt##</legend>
 			<!-- #EndBlock INDEX-->
-			<a href="http://127.0.0.1:10086/login?">登录</a>
+
+			<br/>
+			this skynet node has run <span id="div1">##runtime##</span> seconds.
+
+			<br/><br/>
+
+			<a href="http://127.0.0.1:10086/quick?cmd=login">重新登录</a>
 		</div>
 	</body>
 </html>

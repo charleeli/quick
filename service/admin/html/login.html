@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Admin Platform</title>
+
+        <style type="text/css">
+            html{font-size:12px;}
+            fieldset{width:520px; margin: 0 auto;}
+            legend{font-weight:bold; font-size:22px;}
+            label{float:left; width:70px; margin-left:10px;}
+            .left{margin-left:80px;}
+            .input{width:150px;}
+            span{color: #666666;}
+
+            div.box {
+                position: absolute;
+                width:400px;
+                height:200px;
+                left:50%;
+                top:50%;
+                margin-left:-200px;
+                margin-top:-100px;
+            }
+        </style>
+
+        <script language="javascript" type="text/javascript">
+            function Button1_onclick() {
+            var url = "http://127.0.0.1:10086/quick?cmd=login&username="
+            +username.value + "&password=" + password.value;
+            window.location.href = url;
+            }
+        </script>
+    </head>
+
+    <body bgcolor="#6699FF">
+        <div class="box">
+            <legend > Quick administration </legend>
+
+            <br/>
+
+            <p>
+                <label for="44" class="label">Username:</label><br/>&nbsp;&nbsp;
+                <input id="username" name="username" type="text" class="input" value="admin"/>
+            <p/>
+
+            <p>
+                <label for="123" class="label">Password:</label><br/>&nbsp;&nbsp;
+                <input id="password" name="password" type="password" class="input" value="admin"/>
+            <p/>
+
+            <p>
+                &nbsp;&nbsp;
+                <input id="Button1" type="button" value="Log in" onclick="return Button1_onclick()" />
+            </p>
+        </div>
+    </body>
+</html>
