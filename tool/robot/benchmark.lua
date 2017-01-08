@@ -1,7 +1,7 @@
-package.cpath = "../../3rd/skynet/luaclib/?.so;../../build/luaclib/?.so;../../3rd/levent/?.so"
+package.cpath = "../../3rd/skynet/luaclib/?.so;../../build/luaclib/?.so;../../build/luaclib/levent/?.so;"
 local service_path = "../../lualib/?.lua;" .. "../../service/?.lua;"
         .. "../../lualib/preload/?.lua;".."../../build/lualib/?.lua;"
-package.path = package.path ..";../../3rd/levent/?.lua;../../3rd/skynet/lualib/?.lua;../../3rd/skynet/service/?.lua;"
+package.path = package.path ..";../../3rd/skynet/lualib/?.lua;../../3rd/skynet/service/?.lua;"
         .. service_path
 
 local levent = require "levent.levent"

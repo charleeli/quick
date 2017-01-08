@@ -1,4 +1,4 @@
-package.cpath = package.cpath .. ";../../build/luaclib/?.so"
+package.cpath = package.cpath .. ";../../build/luaclib/levent/?.so;../../build/luaclib/?.so;"
 package.path = package.path .. ";../../lualib/?.lua;../../3rd/skynet/lualib/?.lua;".."../../build/lualib/?.lua;"
 
 local argparse = require "argparse"

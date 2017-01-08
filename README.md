@@ -5,7 +5,7 @@
 
 ## Ubuntu setup
 ```
-sudo apt-get install cmake autoconf libreadline-dev git gitg
+sudo apt-get install autoconf libreadline-dev git gitg
 ```
 
 ## Building from source
@@ -44,13 +44,9 @@ send_private_mail {to_uuid = '56d92ba7e428a68d57000486',subject='quick',content=
 
 ## Benchmark
 ```
-cd ./3rd/levent
-cmake .
-make
-
-cd ./tools/robot
+cd ./tool/robot
 ../../build/bin/lua client.lua
 script ./script/sign.lua
 
-../../build/bin/lua benchmark.lua -script ./script/sign.lua
+../../build/bin/lua benchmark.lua -s ./script/sign.lua
 ```
