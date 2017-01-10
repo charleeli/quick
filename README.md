@@ -29,7 +29,7 @@ make
 ./build/bin/skynet config/config.game2
 
 启动客户端
-cd ./tools
+cd ./tool
 ../build/bin/lua client.lua
 ../build/bin/lua client2.lua
 

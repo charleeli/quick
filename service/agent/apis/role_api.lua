@@ -5,7 +5,6 @@ local Lock = require 'lock'
 local SessionLock = require 'session_lock'
 local Date = require 'date'
 local TimerMgr = require 'timer_mgr'
-local Const = require 'const'
 local Bson   = require 'bson'
 local Env = require 'env'
 local Role = require 'cls.role'
@@ -34,7 +33,7 @@ function M.reset_timer()
     if Env.timer_mgr then
         Env.timer_mgr:stop()
     end
-    Env.timer_mgr = TimerMgr(8)
+    Env.timer_mgr = TimerMgr(10)
 end
 
 function M._load_role(role_td)
@@ -43,26 +42,17 @@ function M._load_role(role_td)
     role:init_apis()
  
     M.reset_timer()
-    Env.timer_mgr:add_timer(
-        60,
-        function()
-            role:save_db() 
-        end
-    )
+    Env.timer_mgr:add_timer(60, function()
+        role:save_db()
+    end)
     
-    Env.timer_mgr:add_timer(
-        18,
-        function() 
-            role:check_cron_update()
-        end
-    )
+    Env.timer_mgr:add_timer(20, function()
+        role:check_cron_update()
+    end)
     
-    Env.timer_mgr:add_timer(
-        Const.MAIL_UPDATE_INTERVAL,
-        function()
-            role:lock_session('update_mailbox')
-        end
-    )
+    Env.timer_mgr:add_timer(180, function()
+        role:lock_session('update_mailbox')
+    end)
 
     Env.timer_mgr:start()
     collectgarbage("collect")

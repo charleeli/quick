@@ -5,7 +5,7 @@ local class = require 'pl.class'
 local TimerMgr = class()
 
 function TimerMgr:_init(check_interval)
-    self.check_interval = check_interval
+    self.check_interval = check_interval or 1
     self.running = false
     self.timestamp = 0
     self.handle = 1
