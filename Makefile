@@ -93,7 +93,7 @@ skynet : skynet/Makefile
 	cp 3rd/skynet/skynet-src/skynet_socket.h $(BUILD_INCLUDE_DIR)
 	install -p -m 0755 3rd/skynet/skynet $(BUILD_BIN_DIR)/skynet
 	
-LUACLIB = lsocket enet log ctime lfs lcrab unqlite cjson base64 webpage
+LUACLIB = lsocket enet log ctime lfs lcrab unqlite cjson base64 webpage random
 LEVENTLIB = levent bson mongo
 CSERVICE = zinc_client
 
@@ -140,6 +140,9 @@ $(BUILD_LUACLIB_DIR)/base64.so : lualib-src/lua-base64.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 
 $(BUILD_LUACLIB_DIR)/webpage.so : lualib-src/lua-webpage.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
+
+$(BUILD_LUACLIB_DIR)/random.so : lualib-src/lua-random.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 
 $(BUILD_LUACLIB_DIR)/levent/levent.so : 3rd/levent/src/lua-levent.c 3rd/levent/src/lua-errno.c \
