@@ -4,12 +4,10 @@ local OnlineClient = require 'client.online'
 
 local Cmd = {}
 
-function Cmd.call_agent(uuid, op, ...)
-    local uid,node,agent
-
-    uid = ret.base.uid
+function Cmd.call_agent(uid, op, ...)
+    local node,agent
     
-    ret = OnlineClient.query(uid)
+    local ret = OnlineClient.query(uid)
     if ret.errcode ~= ERRNO.E_OK then
         LOG_INFO("call_agent fail,query uid<%s>,errcode<%s>",uid,ret.errcode)
         return Skynet.retpack{errcode = ret.errcode }
@@ -27,8 +25,8 @@ function Cmd.call_agent(uuid, op, ...)
     return Skynet.retpack{errcode = ERRNO.E_OK, ret = resp}
 end
 
-function Cmd.send_agent(uuid, op, ...)
-    Skynet.fork(Cmd.call_agent, uuid, op, ...)
+function Cmd.send_agent(uid, op, ...)
+    Skynet.fork(Cmd.call_agent, uid, op, ...)
 end
 
 Skynet.start(function()

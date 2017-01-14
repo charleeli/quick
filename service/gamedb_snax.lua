@@ -14,7 +14,7 @@ function init(...)
         auth = skynet.getenv('redis_auth') or '123456',
     },'redis connect error')
 
-    unqlitedb = unqlite.open(skynet.getenv("unqlitedb"))
+    unqlitedb = unqlite.open(skynet.getenv("cold_backup"))
 end
 
 function exit(...)
@@ -28,7 +28,7 @@ function response.set(key,value)
     end
 
     if unqlitedb == nil then
-        unqlitedb = unqlite.open(skynet.getenv("unqlitedb"))
+        unqlitedb = unqlite.open(skynet.getenv("cold_backup"))
     end
 
     unqlite.begin(unqlitedb)

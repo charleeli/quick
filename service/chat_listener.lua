@@ -1,7 +1,7 @@
 local Skynet = require "skynet"
 local Const = require "const"
 local Date = require "date"
-local TimerMgr = require 'timer_mgr'
+local TimerMgr = require 'timer'
 local Connector = require 'connector'
 local Quick = require 'quick'
 

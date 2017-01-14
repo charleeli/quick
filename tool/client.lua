@@ -2,7 +2,6 @@ package.cpath = "../3rd/skynet/luaclib/?.so;../build/luaclib/?.so"
 local service_path = "../lualib/?.lua;" .. "../service/?.lua;" .. "../lualib/preload/?.lua"
 package.path = "../3rd/skynet/lualib/?.lua;../3rd/skynet/service/?.lua;" .. service_path
 
-local netpack = require "netpack"
 local socket = require "clientsocket"
 local crypt = require "crypt"
 require "luaext"
@@ -28,7 +27,7 @@ local UID
 
 local index = 0
 
-local fd = nil
+local fd
 
 local function send_package(fd, pack)
     socket.send(fd, string.pack(">s2", pack))
@@ -92,9 +91,7 @@ local session = 0
 local function send_request(name, args)
     session = session + 1
     local v = sproto_client(name, args, session)
-    local size = #v + 4
-    local package = string.pack(">I2", size)..v..string.pack(">I4", session)
-    socket.send(fd, package)
+    socket.send(fd, string.pack(">s2", v))
     print_request(name, session,args)
 end
 
@@ -116,11 +113,8 @@ local function dispatch_package()
         if not v then
             break
         end
-        
-        local size = #v - 5
-        local content, ok, session = string.unpack("c"..tostring(size).."B>I4", v)
-        
-        print_package(sproto_server:dispatch(content))
+
+        print_package(sproto_server:dispatch(v))
     end
 end
 
@@ -267,4 +261,3 @@ local function main()
 end
 
 main()
-

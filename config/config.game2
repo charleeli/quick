@@ -3,8 +3,8 @@ thread = 8
 logger = nil
 logpath = "."
 harbor = 0
-start = "main"	-- main script
-bootstrap = "snlua bootstrap"	-- The service for bootstrap
+start = "main"
+bootstrap = "snlua bootstrap"
 
 debug_port = 8002
 admin_port = 10086
@@ -12,28 +12,34 @@ web_port = 9090
 ws_port = 9091
 maxclient = 100
 
--- 集群名称配置文件
-cluster = "./config/common/clustername.lua"
---本节点名
-nodename = "game2"
---集群中心节点配置文件     
-center = './config/common/centernode.lua'
---集群的数据库配置文件
-gamedb = './config/common/config.gamedb'
---集群的账号数据库配置文件
-accountdb = './config/common/config.accountdb'
---冷备份unqlite配置
-unqlitedb = 'game2db.unqlite'
---敏感词文件
-black_words_path = './config/common/words.txt'
-
+-- 日志路径
 log_dirname = "log"
 log_basename = "game2"
 
---游戏服务所在位置
+-- 冷备数据库配置文件
+cold_backup = 'game2.unqlite'
+
+-- 本节点名
+nodename = "game2"
+
+-- 集群名称配置文件
+cluster = "./config/common/clustername.lua"
+
+-- 集群中心节点配置文件
+center = './config/common/centernode.lua'
+
+-- 游戏数据库配置文件
+gamedb = './config/common/gamedb.lua'
+
+-- 账号数据库配置文件
+accountdb = './config/common/accountdb.lua'
+
+-- 敏感词文件
+black_words_path = './config/common/words.txt'
+
+-- 游戏服务所在位置
 gameservice = "./service/?.lua;" ..
               "./service/?/main.lua;"..
-              "./service/admin/?.lua;"..
               "./service/agent/?.lua"
   
 -- LUA服务所在位置
@@ -49,7 +55,7 @@ preload = "./lualib/preload/preload.lua"
 -- C编写的服务模块路径
 cpath = skynetroot .. "cservice/?.so;".."./build/cservice/?.so"
 
--- 将添加到 package.path 中的路径，供 require 调用。
+-- 将添加到 package.path 中的路径，供 require 调用
 lua_path = skynetroot .."lualib/?.lua;" ..
             "./lualib/?.lua;" ..
 		    "./lualib/preload/?.lua;" ..

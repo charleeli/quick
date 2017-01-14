@@ -1,29 +1,25 @@
 local skynet = require "skynet"
 local queue = require "skynet.queue"
 local snax = require "snax"
-local netpack = require "netpack"
+local ctime = require "ctime"
 local lfs = require"lfs"
-local SprotoLoader = require "sprotoloader"
-local SprotoEnv = require "sproto_env"
-local Env = require 'env'
-local Cmd = require 'command'
-local RoleApi = require 'apis.role_api'
-local OnlineClient = require 'client.online'
+local sprotoloader = require "sprotoloader"
+local sproto_env = require "sproto_env"
+local cmd = require 'cmd'
 
-local c2s_sp = SprotoLoader.load(SprotoEnv.PID_C2S)
-local c2s_host = c2s_sp:host(SprotoEnv.PACKAGE)
+local c2s_sp = sprotoloader.load(sproto_env.PID_C2S)
+local c2s_host = c2s_sp:host(sproto_env.PACKAGE)
 
 local cs = queue()
 local UID
 local SUB_ID
 local SECRET
+local FD
 local afktime = 0
 
 local gate		-- 游戏服务器gate地址
-local fd        -- msgagent对应的fd应用层套接字
-local zinc_client   -- msgagent对应的zinc_client服务
-
 local CMD = {}
+local zinc_client   -- msgagent对应的zinc_client服务
 
 local worker_co
 local running = false
@@ -77,26 +73,21 @@ local function logout()
 	if gate then
 		skynet.call(gate, "lua", "logout", UID, SUB_ID)
 	end
-	
-	OnlineClient.offline(UID)
 
 	gate = nil
 	UID = nil
 	SUB_ID = nil
 	SECRET = nil
-	fd = nil
 
 	ti = {}
 	afktime = 0
-	
-	skynet.kill(zinc_client)
+
+    skynet.kill(zinc_client)
 	zinc_client = nil
 
-	-- 卸载玩家数据
-	RoleApi.apis.close()
-	
+	cmd.close()	-- 卸载玩家数据
 	--这里不退出agent服务，以便agent能复用
-	--skynet.exit()	-- 玩家显示登出，需要退出agent服务
+	--skynet.exit()
 end
 
 -- 空闲登出
@@ -115,52 +106,50 @@ end
 -- 玩家登录游服后调用
 function CMD.login(source, uid, subid, secret)
 	-- you may use secret to make a encrypted data stream
-	LOG_INFO(string.format("%d is login", uid))
+	LOG_INFO("[%s] %d is login", skynet.address(skynet.self()), uid)
 	gate = source
 	UID = uid
 	SUB_ID = subid
 	SECRET = secret
-    
+
 	ti = {}
 	afktime = 0
 end
 
 -- 玩家登录游服，握手成功后调用
-function CMD.auth(source, uid,fd)
-	LOG_INFO(string.format("%d is real login", uid))
-	
-	fd = fd
-	
-	zinc_client = skynet.launch("zinc_client", fd)
-	
-	LOG_INFO(
-	    "init agent's environmnet uid=%d fd=%d zinc_client=%x", 
-	    uid, fd,zinc_client
+function CMD.auth(source, uid, client_fd)
+	FD = client_fd
+	LOG_INFO("[%s] %d is real login", skynet.address(skynet.self()), uid)
+
+    zinc_client = skynet.launch("zinc_client", FD)
+    LOG_INFO(
+	    "[%s] init agent's environmnet uid=%d fd=%d zinc_client=%x",
+	    skynet.address(skynet.self()), uid, FD, zinc_client
     )
-	RoleApi.apis.start({uid = uid,zinc_client = zinc_client})
-	
-    local ret = OnlineClient.online(NODE_NAME, skynet.self(),UID,SUB_ID)
-    if ret.errcode ~= ERRNO.E_OK then
-        LOG_INFO('OnlineClient.online fail, ac:<%s>, errcode<%s>', UID, ret.errcode)
-    end
-	
+
+    cmd.start({uid = uid, subid = SUB_ID, zinc_client = zinc_client})
+
 	if not running then
 		running = true
 		reg_timers()
 		worker_co = skynet.fork(worker)
-	end
+    end
+end
+
+function CMD.online(source, uid, client_fd)
+
 end
 
 function CMD.logout(source)
 	-- NOTICE: The logout MAY be reentry
-	skynet.error(string.format("%s is logout,subid=%d", UID, SUB_ID))
+	LOG_INFO("[%s] %s is logout", skynet.address(skynet.self()), UID)
 	logout()
 end
 
 function CMD.afk(source)
 	-- the connection is broken, but the user may back
 	afktime = skynet.time()
-	skynet.error(string.format("AFK"))
+	skynet.error(string.format("[%s] AFK", skynet.address(skynet.self())))
 end
 
 local request_handlers = {}
@@ -173,7 +162,7 @@ local function load_request_handlers()
             local module_data = setmetatable({}, { __index = _ENV })
             local routine, err = loadfile(path..'/'..file, "bt", module_data)
             assert(routine, err)()
-            
+
             for k, v in pairs(module_data) do
                 if type(v) == 'function' then
                     request_handlers[k] = v
@@ -184,34 +173,31 @@ local function load_request_handlers()
 end
 
 local function msg_unpack(msg, sz)
-	local netmsg = netpack.tostring(msg, sz, 0) 
+	local netmsg = skynet.tostring(msg, sz)
 	if not netmsg then
-		LOG_ERROR("msg_unpack error")
-		error("msg_unpack error")
+		LOG_ERROR("[%s] msg_unpack error", skynet.address(skynet.self()))
+		error("[%s] msg_unpack error", skynet.address(skynet.self()))
 	end
 	
 	return netmsg
 end
 
-local function format_errmsg(errno, errmsg)
-	local err = {}
-	err.code = errno or 0
-	err.desc = errmsg
-	return err
-end
-
 local function msg_dispatch(netmsg)
-    local begin = skynet.time()
+    local begin = ctime.timestamp()
 	local type, name, request, response = c2s_host:dispatch(netmsg)
-	
+
 	if not request_handlers[name] then
-	    LOG_ERROR('request_handler %s not exist or not loaded',name)
+	    LOG_ERROR('[%s] request_handler %s not exist or not loaded',skynet.address(skynet.self()), name)
 	end
-	
-	local r = request_handlers[name](request)
-	
-	LOG_INFO("process %s time used %f ms", name, (skynet.time()-begin)*10)
-	return response(r)	
+
+	if cmd.verify(name) then
+		local r = request_handlers[name](request)
+    	skynet.send(zinc_client, "zinc_client", string.pack(">s2",response(r)))
+	else
+		skynet.send(zinc_client, "zinc_client", string.pack(">s2",response{errcode = ERRNO.E_ROLE_NOT_ONLINE}))
+	end
+
+	LOG_INFO("[%s] process %s time used %f ms", skynet.address(skynet.self()), name, (ctime.timestamp()-begin)*1000)
 end
 
 skynet.register_protocol {
@@ -223,20 +209,20 @@ skynet.register_protocol {
 	end,
 
 	dispatch = function (_, _, netmsg)
-		skynet.ret(msg_dispatch(netmsg))
+		msg_dispatch(netmsg)
 	end
 }
 
 skynet.start(function()
     -- If you want to fork a work thread , you MUST do it in CMD.login
 	skynet.dispatch("lua", function(session, source, command, ...)
-		if Cmd[command] then 
-		    Cmd[command](...)
+		if cmd[command] then
+		    cmd[command](...)
 		else
-		    local f = assert(CMD[command],string.format('illegal command:%s',command))
+		    local f = assert(CMD[command], string.format('illegal command:%s',command))
 		    skynet.retpack(cs(f, source, ...))
 	    end
 	end)
-	
+
 	load_request_handlers()
 end)

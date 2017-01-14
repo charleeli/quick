@@ -76,22 +76,22 @@ local function main()
     print("please wait servial seconds...")
     levent.sleep(3)  
 
-    print("-------------------------------------------------")
+    --print('-------------------------------------------')
     local send_count = #sendCh
     for i = 1,send_count do
         local info = sendCh:get()
-        print(info.session,info.send_time,info.cmd,info.args)
+        --print(info.session,info.send_time,info.cmd,info.args)
         if first_send_time == 0 or first_send_time > info.send_time then
             first_send_time = info.send_time
         end
             
     end
     
-    print("-------------------------------------------------")
+    --print('-------------------------------------------')
     local recv_count = #recvCh
     for i = 1, recv_count do
         local info = recvCh:get()
-        print(info.elapse,info.errcode,info.session,info.recv_time,info.cmd,info.args)
+        --print(info.elapse,info.errcode,info.session,info.recv_time,info.cmd,info.args)
         if first_recv_time == 0 or first_recv_time > info.recv_time then
             first_recv_time = info.recv_time
         end
@@ -110,11 +110,12 @@ local function main()
         end
     end
     
-    print("-------------------------------------------------")
+    print('-------------------------------------------')
     for k,v in pairs(resmap) do
-        print(k,v.elapse/v.count,v.count)
+        print(k, v.count, v.elapse/v.count)
     end
-    
+
+    print('-------------------------------------------')
     if args.concurrency >= 2 then
         local duration = last_send_time - first_send_time
         print("duration:",duration)

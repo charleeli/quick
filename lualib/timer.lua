@@ -1,10 +1,10 @@
-local Skynet = require "skynet"
-local Date   = require "date"
+local skynet = require "skynet"
+local date  = require "date"
 local class = require 'pl.class'
 
-local TimerMgr = class()
+local Timer = class()
 
-function TimerMgr:_init(check_interval)
+function Timer:_init(check_interval)
     self.check_interval = check_interval or 1
     self.running = false
     self.timestamp = 0
@@ -14,7 +14,7 @@ function TimerMgr:_init(check_interval)
     self.timers = {}
 end
 
-function TimerMgr:add_timer(interval, func, immediate, times)
+function Timer:add_timer(interval, func, immediate, times)
     assert(interval >= self.check_interval, interval)
     local handle = self.handle
     self.handle = handle + 1
@@ -23,23 +23,28 @@ function TimerMgr:add_timer(interval, func, immediate, times)
         func = func, 
         wakeup = immediate and 0 or interval,
         times = times or 0,
-        timestamp = Date.second(),
+        timestamp = date.second(),
     }
     return handle
 end
 
-function TimerMgr:remove_timer(handle)
+function Timer:set_interval(interval, func)
+    self:start()
+    return self:add_timer(interval, func)
+end
+
+function Timer:remove_timer(handle)
     self.to_deleted[handle] = true
 end
 
-function TimerMgr:update()
+function Timer:update()
     for k,v in pairs(self.pending) do
         self.timers[k] = v
     end
     for k,_ in pairs(self.to_deleted) do
         self.timers[k] = nil
     end
-    local second = Date.second()
+    local second = date.second()
     for k,v in pairs(self.timers) do
         local interval = second - v.timestamp
         if v.wakeup <= interval then
@@ -59,23 +64,23 @@ function TimerMgr:update()
     end
 end
 
-function TimerMgr:start()
+function Timer:start()
     if self.running then
         return
     end
     self.running = true
-    self.timestamp = Date.second()
-    Skynet.fork(function ()
+    self.timestamp = date.second()
+    skynet.fork(function ()
         while self.running do
             self:update()
-            Skynet.sleep(self.check_interval * 100)
+            skynet.sleep(self.check_interval * 100)
         end
     end)
     return
 end
 
-function TimerMgr:stop()
+function Timer:stop()
     self.running = false
 end
 
-return TimerMgr
+return Timer

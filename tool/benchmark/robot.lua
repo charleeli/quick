@@ -115,9 +115,7 @@ end
 function Robot:send_request(name, args)
     self.session = self.session + 1
     local v = sproto_client(name, args, self.session)
-    local size = #v + 4
-    local package = string.pack(">I2", size)..v..string.pack(">I4", self.session)
-    socket.send(self.fd, package)
+    socket.send(self.fd, string.pack(">s2", v))
     self:print_request(name, self.session,args)
 end
 
@@ -139,10 +137,7 @@ function Robot:dispatch_package()
             break
         end
         
-        local size = #v - 5
-        local content, ok, session = string.unpack("c"..tostring(size).."B>I4", v)
-        
-        msg_type, session, resp = sproto_server:dispatch(content)
+        msg_type, session, resp = sproto_server:dispatch(v)
         self:print_package(msg_type, session, resp)
         if msg_type == "RESPONSE" then
             return msg_type, session, resp

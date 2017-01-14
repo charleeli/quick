@@ -3,18 +3,20 @@ thread = 8
 logger = nil
 logpath = "."
 harbor = 0
-start = "main"	-- main script
-bootstrap = "snlua bootstrap"	-- The service for bootstrap
+start = "main"
+bootstrap = "snlua bootstrap"
+
+-- 日志路径
+log_dirname = "log"
+log_basename = "login"
 
 -- 集群名称配置文件
 cluster = "./config/common/clustername.lua"
 
 --账号中心配置文件
-accountdb= './config/common/config.accountdb'
+accountdb= './config/common/accountdb.lua'
 
-log_dirname = "log"
-log_basename = "login"
-
+-- 登录服务所在位置
 loginservice = "./service/login/?.lua;" ..
 			   "./service/?.lua;"
 
