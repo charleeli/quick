@@ -13,9 +13,6 @@
 [submodule "3rd/lsocket"]
 	path = 3rd/lsocket
 	url = https://github.com/cloudwu/lsocket.git
-[submodule "3rd/argparse"]
-	path = 3rd/argparse
-	url = https://github.com/mpeterv/argparse.git
 [submodule "3rd/unqlite"]
 	path = 3rd/unqlite
 	url = https://github.com/symisc/unqlite.git
@@ -28,9 +25,9 @@
 [submodule "3rd/libev"]
 	path = 3rd/libev
 	url = https://github.com/enki/libev.git
-[submodule "3rd/levent"]
-	path = 3rd/levent
-	url = https://github.com/xjdrew/levent.git
 [submodule "3rd/skynet"]
 	path = 3rd/skynet
 	url = https://github.com/cloudwu/skynet.git
+[submodule "3rd/levent"]
+	path = 3rd/levent
+	url = https://github.com/xjdrew/levent.git
