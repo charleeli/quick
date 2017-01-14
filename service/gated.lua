@@ -160,5 +160,13 @@ function server.is_online(uid)
 	end
 end
 
+function server.get_users()
+    local _users = {}
+    for _,v in pairs(users) do
+        table.insert(_users,v)
+    end
+    return _users
+end
+
 msgserver.start(server)		-- 启动游戏服务器
 skynet.register(SERVICE_NAME)

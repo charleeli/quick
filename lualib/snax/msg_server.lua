@@ -137,6 +137,7 @@ function server.start(conf)
 		get_agents = assert(conf.get_agents),
 		get_agent = assert(conf.get_agent),
 		is_online = assert(conf.is_online),
+		get_users = assert(conf.get_users),
 	}
 
 	-- 内部命令处理

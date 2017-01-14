@@ -38,8 +38,9 @@ load_role
 gm  {cmd="set level 99"}
 view_sign
 send_world_chat {msg = "hello everyone!"}
-send_private_chat {uuid = '56d92ba7e428a68d57000486', msg = 'hi 486'}
-send_private_mail {to_uuid = '56d92ba7e428a68d57000486',subject='quick',content='quick is good'}
+send_private_chat {uuid = '5879ce6ee428a67f3fe05345', msg = 'hi 486'}
+send_private_mail {to_uuid = '5879ce6ee428a67f3fe05345',subject='quick',content='quick is good'}
+update_mailbox
 ```
 
 ## Benchmark

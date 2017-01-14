@@ -160,7 +160,7 @@ function apis:update_mailbox()
   
     local ret = MailboxClient.pull_mails(self:get_uuid())
     if ret.errcode and ret.errcode ~= ERRNO.E_OK then
-        return ret.errcode
+        return {errcode = ret.errcode}
     end
     
     local add_pmails, add_smails = {}, {}
@@ -195,7 +195,7 @@ function apis:update_mailbox()
         Notify.mail(pmails,smails)
     end
     
-    return ERRNO.E_OK
+    return {errcode = ERRNO.E_OK}
 end
 
 local triggers = {

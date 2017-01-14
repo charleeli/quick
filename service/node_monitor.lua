@@ -1,4 +1,5 @@
 local Skynet = require "skynet"
+local Cluster = require 'cluster'
 local Acceptor = require 'acceptor'
 local Connector = require 'connector'
 local OnlineClient = require 'client.online'
@@ -13,7 +14,7 @@ end
 
 local is_shutdown = false
 local services_monitered = {}
-local cluster_monitor_connector = nil
+local cluster_monitor_connector
 
 local function connect_cluster_monitor_cb(...)
     LOG_INFO("trying to connect cluster_monitor", ...)

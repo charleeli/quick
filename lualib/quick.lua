@@ -1,6 +1,5 @@
 local Skynet = require "skynet"
 local Cluster = require 'cluster'
-local netpack = require "netpack"
 local SprotoLoader = require "sprotoloader"
 local SprotoEnv = require "sproto_env"
 
@@ -14,8 +13,8 @@ local Quick = {}
 function Quick.notify(zinc_client, api, args)
     Skynet.send(
         zinc_client, 
-        "zinc_client", 
-        netpack.pack_string(s2c_encode_req(api, args)..string.pack("B>I4",1,0))
+        "zinc_client",
+        string.pack(">s2", s2c_encode_req(api, args))
     )
 end
 
