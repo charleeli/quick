@@ -21,7 +21,7 @@ make
 ./build/bin/redis-server ./config/database/accountdb.conf
 
 启动存储服务器
-./build/bin/redis-server ./config/database/gamedb.conf
+./build/bin/redis-server ./config/database/redis0.conf
 
 启动登陆服务器和游戏服务器
 ./build/bin/skynet config/config.login

@@ -3,26 +3,57 @@ local snax = require "snax"
 local redis = require "redis"
 local unqlite = require "unqlite"
 
-local db
 local unqlitedb
 
-function init(...)
-    db = assert(redis.connect{
-        host = skynet.getenv('redis_host') or '127.0.0.1',
-        port = skynet.getenv('redis_port') or 6379,
-        db = 0,
-        auth = skynet.getenv('redis_auth') or '123456',
-    },'redis connect error')
+local redis_pool = {}
+local redis_maxinst
 
+local function read_gamedb_conf()
+    local gamedb_cfg = skynet.getenv('gamedb')
+    if not gamedb_cfg then
+        error("no gamedb cfg!")
+    end
+
+    local env = {}
+    local f = assert(loadfile(gamedb_cfg,"t",env))
+    f()
+    return env
+end
+
+local function getconn(uid)
+    return redis_pool['redis'..tostring(math.floor(uid % redis_maxinst))]
+end
+
+function init(...)
     unqlitedb = unqlite.open(skynet.getenv("cold_backup"))
+
+
+    local gamedb_conf = read_gamedb_conf()
+
+    redis_maxinst = tonumber(skynet.getenv("redis_maxinst")) or 1
+	for i = 0, redis_maxinst - 1 do
+		local db = assert(redis.connect{
+			host = gamedb_conf["redis"..i.."_host"],
+			port = gamedb_conf["redis"..i.."_port"],
+			db = 0,
+			auth = gamedb_conf["redis"..i.."_auth"],
+		},'redis'..i..' connect error')
+
+		if db then
+			redis_pool['redis'..i] = db
+		else
+			skynet.error("redis"..i.." connect error")
+		end
+    end
 end
 
 function exit(...)
     unqlite.close(unqlitedb)
 end
 
-function response.set(key,value)
-    local result = db:set(key, value)
+function response.set(uid,value)
+    local db = getconn(uid)
+    local result = db:set(uid, value)
     if result ~= 'OK' then
         return false
     end
@@ -32,13 +63,15 @@ function response.set(key,value)
     end
 
     unqlite.begin(unqlitedb)
-	unqlite.store(unqlitedb, key, value)
+	unqlite.store(unqlitedb, uid, value)
     unqlite.commit(unqlitedb)
     return true
 end
 
-function response.get(key)
-    local result = db:get(key)
+function response.get(uid)
+    print(uid)
+    local db = getconn(uid)
+    local result = db:get(uid)
     --[[
     if result == nil then
         result = unqlite.fetch(unqlitedb, key)

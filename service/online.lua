@@ -103,7 +103,7 @@ function Cmd.register_node(node, agent_list)
                 table.insert(fail_list, item)
             end
         else
-            _add_user(uid, info)
+            _add_user(info.uid, info)
         end
     end
 

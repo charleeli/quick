@@ -124,7 +124,7 @@ end
 function Role:save_db()
     local gamedb_snax = snax.uniqueservice("gamedb_snax")
 
-    local suc = gamedb_snax.req.set(self:get_account(),td.DumpToJSON('Role', self._role_td))
+    local suc = gamedb_snax.req.set(self:get_uid(), td.DumpToJSON('Role', self._role_td))
 
     LOG_INFO('role <account = %s> save db <%s>', self:get_account(), suc)
     return suc
