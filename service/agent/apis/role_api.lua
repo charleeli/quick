@@ -37,7 +37,6 @@ function M.load_role()
         
         if not env.role then
             local gamedb_cli = snax.uniqueservice("gamedb_snax")
-
             local raw_json_text = gamedb_cli.req.get(env.uid)
 
             local role_td

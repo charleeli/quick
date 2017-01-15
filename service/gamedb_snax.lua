@@ -3,8 +3,6 @@ local snax = require "snax"
 local redis = require "redis"
 local vedis = require "vedis"
 
-local vedisdb
-
 local redis_pool = {}
 local redis_maxinst
 
@@ -26,8 +24,7 @@ local function getconn(uid)
 end
 
 function init(...)
-    vedisdb = vedis.open(skynet.getenv("cold_backup"))
-
+    vedis.open(skynet.getenv("cold_backup"))
 
     local gamedb_conf = read_gamedb_conf()
 
@@ -49,7 +46,7 @@ function init(...)
 end
 
 function exit(...)
-    vedis.close(vedisdb)
+    vedis.close()
 end
 
 function response.set(uid,value)
@@ -59,13 +56,7 @@ function response.set(uid,value)
         return false
     end
 
-    if vedisdb == nil then
-        vedisdb = vedis.open(skynet.getenv("cold_backup"))
-    end
-
-    vedis.begin(vedisdb)
-	vedis.store(vedisdb, uid, value)
-    vedis.commit(vedisdb)
+	vedis.set(uid, value)
     return true
 end
 
@@ -74,7 +65,7 @@ function response.get(uid)
     local result = db:get(uid)
     --[[
     if result == nil then
-        result = vedis.fetch(vedisdb, uid)
+        result = vedis.get(uid)
     end
     --]]
     return result

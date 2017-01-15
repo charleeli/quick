@@ -84,7 +84,7 @@ redis:
 	install -p -m 0755 3rd/redis/src/redis-cli $(BUILD_BIN_DIR)/redis-cli
 	install -p -m 0755 3rd/redis/src/redis-server $(BUILD_BIN_DIR)/redis-server
 
-LUACLIB = log lsocket lfs lcrab enet vedis ctime cjson base64 webpage random array skiplist
+LUACLIB = log lsocket lfs lcrab enet lvedis ctime cjson base64 webpage random array skiplist
 LEVENTLIB = levent bson mongo
 CSERVICE = zinc_client
 
@@ -117,7 +117,7 @@ $(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c | $(BUILD_LUACLIB_DIR)
 $(BUILD_LUACLIB_DIR)/enet.so : lualib-src/lua-enet.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet
 
-$(BUILD_LUACLIB_DIR)/vedis.so : lualib-src/lua-vedis.c 3rd/vedis/vedis.c \
+$(BUILD_LUACLIB_DIR)/lvedis.so : lualib-src/lua-vedis.c 3rd/vedis/vedis.c \
     | $(BUILD_LUACLIB_DIR)
 	cp 3rd/vedis/vedis.h $(BUILD_INCLUDE_DIR)
 	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@

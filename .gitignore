@@ -42,7 +42,7 @@ luac.out
 # Others
 *.*~
 *.rdb
-*.unqlite
+*.vedis*
 .idea/
 build/
 log/

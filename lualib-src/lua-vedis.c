@@ -300,30 +300,161 @@ static int _vedis_rollback(lua_State* L)
     }
 }
 
-static const luaL_Reg vedis_functions[] =
+static int _vedis_exec(lua_State* L)
 {
+    vedis* db = (vedis*)lua_touserdata(L, 1);
+    if (NULL == db)
+    {
+        luaL_argerror(L, 1,  "vedis: close get null db");
+        lua_pushboolean(L,0);
+        return 0;
+    }
+
+    size_t contentlen;
+    void* content = (void* )luaL_checklstring(L, 2, &contentlen);
+
+    if (contentlen <= 0 || content == NULL)
+    {
+        luaL_argerror(L, 2, "vedis: invalid content");
+        lua_pushboolean(L,0);
+        return 0;
+    }
+
+    int rs = vedis_exec(db, content, contentlen);
+
+    if (rs != VEDIS_OK)
+    {
+        fatal(L, db, "vedis: exec failed");
+        lua_pushboolean(L,0);
+        return 0;
+    }
+    else
+    {
+        lua_pushboolean(L,1);
+        return 1;
+    }
+}
+
+static int _vedis_exec_result_string(lua_State* L)
+{
+    vedis* db = (vedis*)lua_touserdata(L, 1);
+    if (NULL == db)
+    {
+        luaL_argerror(L, 1,  "vedis: close get null db");
+        lua_pushnil(L);
+    }
+
+    size_t contentlen;
+    void* content = (void* )luaL_checklstring(L, 2, &contentlen);
+    if (contentlen <= 0 || content == NULL)
+    {
+        luaL_argerror(L, 2, "vedis: invalid content");
+        lua_pushnil(L);
+    }
+
+    int rc = vedis_exec(db, content, contentlen);
+    if (rc != VEDIS_OK)
+    {
+        fatal(L, db, "vedis: exec failed");
+        lua_pushnil(L);
+    }
+
+    vedis_value *pResult;
+    rc = vedis_exec_result(db, &pResult);
+	if( rc != VEDIS_OK )
+	{
+		fatal(L, db, "vedis: exec failed");
+        lua_pushnil(L);
+	}
+	else
+	{
+		const char *zResponse = NULL;
+		zResponse = vedis_value_to_string(pResult,0);
+		if(zResponse == NULL || zResponse == "")
+		{
+		    lua_pushnil(L);
+		}
+		else
+		{
+		    lua_pushstring(L, zResponse);
+		}
+	}
+
+    return 1;
+}
+
+static int _vedis_exec_result_array(lua_State* L)
+{
+    vedis* db = (vedis*)lua_touserdata(L, 1);
+    if (NULL == db)
+    {
+        luaL_argerror(L, 1,  "vedis: close get null db");
+        lua_pushnil(L);
+    }
+
+    size_t contentlen;
+    void* content = (void* )luaL_checklstring(L, 2, &contentlen);
+    if (contentlen <= 0 || content == NULL)
+    {
+        luaL_argerror(L, 2, "vedis: invalid content");
+        lua_pushnil(L);
+    }
+
+    int rc = vedis_exec(db, content, contentlen);
+    if (rc != VEDIS_OK)
+    {
+        fatal(L, db, "vedis: exec failed");
+        lua_pushnil(L);
+    }
+
+    vedis_value *pResult;
+    rc = vedis_exec_result(db, &pResult);
+    if( rc != VEDIS_OK )
+	{
+		fatal(L, db, "vedis: exec failed");
+        lua_pushnil(L);
+	}
+	else
+	{
+        lua_newtable(L);
+        lua_pushnil(L);
+        lua_rawseti(L,-2,0);
+
+        vedis_value *pEntry;
+        int index = 0;
+        while((pEntry = vedis_array_next_elem(pResult)) != 0 )
+        {
+            index++;
+
+            const char *zEntry;
+            zEntry = vedis_value_to_string(pEntry,0);
+
+            lua_pushstring(L, zEntry);
+            lua_rawseti(L, -2, index);
+        }
+	}
+
+	return 1;
+}
+
+static const luaL_Reg vedis_functions[] = {
     { "open", _vedis_open },
     { "close", _vedis_close },
     { "store", _vedis_kv_store },
+    { "append", _vedis_kv_append },
     { "fetch", _vedis_kv_fetch },
     { "delete", _vedis_kv_delete },
     { "begin", _vedis_begin },
     { "commit", _vedis_commit },
+    { "rollback", _vedis_rollback },
+    { "exec", _vedis_exec },
+    {"exec_result_string", _vedis_exec_result_string },
+    {"exec_result_array", _vedis_exec_result_array },
     { NULL, NULL}
 };
 
-int luaopen_vedis(lua_State* L)
+int luaopen_lvedis(lua_State* L)
 {
     luaL_newlib(L, vedis_functions);
-
-    /*SETINT("VEDIS_OPEN_READONLY", VEDIS_OPEN_READONLY);
-    SETINT("VEDIS_OPEN_READWRITE", VEDIS_OPEN_READWRITE);
-    SETINT("VEDIS_OPEN_CREATE", VEDIS_OPEN_CREATE);
-    SETINT("VEDIS_OPEN_EXCLUSIVE", VEDIS_OPEN_EXCLUSIVE);
-    SETINT("VEDIS_OPEN_TEMP_DB", VEDIS_OPEN_TEMP_DB);
-    SETINT("VEDIS_OPEN_NOMUTEX", VEDIS_OPEN_NOMUTEX);
-    SETINT("VEDIS_OPEN_OMIT_JOURNALING", VEDIS_OPEN_OMIT_JOURNALING);
-    SETINT("VEDIS_OPEN_IN_MEMORY", VEDIS_OPEN_IN_MEMORY);
-    SETINT("VEDIS_OPEN_MMAP", VEDIS_OPEN_MMAP);*/
     return 1;
 }
