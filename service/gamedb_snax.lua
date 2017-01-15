@@ -1,9 +1,9 @@
 local skynet = require "skynet"
 local snax = require "snax"
 local redis = require "redis"
-local unqlite = require "unqlite"
+local vedis = require "vedis"
 
-local unqlitedb
+local vedisdb
 
 local redis_pool = {}
 local redis_maxinst
@@ -21,11 +21,12 @@ local function read_gamedb_conf()
 end
 
 local function getconn(uid)
+    local uid = tonumber(uid)
     return redis_pool['redis'..tostring(math.floor(uid % redis_maxinst))]
 end
 
 function init(...)
-    unqlitedb = unqlite.open(skynet.getenv("cold_backup"))
+    vedisdb = vedis.open(skynet.getenv("cold_backup"))
 
 
     local gamedb_conf = read_gamedb_conf()
@@ -48,7 +49,7 @@ function init(...)
 end
 
 function exit(...)
-    unqlite.close(unqlitedb)
+    vedis.close(vedisdb)
 end
 
 function response.set(uid,value)
@@ -58,23 +59,22 @@ function response.set(uid,value)
         return false
     end
 
-    if unqlitedb == nil then
-        unqlitedb = unqlite.open(skynet.getenv("cold_backup"))
+    if vedisdb == nil then
+        vedisdb = vedis.open(skynet.getenv("cold_backup"))
     end
 
-    unqlite.begin(unqlitedb)
-	unqlite.store(unqlitedb, uid, value)
-    unqlite.commit(unqlitedb)
+    vedis.begin(vedisdb)
+	vedis.store(vedisdb, uid, value)
+    vedis.commit(vedisdb)
     return true
 end
 
 function response.get(uid)
-    print(uid)
     local db = getconn(uid)
     local result = db:get(uid)
     --[[
     if result == nil then
-        result = unqlite.fetch(unqlitedb, key)
+        result = vedis.fetch(vedisdb, uid)
     end
     --]]
     return result

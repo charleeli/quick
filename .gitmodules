@@ -13,9 +13,6 @@
 [submodule "3rd/lsocket"]
 	path = 3rd/lsocket
 	url = https://github.com/cloudwu/lsocket.git
-[submodule "3rd/unqlite"]
-	path = 3rd/unqlite
-	url = https://github.com/symisc/unqlite.git
 [submodule "3rd/lua-cjson"]
 	path = 3rd/lua-cjson
 	url = https://github.com/mpx/lua-cjson.git
@@ -31,3 +28,6 @@
 [submodule "3rd/levent"]
 	path = 3rd/levent
 	url = https://github.com/xjdrew/levent.git
+[submodule "3rd/vedis"]
+	path = 3rd/vedis
+	url = https://github.com/symisc/vedis.git

@@ -17,7 +17,7 @@ log_dirname = "log"
 log_basename = "game2"
 
 -- 冷备数据库配置文件
-cold_backup = 'game2.unqlite'
+cold_backup = 'game2.vedis'
 
 -- 本节点名
 nodename = "game2"
