@@ -16,8 +16,8 @@ function MailboxMgr:get_item(role_uuid)
         return item
     end
 
-    local mailboxdb_snax = snax.uniqueservice("mailboxdb_snax")
-    local raw_json_text = mailboxdb_snax.req.get('Mailbox:'..role_uuid)
+    local maildb_snax = snax.uniqueservice("maildb_snax")
+    local raw_json_text = maildb_snax.req.get('Mailbox:'..role_uuid)
 
     local data
     if raw_json_text then

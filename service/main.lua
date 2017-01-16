@@ -17,8 +17,9 @@ skynet.start(function()
     skynet.newservice('chat_listener')
     skynet.newservice('rpc_proxy')
     skynet.newservice("res_mgr")
-    snax.uniqueservice("gamedb_snax")
     snax.uniqueservice("accountdb_snax")
+    snax.uniqueservice("gamedb_snax")
+    snax.uniqueservice("maildb_snax")
 
     if NODE_NAME == require("quick").center_node_name() then
         skynet.uniqueservice(true, 'admin')

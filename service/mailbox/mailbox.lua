@@ -11,8 +11,8 @@ function Mailbox:_init(obj,role_uuid)
 end
 
 function Mailbox:_save()
-    local mailboxdb_snax = snax.uniqueservice("mailboxdb_snax")
-    mailboxdb_snax.req.set('Mailbox:'..self.role_uuid, td.DumpToJSON('Mailbox', self:get_obj()))
+    local maildb_snax = snax.uniqueservice("maildb_snax")
+    maildb_snax.req.set('Mailbox:'..self.role_uuid, td.DumpToJSON('Mailbox', self:get_obj()))
 end
 
 function Mailbox:get_id()
