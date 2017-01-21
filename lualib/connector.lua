@@ -1,4 +1,4 @@
-local Skynet = require 'skynet'
+local skynet = require 'skynet'
 local class = require 'pl.class'
 
 local STAT_NONE = 0         
@@ -12,7 +12,7 @@ function Connector:_init(connect_cb, connected_cb, disconnect_cb, reconnect_wait
     self.connect_cb = connect_cb
     self.connected_cb = connected_cb
     self.disconnect_cb = disconnect_cb
-    self.reconnect_wait = reconnect_wait or 3
+    self.reconnect_wait = reconnect_wait or 5
 end
 
 function Connector:set_status_none()
@@ -33,12 +33,12 @@ end
 
 function Connector:connect()
     local delay = 0
-    if self:is_connected() then 
+    if self:is_connected() then
         delay = -1
     end
 
     local ret = self.connect_cb(delay)
-    if ret.errcode ~= ERRNO.E_OK then
+    if ret.errcode ~= ERRCODE.E_OK then
         if self:is_connected() and self.disconnect_cb then
             pcall(self.disconnect_cb)
         end
@@ -71,10 +71,10 @@ end
 
 function Connector:start()
     self:set_status_none()
-    Skynet.fork(function()
+    skynet.fork(function()
         while self.useable do
             if not self:connect() then
-                Skynet.sleep(self.reconnect_wait * 100)
+                skynet.sleep(self.reconnect_wait * 100)
             end
         end
     end)

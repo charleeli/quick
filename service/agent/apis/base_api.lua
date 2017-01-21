@@ -1,6 +1,6 @@
-local Date = require 'date'
-local Const = require 'const'
-local Notify = require 'notify'
+local date = require 'date'
+local const = require 'const'
+local notify = require 'notify'
 
 local apis = {}
 
@@ -9,15 +9,15 @@ function apis:get_base()
 end
 
 function apis:_need_daily_update()
-    local t_now = Date.second()
+    local t_now = date.second()
     local t_prev = self._role_td.base.daily_update_time
     
-    if t_now > t_prev + Const.ONE_DAY_SECONDS then
+    if t_now > t_prev + const.ONE_DAY_SECONDS then
         return true
     end
 
-    local t_daily_update = Date.get_today_time(
-        Const.ROLE_DAILY_UPDATE_HOUR, 0, 0
+    local t_daily_update = date.get_today_time(
+        const.ROLE_DAILY_UPDATE_HOUR, 0, 0
     )
     
     return t_prev < t_daily_update
@@ -26,9 +26,9 @@ end
 function apis:daily_update()
     LOG_INFO("daily update begin")
     
-    self._role_td.base.daily_update_time = Date.second()
-    self.message:pub(Const.EVT_DAILY_UPDATE)
-    Notify.daily_update()
+    self._role_td.base.daily_update_time = date.second()
+    self.message:pub(const.EVT_DAILY_UPDATE)
+    notify.daily_update()
     
     LOG_INFO("daily update end")
 end
@@ -59,7 +59,7 @@ function apis:init_base_apis()
                 LOG_INFO('set_%s, old<%s> new<%s>', name, old_value, new_value)
 
                 return {
-                    errcode = ERRNO.E_OK,
+                    errcode = ERRCODE.E_OK,
                     base = self:gen_base_proto()
                 }
             end
@@ -79,7 +79,7 @@ function apis:init_base_apis()
                 )
 
                 return {
-                    errcode = ERRNO.E_OK,
+                    errcode = ERRCODE.E_OK,
                     base = self:gen_base_proto()
                 }
             end
@@ -106,7 +106,7 @@ function apis:init_base_apis()
                 )
 
                 return {
-                    errcode = ERRNO.E_OK,
+                    errcode = ERRCODE.E_OK,
                     base = self:gen_base_proto(),
                 }
             end
@@ -116,15 +116,15 @@ function apis:init_base_apis()
 end
 
 local triggers = {
-    [Const.EVT_ONLINE] = function(self)
+    [const.EVT_ONLINE] = function(self)
         LOG_INFO('base module trigger event online.')
     end,
     
-    [Const.EVT_OFFLINE_BEGIN] = function(self)
+    [const.EVT_OFFLINE_BEGIN] = function(self)
         LOG_INFO('base module trigger event offline begin.')
     end,
     
-    [Const.EVT_OFFLINE] = function(self)
+    [const.EVT_OFFLINE] = function(self)
         LOG_INFO('base module trigger event offline (end).')
     end,
 }

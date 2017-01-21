@@ -1,7 +1,6 @@
 local skynet = require "skynet"
 local snax = require "snax"
 local redis = require "redis"
-local config = require "config"
 
 local db
 
@@ -68,4 +67,3 @@ function response.get(sdkid, pid)
 
     return result
 end
-

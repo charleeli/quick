@@ -1,5 +1,5 @@
-local Env = require 'env'
+local env = require 'env'
 
 function view_sign(args)
-    return Env.role:view_sign()
+    return env.role:view_sign()
 end

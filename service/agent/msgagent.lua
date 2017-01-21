@@ -194,7 +194,7 @@ local function msg_dispatch(netmsg)
 		local r = request_handlers[name](request)
     	skynet.send(zinc_client, "zinc_client", string.pack(">s2",response(r)))
 	else
-		skynet.send(zinc_client, "zinc_client", string.pack(">s2",response{errcode = ERRNO.E_ROLE_NOT_ONLINE}))
+		skynet.send(zinc_client, "zinc_client", string.pack(">s2",response{errcode = ERRCODE.E_ONLINE}))
 	end
 
 	LOG_INFO("[%s] process %s time used %f ms", skynet.address(skynet.self()), name, (ctime.timestamp()-begin)*1000)

@@ -1,5 +1,5 @@
-local SprotoLoader = require "sprotoloader"
-local SprotoCore = require "sproto.core"
+local sprotoloader = require "sprotoloader"
+local sprotocore = require "sproto.core"
 
 local M = {}
 M.PACKAGE = "package"
@@ -23,7 +23,7 @@ function M.init(sp_root)
         local fpath = sp_root .. "/" .. item.filename
         local fp = assert(io.open(fpath, "rb"), "Can't open sproto file")
         local bin = fp:read "*all"
-        SprotoLoader.save(bin, item.id)
+        sprotoloader.save(bin, item.id)
     end
 end
 

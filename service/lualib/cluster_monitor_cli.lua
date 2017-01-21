@@ -1,6 +1,6 @@
-local Quick = require 'quick'
+local quick = require 'quick'
 
-local _call = Quick.caller('cluster_monitor')
+local _call = quick.caller('cluster_monitor')
 
 local M = {}
 

@@ -162,8 +162,8 @@ end
 
 function server.get_users()
     local _users = {}
-    for _,v in pairs(users) do
-        table.insert(_users,v)
+    for _, v in pairs(users) do
+        table.insert(_users, v)
     end
     return _users
 end

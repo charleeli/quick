@@ -1,7 +1,7 @@
-local Skynet = require "skynet"
-local Lcrab = require "crab"
+local skynet = require "skynet"
+local lcrab = require "crab"
 
-Skynet.start(function()
-    Lcrab.init(Skynet.getenv("black_words_path") or './config/common/words.txt')
+skynet.start(function()
+    lcrab.init(skynet.getenv("black_words_path") or './config/common/words.txt')
     LOG_INFO("crab config is loaded")
 end)

@@ -21,7 +21,7 @@ make
 ./build/bin/redis-server ./config/database/accountdb.conf
 
 启动存储服务器
-./build/bin/redis-server ./config/database/redis0.conf
+./build/bin/redis-server ./config/database/gamedb.conf
 
 启动登陆服务器和游戏服务器
 ./build/bin/skynet config/config.login
@@ -38,8 +38,8 @@ load_role
 gm  {cmd="set level 99"}
 view_sign
 send_world_chat {msg = "hello everyone!"}
-send_private_chat {uuid = '5879ce6ee428a67f3fe05345', msg = 'hi 486'}
-send_private_mail {to_uuid = '5879ce6ee428a67f3fe05345',subject='quick',content='quick is good'}
+send_private_chat {uuid = '58834458e428a6cf1b7aa91f', msg = 'hi 486'}
+send_private_mail {to_uuid = '58834458e428a6cf1b7aa91f',subject='quick',content='quick is good'}
 update_mailbox
 ```
 

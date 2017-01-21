@@ -1,17 +1,16 @@
-local Skynet = require "skynet"
-local Const = require "const"
-local Date = require "date"
-local TimerMgr = require 'timer'
-local Connector = require 'connector'
-local Quick = require 'quick'
+local skynet = require "skynet"
+local const = require "const"
+local timer = require 'timer'
+local connector = require 'connector'
+local quick = require 'quick'
 
 local players   = {}
 local chat_cache = {}
-local speaker_connector = nil
+local speaker_connector
 
 local function _send_client(zinc_client, proto, ...)
     if zinc_client then
-        Quick.notify(zinc_client, proto, ...)
+        quick.notify(zinc_client, proto, ...)
     end
 end
 
@@ -22,10 +21,10 @@ local function _dispatch_system_msg(msg)
 end
 
 local function _dispatch_world_msg(uuid, msg)
-    local cache = chat_cache[Const.CHAT_TYPE_WORLD]
+    local cache = chat_cache[const.CHAT_TYPE_WORLD]
     if not cache then
         cache = {}
-        chat_cache[Const.CHAT_TYPE_WORLD] = cache
+        chat_cache[const.CHAT_TYPE_WORLD] = cache
     end
     table.insert(cache, {uuid=uuid, chats = {msg} })
 end
@@ -41,20 +40,20 @@ local function _dispatch_private_msg(uuid, to_uuid, msg)
     end
 end
 
-local Repeater = {}
+local repeater = {}
 
-Repeater.channel_handlers = {
-    [Const.CHAT_CHANNEL_SYSTEM]  = _dispatch_system_msg,
-    [Const.CHAT_CHANNEL_PRIVATE] = _dispatch_private_msg,
-    [Const.CHAT_CHANNEL_WORLD] = _dispatch_world_msg,
+repeater.channel_handlers = {
+    [const.CHAT_CHANNEL_SYSTEM]  = _dispatch_system_msg,
+    [const.CHAT_CHANNEL_PRIVATE] = _dispatch_private_msg,
+    [const.CHAT_CHANNEL_WORLD] = _dispatch_world_msg,
 }
 
-function Repeater.update_world_chat()
-    local cache = chat_cache[Const.CHAT_TYPE_WORLD]
+function repeater.update_world_chat()
+    local cache = chat_cache[const.CHAT_TYPE_WORLD]
   
     if type(cache) == "table" and cache ~= {} then
         local max_idx = #cache
-        local min_idx = math.max(1, max_idx - Const.GLOBAL_CHAT_BROADCAST_MAX_NUM + 1)
+        local min_idx = math.max(1, max_idx - const.GLOBAL_CHAT_BROADCAST_MAX_NUM + 1)
         
         local all_chats = {}
         for idx, item in ipairs(cache) do
@@ -75,7 +74,7 @@ function Repeater.update_world_chat()
             end
         end
         
-        chat_cache[Const.CHAT_TYPE_WORLD] = {}
+        chat_cache[const.CHAT_TYPE_WORLD] = {}
     end
 end
 
@@ -101,8 +100,8 @@ function Cmd.unsubscribe(uuid)
 end
 
 function Cmd.dispatch(chat_type, chats)
-    Skynet.retpack(nil)
-    local handler = Repeater.channel_handlers[chat_type]
+    skynet.retpack(nil)
+    local handler = repeater.channel_handlers[chat_type]
     if not handler then return end
 
     for _, args in ipairs(chats) do
@@ -111,17 +110,18 @@ function Cmd.dispatch(chat_type, chats)
 end
 
 function Cmd.connect_speaker_cb(...)
-    LOG_INFO("trying to connect chat_speaker", ...)
-    local _call_speaker = Quick.caller('chat_speaker')
-    return _call_speaker('connect', ...)
+    LOG_INFO("send heartbeat to chat_speaker", ...)
+    local _call_speaker = quick.caller('chat_speaker')
+    local  r = _call_speaker('connect', ...)
+    return r
 end
 
 function Cmd.connected_speaker_cb()
     LOG_INFO("chat_speaker connected")
-    local _call_speaker = Quick.caller('chat_speaker')
+    local _call_speaker = quick.caller('chat_speaker')
     
     local ret = _call_speaker('register_listener', NODE_NAME)
-    if ret.errcode ~= ERRNO.E_OK then
+    if ret.errcode ~= ERRCODE.E_OK then
         LOG_ERROR("register listener fail, errcode<%s>", ret.errcode)
         return false
     end
@@ -130,21 +130,21 @@ function Cmd.connected_speaker_cb()
 end
 
 function Cmd.disconnect_speaker_cb()
-    LOG_ERROR("chat_speaker disconnected")
+    --LOG_ERROR("chat_speaker disconnected")
 end
 
-Skynet.start(function()
-    Skynet.dispatch("lua", function(session, from, cmd, ...)
+skynet.start(function()
+    skynet.dispatch("lua", function(session, from, cmd, ...)
         local f = assert(Cmd[cmd], cmd)
         f(...)
     end)
 
-    local timers = TimerMgr(1)
-    timers:start()
-    timers:add_timer(
-        Const.GLOBAL_CHAT_BROADCAST_INTERVAL,
+    local timer = timer(1)
+    timer:start()
+    timer:add_timer(
+        const.GLOBAL_CHAT_BROADCAST_INTERVAL,
         function()
-            local ok, err = pcall(Repeater.update_world_chat)
+            local ok, err = pcall(repeater.update_world_chat)
             if not ok then
                 LOG_ERROR("update world chat fail<%s>", err)
                 chat_cache = {}
@@ -152,14 +152,14 @@ Skynet.start(function()
         end
     )
     
-    speaker_connector = Connector(
+    speaker_connector = connector(
         Cmd.connect_speaker_cb,
         Cmd.connected_speaker_cb,
         Cmd.disconnect_speaker_cb
     )
     speaker_connector:start()
 
-    Skynet.register('.chat_listener')
+    skynet.register('.chat_listener')
     LOG_INFO('chat_listener booted')
 end)
 

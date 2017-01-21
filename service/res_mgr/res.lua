@@ -18,6 +18,6 @@ local function require_file(modname)
     return moudle
 end
 
-M.ErrCode = require_file "errcode"
+M.errcode = require_file "errcode"
 
 return M

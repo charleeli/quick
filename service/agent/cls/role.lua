@@ -1,11 +1,14 @@
 local skynet = require "skynet"
+local cluster = require "cluster"
 local snax = require "snax"
+local quick = require "quick"
 local lfs = require"lfs"
 local td = require "td"
 local Message = require 'message'
-local Const = require 'const'
-local Env = require 'env'
+local const = require 'const'
+local env = require 'env'
 local class = require 'pl.class'
+
 local Role = class()
 
 function Role:_init(role_td)
@@ -73,7 +76,7 @@ end
 
 function Role:lock_session(func_name,...)
     local ret = table.pack(
-        Env.session_lock:lock_session(func_name, self[func_name],self, ...)
+        env.session_lock:lock_session(func_name, self[func_name],self, ...)
     )
 
     if not ret[1] then
@@ -86,7 +89,11 @@ end
 
 function Role:online()
     LOG_INFO("role online begin")
-    self.message:pub(Const.EVT_ONLINE)
+
+    local online_cli = cluster.snax(quick.center_node_name(), "online_snax")
+    online_cli.req.online(NODE_NAME, skynet.self(), env.uid, env.subid)
+
+    self.message:pub(const.EVT_ONLINE)
 
     LOG_INFO("role online end")
 end
@@ -94,15 +101,18 @@ end
 function Role:_offline()
     LOG_INFO("Role offline begin")
 
-    Env.timer_mgr:stop()
+    local online_cli = cluster.snax(quick.center_node_name(), "online_snax")
+    online_cli.req.offline(env.uid)
 
-    self.message:pub(Const.EVT_OFFLINE_BEGIN)
+    env.timer:stop()
+
+    self.message:pub(const.EVT_OFFLINE_BEGIN)
     
     LOG_INFO("session lock quit begin")
-    Env.session_lock:lock_quit()
+    env.session_lock:lock_quit()
     LOG_INFO("session lock quit end")
     
-    self.message:pub(Const.EVT_OFFLINE)
+    self.message:pub(const.EVT_OFFLINE)
 
     local suc = self:save_db()
     LOG_INFO("Role offline end")
@@ -124,7 +134,7 @@ end
 function Role:save_db()
     local gamedb_snax = snax.uniqueservice("gamedb_snax")
 
-    local suc = gamedb_snax.req.set(self:get_uid(), td.DumpToJSON('Role', self._role_td))
+    local suc = gamedb_snax.req.set(self:get_account(),td.DumpToJSON('Role', self._role_td))
 
     LOG_INFO('role <account = %s> save db <%s>', self:get_account(), suc)
     return suc

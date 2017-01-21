@@ -17,7 +17,7 @@ CFLAGS = -g -O2 -Wall -I$(BUILD_INCLUDE_DIR)
 LDFLAGS= -L$(BUILD_CLIB_DIR) -Wl,-rpath $(BUILD_CLIB_DIR) -lpthread -lm -ldl -lrt
 DEFS = -DHAS_SOCKLEN_T=1 -DLUA_COMPAT_APIINTCASTS=1 
 
-all : build skynet lua5.3 Penlight levent libenet.so libcrab.so libev.so http_parser.so redis
+all : build skynet lua5.3 Penlight levent libenet.so libunqlite.so libcrab.so libev.so http_parser.so redis
 
 build:
 	-mkdir $(BUILD_DIR)
@@ -66,6 +66,10 @@ libenet.so:3rd/enet/callbacks.c 3rd/enet/compress.c 3rd/enet/host.c 3rd/enet/lis
 	cp -r 3rd/enet/include/enet/ $(BUILD_INCLUDE_DIR)/
 	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libenet.so
 
+libunqlite.so : 3rd/unqlite/unqlite.c
+	cp 3rd/unqlite/unqlite.h $(BUILD_INCLUDE_DIR)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libunqlite.so
+
 libcrab.so : 3rd/crab/crab.c
 	cp 3rd/crab/crab.h $(BUILD_INCLUDE_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $(BUILD_CLIB_DIR)/libcrab.so
@@ -84,7 +88,7 @@ redis:
 	install -p -m 0755 3rd/redis/src/redis-cli $(BUILD_BIN_DIR)/redis-cli
 	install -p -m 0755 3rd/redis/src/redis-server $(BUILD_BIN_DIR)/redis-server
 
-LUACLIB = log lsocket lfs lcrab enet lvedis ctime cjson base64 webpage random array skiplist
+LUACLIB = log lsocket lfs lcrab enet unqlite ctime cjson base64 webpage random array skiplist
 LEVENTLIB = levent bson mongo
 CSERVICE = zinc_client
 
@@ -117,10 +121,8 @@ $(BUILD_LUACLIB_DIR)/lcrab.so : lualib-src/lua-crab.c | $(BUILD_LUACLIB_DIR)
 $(BUILD_LUACLIB_DIR)/enet.so : lualib-src/lua-enet.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lenet
 
-$(BUILD_LUACLIB_DIR)/lvedis.so : lualib-src/lua-vedis.c 3rd/vedis/vedis.c \
-    | $(BUILD_LUACLIB_DIR)
-	cp 3rd/vedis/vedis.h $(BUILD_INCLUDE_DIR)
-	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@
+$(BUILD_LUACLIB_DIR)/unqlite.so : lualib-src/lua-unqlite.c | $(BUILD_LUACLIB_DIR)
+	$(CC) $(DEFS) $(CFLAGS) $(SHARED) $^ -o $@ $(LDFLAGS) -lunqlite
 
 $(BUILD_LUACLIB_DIR)/ctime.so: lualib-src/lua-ctime.c | $(BUILD_LUACLIB_DIR)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@

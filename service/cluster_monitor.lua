@@ -1,8 +1,8 @@
-local Skynet = require "skynet"
-local Cluster = require "cluster"
-local Acceptor = require 'acceptor'
-local Connector = require 'connector'
-local Date = require 'date'
+local skynet = require "skynet"
+local cluster = require "cluster"
+local acceptor = require 'acceptor'
+local connector = require 'connector'
+local date = require 'date'
 
 local is_shutdown = false
 local node_monitors = {}
@@ -10,15 +10,15 @@ local service_name_list = {}
 
 local function _call(node_name, service_addr, ...)
     if NODE_NAME == node_name then
-        return pcall(Skynet.call, service_addr, 'lua', ...)
+        return pcall(skynet.call, service_addr, 'lua', ...)
     end
-    return pcall(Cluster.call, node_name, service_addr, ...)
+    return pcall(cluster.call, node_name, service_addr, ...)
 end
 
 local function _close_node(node_name, monitor_addr)
-    Skynet.fork(function()
+    skynet.fork(function()
         local ok, ret = pcall(
-            Cluster.call,node_name, monitor_addr, 'close_node'
+            cluster.call,node_name, monitor_addr, 'close_node'
         )
         
         if not ok then
@@ -33,7 +33,7 @@ end
 local function _close_service_bytype(service_name)
     for node_name, info in pairs(node_monitors) do
         local monitor_addr = info.addr
-        Skynet.fork(function()
+        skynet.fork(function()
             LOG_INFO(
                 "try close service, node:<%s>, service_name<%s>", 
                 node_name, service_name
@@ -61,11 +61,11 @@ local function _close_service_bytype(service_name)
             local ok, ret
             if NODE_NAME == node_name then
                 ok, ret = pcall(
-                    Skynet.call,monitor_addr, 'lua', 'get_service_num',service_name
+                    skynet.call,monitor_addr, 'lua', 'get_service_num',service_name
                 )
             else
                 ok, ret = pcall(
-                    Cluster.call,node_name, monitor_addr, 'get_service_num',service_name
+                    cluster.call,node_name, monitor_addr, 'get_service_num',service_name
                 )
             end
 
@@ -95,14 +95,15 @@ local function _close_service_bytype(service_name)
             service_name, count, all_ok
         )
         
-        Skynet.sleep(1 * 100)
+        skynet.sleep(1 * 100)
     end
 end
 
 local Cmd = {}
 
 function Cmd.connect(...)
-    return Acceptor.connect_handler(...)
+    local r = acceptor.connect_handler(...)
+    skynet.retpack(r)
 end
 
 function Cmd.unregister_node(node_name, version)
@@ -130,18 +131,18 @@ end
 function Cmd.register_node(node_name, node_monitor_addr)
     if is_shutdown then
         LOG_ERROR("reset node<%s> fail, is shutdown", node_name)
-        return Skynet.retpack({errcode = ERRNO.E_ERROR})
+        return skynet.retpack({errcode = ERRCODE.E_ERROR})
     end
 
     Cmd.unregister_node(node_name)
 
-    local version = string.format("%s-%s",Date.second(),math.random(1, 1000000))
+    local version = string.format("%s-%s",date.second(),math.random(1, 1000000))
   
-    local node_monitor_connector = Connector(
+    local node_monitor_connector = connector(
         function(...)
             local ok, ret = _call(node_name, node_monitor_addr,'connect', ...)
             if not ok then
-                return {errcode = ERRNO.E_ERROR}
+                return {errcode = ERRCODE.E_ERROR}
             end
             return ret
         end,
@@ -168,29 +169,29 @@ function Cmd.register_node(node_name, node_monitor_addr)
         "register node<%s> suc, monitor<%s>, version<%s>",
         node_name, node_monitor_addr, version
     )
-    
-    return Skynet.retpack({errcode = ERRNO.E_OK})
+
+    return skynet.retpack({errcode = ERRCODE.E_OK})
 end
 
 function Cmd.register_service_name(node_name, service_name)
     if is_shutdown then
         LOG_ERROR("register_service_name<%s> fail, is shutdown", node_name)
-        return Skynet.retpack({errcode = ERRNO.E_ERROR})
+        return skynet.retpack({errcode = ERRCODE.E_ERROR})
     end
     
     if not node_monitors[node_name] then
         LOG_ERROR("register_service_name fail, <%s>is's registered", node_name)
-        return Skynet.retpack({errcode = ERRNO.E_ERROR})
+        return skynet.retpack({errcode = ERRCODE.E_ERROR})
     end
     
     service_name_list[service_name] = true
     
     LOG_INFO("<%s>register_service_name <%s> succeed",node_name,service_name)
-    return Skynet.retpack({errcode = ERRNO.E_OK})
+    return skynet.retpack({errcode = ERRCODE.E_OK})
 end
 
 function Cmd.shutdown()
-    Skynet.retpack({errcode = ERRNO.E_OK})
+    skynet.retpack({errcode = ERRCODE.E_OK})
     
     LOG_INFO("system begin shutdown")
     is_shutdown = true
@@ -211,8 +212,8 @@ function Cmd.shutdown()
     
     local seconds = 8
     LOG_INFO("cluster will shutdown in %s seconds", seconds)
-    Skynet.sleep(seconds * 100)
-    Skynet.abort()
+    skynet.sleep(seconds * 100)
+    skynet.abort()
 end
 
 function Cmd.reload_res()
@@ -223,7 +224,7 @@ function Cmd.reload_res()
     
     for node_name, info in pairs(node_monitors) do
         local ok, ret = pcall(
-            Cluster.call,node_name, info.addr, 'reload_res'
+            cluster.call,node_name, info.addr, 'reload_res'
         )
         
         if not ok then
@@ -236,21 +237,21 @@ function Cmd.reload_res()
         count = count + 1
         table.insert(result,{
             node = node_name,
-            reloaded = ret.errcode == ERRNO.E_OK
+            reloaded = ret.errcode == ERRCODE.E_OK
         })
     end
 
     LOG_INFO("system end reload_res")
-    Skynet.retpack({errcode = ERRNO.E_OK, result = result})
+    skynet.retpack({errcode = ERRCODE.E_OK, result = result})
 end
 
-Skynet.start(function ()
-    Skynet.dispatch("lua", function(session, addr, cmd, ...)
+skynet.start(function ()
+    skynet.dispatch("lua", function(session, addr, cmd, ...)
         local f = assert(Cmd[cmd], cmd)
         f(...)
     end)
 
-    Skynet.register('.cluster_monitor')
+    skynet.register('.cluster_monitor')
     LOG_INFO("cluster_monitor booted")
 end)
 

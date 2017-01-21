@@ -22,8 +22,8 @@ function M._load_role(role_td)
         role:check_cron_update()
     end)
     
-    env.timer:set_interval(80, function()
-        role:lock_session('update_mailbox')
+    env.timer:set_interval(180, function()
+        --role:lock_session('update_mailbox')
     end)
 
     collectgarbage("collect")
@@ -37,7 +37,8 @@ function M.load_role()
         
         if not env.role then
             local gamedb_cli = snax.uniqueservice("gamedb_snax")
-            local raw_json_text = gamedb_cli.req.get(env.uid)
+
+            local raw_json_text = gamedb_cli.req.get(env.account)
 
             local role_td
             if not raw_json_text then
@@ -75,10 +76,10 @@ function M.create_role(name, gender)
 
     local gamedb_cli = snax.uniqueservice("gamedb_snax")
 
-    local ret = gamedb_cli.req.set(env.uid, td.DumpToJSON('Role', role))
+    local ret = gamedb_cli.req.set(env.account,td.DumpToJSON('Role', role))
 
     if not ret then
-        LOG_ERROR('ac: <%d> create fail', env.uid)
+        LOG_ERROR('ac: <%s> create fail', env.account)
         return {errcode = -2}
     end
 

@@ -28,6 +28,6 @@
 [submodule "3rd/levent"]
 	path = 3rd/levent
 	url = https://github.com/xjdrew/levent.git
-[submodule "3rd/vedis"]
-	path = 3rd/vedis
-	url = https://github.com/symisc/vedis.git
+[submodule "3rd/unqlite"]
+	path = 3rd/unqlite
+	url = https://github.com/symisc/unqlite.git

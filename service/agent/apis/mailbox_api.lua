@@ -6,33 +6,33 @@ local Const = require 'const'
 local Notify = require 'notify'
 local td = require 'td'
 local Mailbox = require 'cls.mailbox'
-local MailboxClient = require 'client.mailbox'
+local MailboxClient = require 'mailbox_cli'
 
 local function _check_message(subject, content)
    local subject_len = Utf8.len(subject)
    local content_len = Utf8.len(content)
 
    if not subject_len or not content_len then
-        return ERRNO.E_ERROR, "mail illegal"
+        return ERRCODE.E_ERROR, "mail illegal"
    end
    
    if subject_len > Const.MAIL_SUBJECT_LIMIT then
-        return ERRNO.E_SUBJECT_LONG, "mail subject too long"
+        return ERRCODE.E_SUBJECT_LONG, "mail subject too long"
    end
    
    if content_len > Const.MAIL_CONTENT_LIMIT then
-        return ERRNO.E_CONTENT_LONG, "mail content too long"
+        return ERRCODE.E_CONTENT_LONG, "mail content too long"
    end
    
    if not Lcrab.is_crabbed(subject) then
-        return ERRNO.E_CONTENT_SENSITIVE, "subject sensitive : "..subject
+        return ERRCODE.E_CONTENT_SENSITIVE, "subject sensitive : "..subject
    end
    
    if not Lcrab.is_crabbed(content) then
-        return ERRNO.E_CONTENT_SENSITIVE, "content sensitive: "..content
+        return ERRCODE.E_CONTENT_SENSITIVE, "content sensitive: "..content
    end
    
-   return ERRNO.E_OK 
+   return ERRCODE.E_OK
 end
 
 local apis = {}
@@ -54,7 +54,7 @@ end
 
 function apis:send_private_mail(to_uuid, subject, content)
     local errcode, detail = _check_message(subject, content)
-    if errcode ~= ERRNO.E_OK then
+    if errcode ~= ERRCODE.E_OK then
         LOG_ERROR("send private mail error, reason: %s", detail)
         return { errcode = errcode }
     end
@@ -63,19 +63,19 @@ function apis:send_private_mail(to_uuid, subject, content)
         to_uuid, self:get_account(), self:get_uuid(), subject, content
     )
     
-    return { errcode = ERRNO.E_OK }
+    return { errcode = ERRCODE.E_OK }
 end
 
 function apis:read_mail(mail_uuid, mail_type)
     local mail = self.mailbox:get_mail(mail_uuid, mail_type)
     if not mail then
         LOG_ERROR("read mail failed, reason: param error/mail not exist")
-        return { errcode = ERRNO.E_ARGS }
+        return { errcode = ERRCODE.E_ARGS }
     end
     
     mail.is_read = true
     
-    return { errcode = ERRNO.E_OK }
+    return { errcode = ERRCODE.E_OK }
 end
 
 function apis:send_agent_mail(sub_type, attachment, subject, content)
@@ -101,7 +101,7 @@ function apis:send_agent_mail(sub_type, attachment, subject, content)
     
     Notify.mail({}, {mailobj})
     
-    return { errcode = ERRNO.E_OK }
+    return { errcode = ERRCODE.E_OK }
 end
 
 function apis:get_mailbox()
@@ -111,7 +111,7 @@ end
 function apis:delete_mail(mail_uuid, mail_type, safe)
     if not safe then
         LOG_ERROR("delete mail error, reason: safe error")
-        return { errcode = ERRNO.E_ARGS }
+        return { errcode = ERRCODE.E_ARGS }
     end
     
     return self.mailbox:delete_mail(mail_uuid, mail_type)
@@ -120,14 +120,14 @@ end
 function apis:delete_mails(mail_uuid_list, mail_type, safe)
     if not safe then
         LOG_ERROR("delete mails error, reason: safe error")        
-        return { errcode = ERRNO.E_ARGS }
+        return { errcode = ERRCODE.E_ARGS }
     end
   
     for _, mail_uuid in ipairs(mail_uuid_list) do
         self:delete_mail(mail_uuid, mail_type, true)
     end
 
-    return {errcode = ERRNO.E_OK}
+    return {errcode = ERRCODE.E_OK}
 end
 
 function apis:clear_month_mails()
@@ -159,7 +159,7 @@ function apis:update_mailbox()
     local mailbox = self.mailbox:get_mailbox()
   
     local ret = MailboxClient.pull_mails(self:get_uuid())
-    if ret.errcode and ret.errcode ~= ERRNO.E_OK then
+    if ret.errcode and ret.errcode ~= ERRCODE.E_OK then
         return {errcode = ret.errcode}
     end
     
@@ -195,7 +195,7 @@ function apis:update_mailbox()
         Notify.mail(pmails,smails)
     end
     
-    return {errcode = ERRNO.E_OK}
+    return {errcode = ERRCODE.E_OK}
 end
 
 local triggers = {

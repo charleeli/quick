@@ -1,5 +1,16 @@
 local skynet = require 'skynet'
 
+local ZINC_CLIENT = 16
+
+skynet.register_protocol {
+    name = "zinc_client",
+    id = ZINC_CLIENT,
+
+    pack = function (...)
+        return ...
+    end,
+}
+
 assert(skynet['atexit'] == nil)
 assert(skynet['get_exit_cb'] == nil)
 
@@ -29,19 +40,8 @@ skynet.register_protocol {
     id = SYS_CONTROL,
     unpack = skynet.unpack,
     pack = skynet.pack,
-    dispatch = function(session, address, cmd_name, ...)
+    dispatch = function(_, _, cmd_name, ...)
         local f = assert(cmd[cmd_name], cmd_name)
         f(...)
-    end,
-}
-
-local ZINC_CLIENT = 16
-
-skynet.register_protocol {
-    name = "zinc_client",
-    id = ZINC_CLIENT,
-
-    pack = function (...)
-        return ...
     end,
 }

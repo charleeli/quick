@@ -1,25 +1,25 @@
-local Skynet = require "skynet"
-local Env = require "env"
-local Cmd = require "command"
+local skynet = require "skynet"
+local env = require "env"
+local Cmd = require "cmd"
 local MailboxMgr = require 'mailbox.mailbox_mgr'
-local NodeMonitorClient = require 'client.node_monitor'
+local node_monitor_cli = require 'node_monitor_cli'
 
-Skynet.start(function()
-    Skynet.dispatch("lua", function(session, from, cmd, ...)
+skynet.start(function()
+    skynet.dispatch("lua", function(session, from, cmd, ...)
         local f = assert(Cmd[cmd], cmd)
         f(...)
     end)
 
-    Env.mailbox_mgr = MailboxMgr{
-        max_cnt = Env.cache_max_cnt,
-        ttl = Env.cache_ttl,
-        save_cd = Env.cache_save_cd,
+    env.mailbox_mgr = MailboxMgr{
+        max_cnt = env.cache_max_cnt,
+        ttl = env.cache_ttl,
+        save_cd = env.cache_save_cd,
     }
 
-    Env.mailbox_mgr:start()
+    env.mailbox_mgr:start()
     
-    Skynet.register('.mailbox')
+    skynet.register('.mailbox')
     LOG_INFO('mailbox booted') 
-    NodeMonitorClient.register("mailbox", Cmd.on_exit)  
+    node_monitor_cli.register("mailbox", Cmd.on_exit)
 end)
 

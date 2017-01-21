@@ -46,3 +46,4 @@ luac.out
 .idea/
 build/
 log/
+*.unqlite

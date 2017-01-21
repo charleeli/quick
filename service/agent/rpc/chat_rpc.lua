@@ -1,9 +1,9 @@
-local Env = require 'env'
+local env = require 'env'
 
 function send_private_chat(args)
-    return Env.role:send_private_chat(args.uuid, args.msg)
+    return env.role:send_private_chat(args.uuid, args.msg)
 end
 
 function send_world_chat(args)
-    return Env.role:send_world_chat(args.msg)
+    return env.role:send_world_chat(args.msg)
 end

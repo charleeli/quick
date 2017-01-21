@@ -1,15 +1,14 @@
-local Skynet = require "skynet"
-local Cluster = require 'cluster'
-local Acceptor = require 'acceptor'
-local Connector = require 'connector'
-local OnlineClient = require 'client.online'
-local ServiceStateClient = require "client.service_state"
-local ClusterMonitorClient = require 'client.cluster_monitor'
+local skynet = require "skynet"
+local cluster = require 'cluster'
+local quick = require "quick"
+local acceptor = require 'acceptor'
+local connector = require 'connector'
+local cluster_monitor_cli = require 'cluster_monitor_cli'
 
 local _call_gated = function(api, ...)
-    local ok, ret = pcall(Cluster.call, NODE_NAME, 'gated', api, ...)
+    local ok, ret = pcall(cluster.call, NODE_NAME, 'gated', api, ...)
     if ok then return ret end
-    return {errcode = ERRNO.E_SERVICE_UNAVAILABLE, errdata=ret}
+    return {errcode = ERRCODE.E_SERVICE, errdata=ret}
 end
 
 local is_shutdown = false
@@ -18,35 +17,32 @@ local cluster_monitor_connector
 
 local function connect_cluster_monitor_cb(...)
     LOG_INFO("trying to connect cluster_monitor", ...)
-    return ClusterMonitorClient.connect(...)
+    return cluster_monitor_cli.connect(...)
 end
 
 local function connected_cluster_monitor_cb()
     LOG_INFO("cluster_monitor is connected")
     
-    local ret = ClusterMonitorClient.register_node(NODE_NAME, Skynet.self())
-    if ret.errcode ~= ERRNO.E_OK then
+    local ret = cluster_monitor_cli.register_node(NODE_NAME, skynet.self())
+    if ret.errcode ~= ERRCODE.E_OK then
         LOG_ERROR(
             "cluster_monitor is connected, register node fail, errcode<%s>",
             ret.errcode
         )
         return false
     end
-    
-    ret = OnlineClient.clear_node(NODE_NAME)
-    if ret.errcode ~= ERRNO.E_OK then
+
+    local online_cli = cluster.snax(quick.center_node_name(), "online_snax")
+    ret = online_cli.req.clear_node(NODE_NAME)
+    if ret.errcode ~= ERRCODE.E_OK then
         LOG_ERROR("online service clear node fail, errcode<%s>", ret.errcode)
         return false
     end
-    
-    if not ServiceStateClient.is_useable('gated') then
-        return true
-    end
-   
+
     local users = _call_gated('get_users')
     if users then
-        ret = OnlineClient.register_node(NODE_NAME, users)
-        if ret.errcode ~= ERRNO.E_OK then
+        ret = online_cli.req.register_node(NODE_NAME, users)
+        if ret.errcode ~= ERRCODE.E_OK then
             LOG_ERROR('register online users fail, errcode<%s>', ret.errcode)
             return false
         end
@@ -77,7 +73,7 @@ end
 local Cmd = {}
 
 function Cmd.connect(...)
-    return Acceptor.connect_handler(...)
+    return acceptor.connect_handler(...)
 end
 
 function Cmd.register(service_addr, service_name)
@@ -99,8 +95,8 @@ function Cmd.register(service_addr, service_name)
         service_addr, service_name
     )
     
-    local ret = ClusterMonitorClient.register_service_name(NODE_NAME,service_name)
-    if ret.errcode ~= ERRNO.E_OK then
+    local ret = cluster_monitor_cli.register_service_name(NODE_NAME,service_name)
+    if ret.errcode ~= ERRCODE.E_OK then
         LOG_ERROR(
             "cluster_monitor is connected, register_service_name fail, errcode<%s>",
             ret.errcode
@@ -136,7 +132,7 @@ function Cmd.get_service_num(service_name)
         end
     end
     
-    Skynet.retpack(count)
+    skynet.retpack(count)
 end
 
 function Cmd.close_service(service_name)
@@ -147,21 +143,23 @@ function Cmd.close_service(service_name)
                 _addr, _name
             )
             
-            Skynet.send(_addr, "sys", "EXIT")
+            skynet.send(_addr, "sys", "EXIT")
         end
     end
     
-    Skynet.retpack({errcode = ERRNO.E_OK})
+    skynet.retpack({errcode = ERRCODE.E_OK})
 end
 
 function Cmd.close_node()
     is_shutdown = true
-    Skynet.retpack({errcode = ERRNO.E_OK})
+    skynet.retpack{ errcode = ERRCODE.E_OK }
+
+    --TODO:make sure that all the agents on this node have saved their data
 
     local seconds = 3
     LOG_INFO("node will close in %s seconds", seconds)
-    Skynet.sleep(seconds * 100)
-    Skynet.abort()
+    skynet.sleep(seconds * 100)
+    skynet.abort()
 end
 
 function Cmd.reload_res()
@@ -172,14 +170,14 @@ function Cmd.reload_res()
                 _addr, _name
             )
             
-            Skynet.call(_addr,'lua', "reload_res")
+            skynet.call(_addr,'lua', "reload_res")
         end
     end
     
-    Skynet.retpack({errcode = ERRNO.E_OK})
+    skynet.retpack({errcode = ERRCODE.E_OK})
 end
 
-Skynet.register_protocol {
+skynet.register_protocol {
     name = "client",
     id = 3,
     unpack = function() end,
@@ -188,13 +186,13 @@ Skynet.register_protocol {
     end
 }
 
-Skynet.start(function()
-    Skynet.dispatch("lua",function(session, addr, cmd, ...)
+skynet.start(function()
+    skynet.dispatch("lua",function(session, addr, cmd, ...)
         local f = assert(Cmd[cmd], cmd)
         f(...)
     end)
     
-    cluster_monitor_connector = Connector(
+    cluster_monitor_connector = connector(
         connect_cluster_monitor_cb,
         connected_cluster_monitor_cb,
         disconnect_cluster_monitor_cb

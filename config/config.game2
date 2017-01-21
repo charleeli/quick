@@ -17,7 +17,7 @@ log_dirname = "log"
 log_basename = "game2"
 
 -- 冷备数据库配置文件
-cold_backup = 'game2.vedis'
+cold_backup = 'game2.unqlite'
 
 -- 本节点名
 nodename = "game2"
@@ -60,6 +60,7 @@ lua_path = skynetroot .."lualib/?.lua;" ..
             "./lualib/?.lua;" ..
 		    "./lualib/preload/?.lua;" ..
 		    "./service/agent/?.lua;"..
+		    "./service/lualib/?.lua;"..
 		    "./service/?.lua;"..
 		    "./build/lualib/?.lua"
 

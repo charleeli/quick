@@ -23,7 +23,7 @@ local function handle_home(args)
 end
 
 local Cmd = {
-    ['home'] = handle_home,--http://0.0.0.0:8081/quick?cmd=home
+    ['home'] = handle_home,--http://0.0.0.0:8080/quick?cmd=home
     ['json'] = handle_json,
 }
 

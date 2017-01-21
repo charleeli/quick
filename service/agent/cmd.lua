@@ -42,7 +42,6 @@ local alread_close = false
 function M.close()
     local ok, msg = pcall(function()
         if alread_close then
-            LOG_ERROR("msgagent has been offline!")
             return 2
         end
 
@@ -71,7 +70,6 @@ function M.close()
             end
         end
 
-        LOG_ERROR("msgagent offline succed!")
         return 0
     end)
 

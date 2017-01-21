@@ -1,4 +1,4 @@
-local Const = require 'const'
+local const = require 'const'
 local Sign = require 'cls.sign'
 
 local apis ={}
@@ -15,12 +15,12 @@ function apis:view_sign()
 end
 
 local triggers = {
-    [Const.EVT_ONLINE] = function(self)
+    [const.EVT_ONLINE] = function(self)
         self:init_sign()
         return
     end,
 
-    [Const.EVT_OFFLINE] = function(self)
+    [const.EVT_OFFLINE] = function(self)
         return
     end
 }
