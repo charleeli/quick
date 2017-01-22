@@ -22,8 +22,8 @@ function M._load_role(role_td)
         role:check_cron_update()
     end)
     
-    env.timer:set_interval(180, function()
-        --role:lock_session('update_mailbox')
+    env.timer:set_interval(30, function()
+        role:lock_session('update_mailbox')
     end)
 
     collectgarbage("collect")
