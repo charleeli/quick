@@ -18,7 +18,7 @@ end
 function date.format(sec, ms)
     local f = os.date("%Y-%m-%d %H:%M:%S",sec)
     if ms then
-        f = string.format("%s.%02d",ms)
+        f = string.format("%s.%02d", f, ms)
     end
     return f
 end
